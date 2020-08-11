@@ -17,6 +17,10 @@ class FaqCategory extends Resource
      */
     public static $model = FaqCategoryModel::class;
 
+    public static function label()
+    {
+        return 'FAQ Categories';
+    }
 
     /**
      * The single value that should be used to represent the resource when being displayed.

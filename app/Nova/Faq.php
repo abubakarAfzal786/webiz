@@ -19,6 +19,11 @@ class Faq extends Resource
      */
     public static $model = FaqModel::class;
 
+    public static function label()
+    {
+        return 'FAQ';
+    }
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
