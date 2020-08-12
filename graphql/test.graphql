@@ -1,0 +1,10 @@
+extend type Query {
+    tests: [Test!]! @paginate(defaultCount: 10)
+    test(id: ID @eq): Test @find
+}
+
+type Test {
+    id: ID!
+    title: String!
+    user: User! @belongsTo
+}

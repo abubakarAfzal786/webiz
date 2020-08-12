@@ -1,0 +1,33 @@
+extend type Query @guard {
+    users: [User!]! @paginate(defaultCount: 10)
+    user(id: ID @eq): User @find
+    me: User @auth
+}
+
+extend type Mutation {
+    createUser(
+        name: String!,
+        password: String!,
+        email: String! @rules(apply: ["email", "unique:users,email"]),
+    ): User
+
+    updateUser(
+        id: ID! @rules(apply: ["exists:users,id"]),
+        name: String,
+        email: String,
+        password: String
+    ): User
+
+    deleteUser(
+        id: ID! @rules(apply: ["exists:users,id"])
+    ): Boolean
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+    tests: [Test!] @hasMany
+}
