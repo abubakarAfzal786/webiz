@@ -1,0 +1,15 @@
+extend type Query @guard {
+    members: [Member!]! @paginate(defaultCount: 10)
+    member(id: ID @eq): Member @find
+}
+
+type Member {
+    id: ID!
+    name: String!
+    email: String!
+    phone: String!
+    status: Boolean!
+    balance: Float!
+    created_at: DateTime!
+    updated_at: DateTime!
+}

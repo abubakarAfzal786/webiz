@@ -12,7 +12,7 @@ type Query {
     authorize: Boolean
 
     sendVerification(phone: String!): Boolean
-    verify(code: Int!, phone: String!): Boolean
+    verify(code: Int!, phone: String!): VerifyResponse
 }
 
 type Mutation {
@@ -25,5 +25,13 @@ type AuthResponse {
     success: Boolean
 }
 
+type VerifyResponse {
+    message: String
+    token: String
+    success: Boolean
+    user: Member
+}
+
 #import user.graphql
 #import test.graphql
+#import member.graphql
