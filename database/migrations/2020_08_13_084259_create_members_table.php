@@ -17,7 +17,7 @@ class CreateMembersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone')->unique();
-            $table->string('email');
+            $table->string('email')->unique();
             $table->boolean('status')->default(true);
             $table->decimal('balance', 15, 2)->default(0);
             $table->timestamps();

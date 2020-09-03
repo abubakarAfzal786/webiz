@@ -1,5 +1,5 @@
 extend type Query @guard {
-    members: [Member!]! @paginate(defaultCount: 10)
+#    members: [Member!]! @paginate(defaultCount: 10)
     member(id: ID @eq): Member @find
 }
 

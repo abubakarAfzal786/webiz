@@ -28,7 +28,7 @@ class Verify
         $user = Member::query()->where('phone', $args['phone'])->first();
 
         if ($user) {
-            if (!$this->verifyWithOTP($args['code'], $args['phone'])) {
+            if ($this->verifyWithOTP($args['code'], $args['phone'])) {
                 $token = $this->jwt->fromUser($user);
                 $code = 200;
                 return [
