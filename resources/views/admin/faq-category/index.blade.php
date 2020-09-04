@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12 mb-4">
-                <div class="card text-left">
+                <div class="card text-left"><div class="card-header">{{ __('FAQ Categories') }}</div>
                     <div class="card-body">
                         <div class="table-responsive">
                             {!! $dataTable->table(['class' => 'display table table-striped table-bordered dataTable']) !!}

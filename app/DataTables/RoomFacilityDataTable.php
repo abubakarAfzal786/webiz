@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Faq;
+use App\Models\RoomFacility;
 use Illuminate\Database\Eloquent\Builder;
 use Yajra\DataTables\DataTableAbstract;
 use Yajra\DataTables\Html\Button;
@@ -11,7 +11,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class FaqDataTable extends DataTable
+class RoomFacilityDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -23,27 +23,28 @@ class FaqDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('category', function ($faq) {
-                return $faq->category ? $faq->category->name : '';
+            ->editColumn('icon', function ($facility) {
+                return $facility->icon ? '<i class="' . $facility->icon . ' fa-2x"></i>' : '';
             })
-            ->addColumn('action', function ($faq) {
+            ->addColumn('action', function ($facility) {
                 return '
                 <div class="btn-group btn-group-sm">
-                <a class="btn btn-success" href="' . route('admin.faq.edit', $faq->id) . '">Edit</a>
-                <a class="btn btn-danger delete-swal" data-id="' . $faq->id . '">Delete</a>
+                <a class="btn btn-success" href="' . route('admin.room-facility.edit', $facility->id) . '">Edit</a>
+                <a class="btn btn-danger delete-swal" data-id="' . $facility->id . '">Delete</a>
                 </div>';
-            });
+            })
+            ->rawColumns(['icon', 'action']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param Faq $model
+     * @param RoomFacility $model
      * @return Builder
      */
-    public function query(Faq $model)
+    public function query(RoomFacility $model)
     {
-        return $model->newQuery()->with('category');
+        return $model->newQuery();
     }
 
     /**
@@ -54,7 +55,7 @@ class FaqDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('faq-table')
+            ->setTableId('room-facility-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('Bfrtip')
@@ -64,8 +65,7 @@ class FaqDataTable extends DataTable
                 Button::make('export'),
                 Button::make('print'),
                 Button::make('reset'),
-                Button::make('reload'),
-                Button::make('create')->action("window.location = '" . route('admin.faq-category.index') . "';")->text(__('FAQ Categories'))
+                Button::make('reload')
             );
     }
 
@@ -78,9 +78,8 @@ class FaqDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('question'),
-            Column::make('answer'),
-            Column::make('category'),
+            Column::make('name'),
+            Column::make('icon')->width(30),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
@@ -96,6 +95,6 @@ class FaqDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Faq_' . date('YmdHis');
+        return 'RoomFacility_' . date('YmdHis');
     }
 }

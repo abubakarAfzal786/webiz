@@ -5,7 +5,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12 mb-4">
                 <div class="card text-left">
-                    <div class="card-header">{{ __('Members') }}</div>
+                    <div class="card-header">{{ __('Rooms') }}</div>
                     <div class="card-body">
                         <div class="table-responsive">
                             {!! $dataTable->table(['class' => 'display table table-striped table-bordered dataTable']) !!}
@@ -26,10 +26,10 @@
 
                 if (confirm("Are you sure?")) {
                     $.ajax({
-                        url: '/dashboard/members/' + item_id,
+                        url: '/dashboard/rooms/' + item_id,
                         type: 'DELETE',
                         success: function () {
-                            $('#members-table').DataTable().draw();
+                            $('#rooms-table').DataTable().draw();
                         },
                         error: function () {
                             alert("{{ __('Something went wrong.') }}")

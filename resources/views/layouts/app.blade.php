@@ -10,13 +10,16 @@
     <title>{{ config('app.name', 'WeBiz') }}</title>
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link href="//fonts.gstatic.com" rel="dns-prefetch">
+    <link href="//fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.css"/>
+    @stack('header-pre-scripts')
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.5.0/css/all.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.css"/>
     <link rel="stylesheet" href="//cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+    @stack('header-post-scripts')
 </head>
 <body>
 <div id="app">
@@ -39,11 +42,10 @@
                             <a class="nav-link" href="{{ route('admin.members.index') }}">{{ __('Members') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.faq.index') }}">{{ __('FAQ') }}</a>
+                            <a class="nav-link" href="{{ route('admin.faq.index') }}">{{ __('FAQ Base') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link"
-                               href="{{ route('admin.faq-category.index') }}">{{ __('FAQ Categories') }}</a>
+                            <a class="nav-link" href="{{ route('admin.rooms.index') }}">{{ __('Rooms') }}</a>
                         </li>
                     @endauth
                 </ul>

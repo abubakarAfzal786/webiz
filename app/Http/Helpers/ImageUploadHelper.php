@@ -8,34 +8,19 @@ use Illuminate\Support\Facades\Storage;
 
 trait ImageUploadHelper
 {
-    /**
-     * @param $file
-     * @return bool
-     */
-    public function upload($file)
+    private function getDisk()
     {
-        // TODO get setting from db
-        $local = true;
-
-        return $local ? $this->uploadLocal($file) : $this->uploadS3($file);
-    }
-
-    /**
-     * @param $file
-     * @return bool
-     */
-    public function uploadLocal($file)
-    {
-        return Storage::disk('public')->put('images', $file);
+        // TODO get setting from db (public, s3, gcs)
+        return 'gcs';
     }
 
     /**
      * @param $file
      * @return string
      */
-    public function uploadS3($file)
+    public function uploadImage($file)
     {
-        return Storage::disk('s3')->put('images', $file);
+        return Storage::disk($this->getDisk())->put('images', $file);
     }
 
     /**
@@ -62,9 +47,22 @@ trait ImageUploadHelper
         $$attr = isset($this->$attr) && trim($this->$attr) ? $this->$attr : '';
         if ($$attr) {
             if (!filter_var($$attr, FILTER_VALIDATE_URL)) {
-                return urldecode(Storage::disk('s3')->temporaryUrl($$attr, Carbon::now()->addMinutes(10)));
+                if ($this->getDisk() == 'gcs') {
+                    return Storage::disk('gcs')->url($$attr);
+                } else {
+                    return urldecode(Storage::disk('s3')->temporaryUrl($$attr, Carbon::now()->addMinutes(10)));
+                }
             }
         }
         return $$attr;
+    }
+
+    /**
+     * @param $path
+     * @return bool
+     */
+    public function deleteImage($path)
+    {
+        return Storage::disk($this->getDisk())->delete($path);
     }
 }

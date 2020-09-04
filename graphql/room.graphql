@@ -1,0 +1,16 @@
+extend type Query @guard {
+    rooms: [Room!]! @paginate(defaultCount: 10)
+    room(id: ID @eq): Room @find
+}
+
+type Room {
+    id: ID!
+    name: String!
+    price: Float!
+    seats: Int!
+    overview: String!
+    location: String!
+    status: Boolean!
+    created_at: DateTime!
+    updated_at: DateTime!
+}

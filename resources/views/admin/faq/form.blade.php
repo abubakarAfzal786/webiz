@@ -4,6 +4,7 @@
     <div class="row">
         <div class="col-md-6 offset-3">
             <div class="card mb-5">
+                <div class="card-header">{{ isset($member) ? __('Edit') : __('Create') }} {{ __('FAQ') }}</div>
                 <div class="card-body">
                     <form method="POST"
                           action="{{ isset($faq) ? route('admin.faq.update', $faq) : route('admin.faq.store') }}">

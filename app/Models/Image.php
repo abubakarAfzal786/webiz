@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Http\Helpers\ImageUploadHelper;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Image extends Model
 {
@@ -14,17 +16,35 @@ class Image extends Model
         'path',
         'size',
         'main',
-        'relation_id',
-        'model',
     ];
-    
+
+    protected $appends = [
+        'url'
+    ];
+
+    /**
+     * @return string
+     */
     public function getUrlAttribute()
     {
-        return $this->imageUrlGetter('image');
+        return $this->imageUrlGetter('path');
     }
 
-    public function member()
+    /**
+     * @return MorphTo
+     */
+    public function imageable()
     {
-        return $this->belongsTo(Member::class, 'relation_id', 'id')->where('model', Member::class);
+        return $this->morphTo();
+    }
+
+    /**
+     * @return bool|void|null
+     * @throws Exception
+     */
+    public function delete()
+    {
+        $this->deleteImage($this->getAttribute('path'));
+        parent::delete();
     }
 }

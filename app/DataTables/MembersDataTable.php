@@ -23,6 +23,9 @@ class MembersDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
+            ->editColumn('status', function ($member) {
+                return $member->status ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Block</span>';
+            })
             ->editColumn('created_at', function ($member) {
                 return $member->created_at ? $member->created_at->diffForHumans() : '';
             })
@@ -35,7 +38,8 @@ class MembersDataTable extends DataTable
                 <a class="btn btn-success" href="' . route('admin.members.edit', $member->id) . '">Edit</a>
                 <a class="btn btn-danger delete-swal" data-id="' . $member->id . '">Delete</a>
                 </div>';
-            });
+            })
+            ->rawColumns(['status', 'action']);
     }
 
     /**
@@ -61,7 +65,7 @@ class MembersDataTable extends DataTable
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('Bfrtip')
-            ->orderBy(1)
+            ->orderBy(0)
             ->buttons(
                 Button::make('create'),
                 Button::make('export'),

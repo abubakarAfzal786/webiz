@@ -35,3 +35,4 @@ type VerifyResponse {
 #import user.graphql
 #import test.graphql
 #import member.graphql
+#import room.graphql

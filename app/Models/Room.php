@@ -2,43 +2,23 @@
 
 namespace App\Models;
 
-use App\Http\Helpers\ImageUploadHelper;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Member extends Model implements JWTSubject
+class Room extends Model
 {
-    use ImageUploadHelper;
-
     protected $fillable = [
         'name',
-        'phone',
-        'email',
+        'price',
+        'seats',
+        'overview',
+        'location',
+        'lat',
+        'lon',
         'status',
-        'balance',
     ];
-
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
 
     /**
      * @return bool|void|null
@@ -51,6 +31,14 @@ class Member extends Model implements JWTSubject
             $image->delete();
         }
         parent::delete();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function facilities()
+    {
+        return $this->belongsToMany(RoomFacility::class, 'room_facility_pivot', 'room_id', 'facility_id');
     }
 
     /**
@@ -70,5 +58,4 @@ class Member extends Model implements JWTSubject
     {
         return $this->mainImage ? $this->mainImage : null;
     }
-
 }
