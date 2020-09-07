@@ -109,6 +109,21 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label" for="type_id">{{ __('Type') }}</label>
+                            <div class="col-sm-10">
+                                <select name="type_id" id="type_id" class="form-control" required>
+                                    <option></option>
+                                    @foreach($types as $key => $value)
+                                        <option value="{{ $key }}" {{ old('type_id', isset($room) ? $room->type_id : null) == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                    @endforeach
+                                </select>
+                                @error('type_id')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
                         @isset($room)
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="status">{{ __('Room Status') }}</label>

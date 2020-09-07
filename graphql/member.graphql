@@ -1,7 +1,7 @@
-extend type Query @guard {
+#extend type Query @guard {
 #    members: [Member!]! @paginate(defaultCount: 10)
-    member(id: ID @eq): Member @find
-}
+#    member(id: ID @eq): Member @find
+#}
 
 type Member {
     id: ID!

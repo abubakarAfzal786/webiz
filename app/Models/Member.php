@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use App\Http\Helpers\ImageUploadHelper;
+use App\User;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Member extends Model implements JWTSubject
+class Member extends Authenticatable implements JWTSubject
 {
     use ImageUploadHelper;
 
@@ -18,6 +21,7 @@ class Member extends Model implements JWTSubject
         'email',
         'status',
         'balance',
+        'user_id',
     ];
 
     /**
@@ -61,14 +65,20 @@ class Member extends Model implements JWTSubject
         return $this->morphMany(Image::class, 'imageable');
     }
 
+    /**
+     * @return MorphOne
+     */
     public function mainImage()
     {
-        return $this->images()->where('main', true);
+        return $this->morphOne(Image::class, 'imageable')->where('main', true);
     }
 
-    public function getMainImageAttribute()
+    /**
+     * @return BelongsTo
+     */
+    public function user()
     {
-        return $this->mainImage ? $this->mainImage : null;
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
 }

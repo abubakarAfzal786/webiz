@@ -8,12 +8,14 @@ use App\Http\Helpers\ImageUploadHelper;
 use App\Http\Requests\StoreRoomRequest;
 use App\Models\Room;
 use App\Models\RoomFacility;
+use App\Models\RoomType;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class RoomController extends Controller
@@ -37,9 +39,10 @@ class RoomController extends Controller
      */
     public function create()
     {
+        $types = RoomType::query()->get()->pluck('name', 'id');
         $facilities = RoomFacility::query()->get();
 
-        return view('admin.rooms.form', compact('facilities'));
+        return view('admin.rooms.form', compact('facilities', 'types'));
     }
 
     /**
@@ -51,6 +54,7 @@ class RoomController extends Controller
     public function store(StoreRoomRequest $request)
     {
         /** @var Room $room */
+        $request->merge(['user_id' => Auth::id()]);
         $room = Room::query()->create($request->except('_token', 'facilities'));
         $room->facilities()->sync($request->get('facilities'));
 
@@ -83,10 +87,11 @@ class RoomController extends Controller
      */
     public function edit(Room $room)
     {
+        $types = RoomType::query()->get()->pluck('name', 'id');
         $facilities = RoomFacility::query()->get();
         $roomFacilities = $room->facilities->pluck('id')->toArray();
 
-        return view('admin.rooms.form', compact('facilities', 'room', 'roomFacilities'));
+        return view('admin.rooms.form', compact('facilities', 'room', 'roomFacilities', 'types'));
     }
 
     /**

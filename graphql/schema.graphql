@@ -13,6 +13,8 @@ type Query {
 
     sendVerification(phone: String!): Boolean
     verify(code: Int!, phone: String!): VerifyResponse
+
+    me: Member @auth
 }
 
 type Mutation {
@@ -32,7 +34,17 @@ type VerifyResponse {
     user: Member
 }
 
+input SortOption {
+    field: String
+    order: SortOrder
+}
+
+enum SortOrder {
+    ASC
+    DESC
+}
+
+#import image.graphql
 #import user.graphql
-#import test.graphql
 #import member.graphql
 #import room.graphql

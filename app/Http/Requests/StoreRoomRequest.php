@@ -36,6 +36,7 @@ class StoreRoomRequest extends FormRequest
             'status' => 'nullable',
             'images' => 'array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'type_id' => 'required|exists:room_types,id',
         ];
 
         return $rules;

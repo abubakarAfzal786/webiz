@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class MemberController extends Controller
@@ -44,6 +45,7 @@ class MemberController extends Controller
      */
     public function store(StoreMemberRequest $request)
     {
+        $request->merge(['user_id' => Auth::id()]);
         Member::query()->create($request->except('_token'));
 
         return redirect()->route('admin.members.index')->with([

@@ -1,0 +1,13 @@
+type Image {
+    id: ID!
+    title: String!
+    path: String!
+    url: String!
+    size: Float!
+    main: Boolean!
+    created_at: DateTime!
+    updated_at: DateTime!
+    imageable: Imageable! @morphTo
+}
+
+union Imageable = Member | Room

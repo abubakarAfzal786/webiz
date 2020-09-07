@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Models\Test;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -58,13 +57,5 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function tests(): HasMany
-    {
-        return $this->hasMany(Test::class);
     }
 }

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\User;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Room extends Model
 {
@@ -18,6 +21,8 @@ class Room extends Model
         'lat',
         'lon',
         'status',
+        'user_id',
+        'type_id',
     ];
 
     /**
@@ -34,6 +39,22 @@ class Room extends Model
     }
 
     /**
+     * @return MorphMany
+     */
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
+
+    /**
+     * @return MorphOne
+     */
+    public function mainImage()
+    {
+        return $this->morphOne(Image::class, 'imageable')->where('main', true);
+    }
+
+    /**
      * @return BelongsToMany
      */
     public function facilities()
@@ -42,20 +63,18 @@ class Room extends Model
     }
 
     /**
-     * @return MorphMany
+     * @return BelongsTo
      */
-    public function images()
+    public function user()
     {
-        return $this->morphMany(Image::class, 'imageable');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function mainImage()
+    /**
+     * @return BelongsTo
+     */
+    public function type()
     {
-        return $this->images()->where('main', true);
-    }
-
-    public function getMainImageAttribute()
-    {
-        return $this->mainImage ? $this->mainImage : null;
+        return $this->belongsTo(RoomType::class, 'type_id', 'id');
     }
 }

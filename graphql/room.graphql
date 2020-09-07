@@ -1,6 +1,7 @@
 extend type Query @guard {
-    rooms: [Room!]! @paginate(defaultCount: 10)
+    rooms(orderBy: [SortOption!]! @orderBy): [Room!]! @paginate(defaultCount: 10)
     room(id: ID @eq): Room @find
+    searchRoom(type: [Int!], seats: Int!, facilities: [Int!]): [Room!]!
 }
 
 type Room {
@@ -11,6 +12,25 @@ type Room {
     overview: String!
     location: String!
     status: Boolean!
+    type: RoomType! @belongsTo
+    facilities: [Facility]! @hasMany
+    mainImage: Image! @morphOne
+    images: [Image]! @morphMany
     created_at: DateTime!
     updated_at: DateTime!
+}
+
+type Facility {
+    id: ID!
+    name: String!
+    icon: String
+}
+
+type RoomType {
+    id: ID!
+    name: String!
+}
+
+type SearchRoomResponse {
+    success: Boolean!
 }

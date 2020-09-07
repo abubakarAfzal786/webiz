@@ -23,6 +23,8 @@ class CreateRoomsTable extends Migration
             $table->decimal('lat', 10, 8)->nullable();
             $table->decimal('lon', 11, 8)->nullable();
             $table->boolean('status')->default(true);
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('type_id')->nullable();
             $table->timestamps();
         });
     }
