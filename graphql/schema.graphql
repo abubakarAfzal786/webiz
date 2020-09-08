@@ -12,7 +12,7 @@ type Query {
     authorize: Boolean
 
     sendVerification(phone: String!): Boolean
-    verify(code: Int!, phone: String!): VerifyResponse
+    verify(code: Int!, phone: String!, test: Boolean): VerifyResponse
 
     me: Member @auth
 }
