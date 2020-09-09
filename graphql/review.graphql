@@ -1,0 +1,35 @@
+extend type Query @guard {
+    reviews: [Review!]! @paginate(defaultCount: 10)
+    review(id: ID @eq): Review @find
+}
+
+type Review {
+    id: ID!
+    room_id: Int!
+    member_id: Int!
+    description: String!
+    rate: Float!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+extend type Mutation {
+    createReview(
+        room_id: ID!, @rules(apply: ["exists:rooms,id"]),
+        member_id: ID!, @rules(apply: ["exists:members,id"]),
+        description: String!
+        rate: Float!, @rules(apply: ["between:0,5"])
+    ): Review
+
+    updateReview(
+        id: ID! @rules(apply: ["exists:reviews,id"]),
+        room_id: ID!, @rules(apply: ["exists:rooms,id"]),
+        member_id: ID!, @rules(apply: ["exists:members,id"]),
+        description: String!
+        rate: Float! @rules(apply: ["numeric", "between:0,5"])
+    ): Review
+
+    deleteReview(
+        id: ID! @rules(apply: ["exists:reviews,id"])
+    ): Boolean
+}

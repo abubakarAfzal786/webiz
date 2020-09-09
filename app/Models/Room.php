@@ -4,12 +4,19 @@ namespace App\Models;
 
 use App\User;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Collection;
 
+/**
+ * @property Collection reviews
+ * @property Collection images
+ */
 class Room extends Model
 {
     protected $fillable = [
@@ -25,6 +32,15 @@ class Room extends Model
         'type_id',
     ];
 
+    protected $appends = [
+        'average_rate',
+        'rates_count',
+    ];
+
+    protected $casts = [
+        'average_rate' => 'float'
+    ];
+
     /**
      * @return bool|void|null
      * @throws Exception
@@ -36,6 +52,13 @@ class Room extends Model
             $image->delete();
         }
         parent::delete();
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder->where('status', true);
+        });
     }
 
     /**
@@ -76,5 +99,38 @@ class Room extends Model
     public function type()
     {
         return $this->belongsTo(RoomType::class, 'type_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'room_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'room_id', 'id');
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getAverageRateAttribute()
+    {
+        $reviews = $this->reviews->pluck('rate')->toArray();
+        return $reviews ? number_format(array_sum($reviews) / count($reviews), 2) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRatesCountAttribute()
+    {
+        return $this->reviews()->count();
     }
 }

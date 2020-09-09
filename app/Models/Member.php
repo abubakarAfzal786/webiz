@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Http\Helpers\ImageUploadHelper;
 use App\User;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -57,6 +59,13 @@ class Member extends Authenticatable implements JWTSubject
         parent::delete();
     }
 
+    protected static function booted()
+    {
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder->where('status', true);
+        });
+    }
+
     /**
      * @return MorphMany
      */
@@ -79,6 +88,22 @@ class Member extends Authenticatable implements JWTSubject
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'member_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'member_id', 'id');
     }
 
 }

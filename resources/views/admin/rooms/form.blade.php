@@ -16,8 +16,8 @@
                             <label class="col-sm-2 col-form-label" for="name">{{ __('Name') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" id="name" type="text" placeholder="{{ __('Name') }}"
-                                       name="name"
-                                       required value="{{ old('name', isset($room) ? $room->name : null) }}">
+                                       name="name" required
+                                       value="{{ old('name', isset($room) ? $room->name : null) }}">
                                 @error('name')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
@@ -29,7 +29,7 @@
                             <div class="col-sm-10">
                                 <input class="form-control" id="price" type="number" min="0" step="0.1"
                                        placeholder="{{ __('Price') }}" name="price"
-                                       value="{{ old('p.rice', isset($room) ? $room->price : 0) }}">
+                                       value="{{ old('price', isset($room) ? $room->price : 0) }}">
                                 @error('price')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
@@ -52,8 +52,7 @@
                             <label class="col-sm-2 col-form-label" for="overview">{{ __('Overview') }}</label>
                             <div class="col-sm-10">
                                 <textarea class="form-control" id="overview" type="text"
-                                          placeholder="{{ __('Overview') }}"
-                                          name="overview"
+                                          placeholder="{{ __('Overview') }}" name="overview"
                                           required>{{ old('overview', isset($room) ? $room->overview : null) }}</textarea>
                                 @error('overview')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -101,8 +100,8 @@
                             <label class="col-sm-2 col-form-label" for="location">{{ __('Location') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" id="location" type="text" placeholder="{{ __('Location') }}"
-                                       name="location"
-                                       required value="{{ old('location', isset($room) ? $room->location : null) }}">
+                                       name="location" required
+                                       value="{{ old('location', isset($room) ? $room->location : null) }}">
                                 @error('location')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
@@ -115,7 +114,8 @@
                                 <select name="type_id" id="type_id" class="form-control" required>
                                     <option></option>
                                     @foreach($types as $key => $value)
-                                        <option value="{{ $key }}" {{ old('type_id', isset($room) ? $room->type_id : null) == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                        <option
+                                            value="{{ $key }}" {{ old('type_id', isset($room) ? $room->type_id : null) == $key ? 'selected' : '' }}>{{ $value }}</option>
                                     @endforeach
                                 </select>
                                 @error('type_id')
@@ -145,7 +145,8 @@
                                         <img class="img-thumbnail" src="{{ $photo->url }}" alt="">
                                     @endforeach
                                 @endisset
-                                <input type="file" class="form-control mt-2 p-1" name="images[]" placeholder="images" multiple>
+                                <input type="file" class="form-control mt-2 p-1" name="images[]" placeholder="images"
+                                       multiple>
                                 @error('images.*')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror

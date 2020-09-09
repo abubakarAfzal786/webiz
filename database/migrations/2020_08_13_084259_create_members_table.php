@@ -22,6 +22,8 @@ class CreateMembersTable extends Migration
             $table->decimal('balance', 15, 2)->default(0);
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 

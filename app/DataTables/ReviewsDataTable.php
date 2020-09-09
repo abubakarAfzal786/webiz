@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Room;
+use App\Models\Review;
 use Illuminate\Database\Eloquent\Builder;
 use Yajra\DataTables\DataTableAbstract;
 use Yajra\DataTables\Html\Button;
@@ -11,7 +11,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class RoomsDataTable extends DataTable
+class ReviewsDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -23,32 +23,34 @@ class RoomsDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->editColumn('status', function ($room) {
-                return $room->status ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Block</span>';
+            ->addColumn('room', function ($review) {
+                return $review->room ? $review->room->name : '';
             })
-            ->editColumn('created_at', function ($room) {
-                return $room->created_at ? $room->created_at->diffForHumans() : '';
+            ->addColumn('member', function ($review) {
+                return $review->member ? $review->member->name : '';
             })
-            ->editColumn('updated_at', function ($room) {
-                return $room->updated_at ? $room->updated_at->diffForHumans() : '';
+            ->editColumn('created_at', function ($review) {
+                return $review->created_at ? $review->created_at->diffForHumans() : '';
             })
-            ->addColumn('action', function ($room) {
+            ->editColumn('updated_at', function ($review) {
+                return $review->updated_at ? $review->updated_at->diffForHumans() : '';
+            })
+            ->addColumn('action', function ($review) {
                 return '
                 <div class="btn-group btn-group-sm">
-                <a class="btn btn-success" href="' . route('admin.rooms.edit', $room->id) . '">Edit</a>
-                <a class="btn btn-danger delete-swal" data-id="' . $room->id . '">Delete</a>
+                <a class="btn btn-success" href="' . route('admin.reviews.edit', $review->id) . '">Edit</a>
+                <a class="btn btn-danger delete-swal" data-id="' . $review->id . '">Delete</a>
                 </div>';
-            })
-            ->rawColumns(['status', 'action']);
+            });
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param Room $model
+     * @param Review $model
      * @return Builder
      */
-    public function query(Room $model)
+    public function query(Review $model)
     {
         return $model->newQuery();
     }
@@ -61,7 +63,7 @@ class RoomsDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('rooms-table')
+            ->setTableId('reviews-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('Bfrtip')
@@ -71,9 +73,7 @@ class RoomsDataTable extends DataTable
                 Button::make('export'),
                 Button::make('print'),
                 Button::make('reset'),
-                Button::make('reload'),
-                Button::make('create')->action("window.location = '" . route('admin.room-facility.index') . "';")->text(__('Room Facilities')),
-                Button::make('create')->action("window.location = '" . route('admin.room-type.index') . "';")->text(__('Room Types'))
+                Button::make('reload')
             );
     }
 
@@ -86,11 +86,10 @@ class RoomsDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('name'),
-            Column::make('price'),
-            Column::make('seats'),
-            Column::make('location'),
-            Column::make('status'),
+            Column::make('room'),
+            Column::make('member'),
+            Column::make('description'),
+            Column::make('rate'),
             Column::make('created_at'),
             Column::make('updated_at'),
             Column::computed('action')
@@ -108,6 +107,6 @@ class RoomsDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Rooms_' . date('YmdHis');
+        return 'Reviews_' . date('YmdHis');
     }
 }

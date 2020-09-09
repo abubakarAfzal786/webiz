@@ -15,19 +15,49 @@ class SearchRoom
      */
     public function __invoke($_, array $args)
     {
-        $types = $args['type'];
+        $types = $args['types'] ?? null;
         $seats = $args['seats'];
-        $facilities = $args['facilities'];
+        $facilities = $args['facilities'] ?? [];
+        $start = $args['start'] ?? null;
+        $end = $args['end'] ?? null;
 
         $rooms = Room::query()
             ->with('facilities')
-            ->whereIn('type_id', $types)
-            ->where('seats', '>=', $seats);
+            ->where('seats', '>=', $seats)
+            ->when($types, function (Builder $q) use ($types) {
+                return $q->whereIn('type_id', $types);
+            });
 
         foreach ($facilities as $facility) {
             $rooms = $rooms->whereHas('facilities', function (Builder $q) use ($facility) {
                 $q->where('room_facilities.id', $facility);
             });
+        }
+
+        if (!$start && $end) {
+            $rooms = $rooms->whereHas('bookings', function (Builder $q) use ($end) {
+                $q->where('start_date', '>=', $end)->orwhere('end_date', '<', $end);
+            })->orWhereDoesntHave('bookings');
+        }
+
+        if (!$end && $start) {
+            $rooms = $rooms->whereHas('bookings', function (Builder $q) use ($start) {
+                $q->where('start_date', '>', $start)->orwhere('end_date', '>=', $start);
+            })->orWhereDoesntHave('bookings');
+        }
+
+        if ($start && $end) {
+            $rooms = $rooms->whereHas('bookings', function (Builder $q) use ($start, $end) {
+                $q->where(
+                    function (Builder $query) use ($start, $end) {
+                        $query->where('start_date', '>', $start)->where('start_date', '>=', $end);
+                    }
+                )->orWhere(
+                    function (Builder $query) use ($start, $end) {
+                        $query->where('end_date', '<=', $start)->where('end_date', '<', $end);
+                    }
+                );
+            })->orWhereDoesntHave('bookings');
         }
 
         $rooms = $rooms->orderBy('created_at', 'desc')->get();

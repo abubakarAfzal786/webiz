@@ -39,6 +39,9 @@
                 <ul class="navbar-nav mr-auto">
                     @auth
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.bookings.index') }}">{{ __('Bookings') }}</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.members.index') }}">{{ __('Members') }}</a>
                         </li>
                         <li class="nav-item">
@@ -46,6 +49,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.rooms.index') }}">{{ __('Rooms') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.reviews.index') }}">{{ __('Reviews') }}</a>
                         </li>
                     @endauth
                 </ul>

@@ -26,6 +26,9 @@ class CreateRoomsTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('type_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->foreign('type_id')->references('id')->on('room_types')->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 

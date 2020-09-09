@@ -1,0 +1,35 @@
+extend type Query @guard {
+    bookings: [Booking!]! @paginate(defaultCount: 10)
+    booking(id: ID @eq): Booking @find
+}
+
+type Booking {
+    id: ID!
+    room_id: Int!
+    member_id: Int!
+    start_date: DateTimeOrDate!
+    end_date: DateTimeOrDate!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+extend type Mutation {
+    createBooking(
+        room_id: ID!, @rules(apply: ["exists:rooms,id"]),
+        member_id: ID!, @rules(apply: ["exists:members,id"]),
+        start_date: DateTimeOrDate! @rules(apply: ["date", "after:now"])
+        end_date: DateTimeOrDate! @rules(apply: ["date", "after:start_date"])
+    ): Booking
+
+    updateBooking(
+        id: ID! @rules(apply: ["exists:bookings,id"]),
+        room_id: ID!, @rules(apply: ["exists:rooms,id"]),
+        member_id: ID!, @rules(apply: ["exists:members,id"]),
+        start_date: DateTimeOrDate! @rules(apply: ["date", "after:now"])
+        end_date: DateTimeOrDate! @rules(apply: ["date", "after:start_date"])
+    ): Booking
+
+    deleteBooking(
+        id: ID! @rules(apply: ["exists:bookings,id"])
+    ): Boolean
+}
