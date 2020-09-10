@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\DataTables\FaqCategoryDataTable;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreFaqCategoryRequest;
 use App\Models\FaqCategory;
 use Exception;
 use Illuminate\Contracts\View\Factory;
@@ -38,10 +39,10 @@ class FaqCategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param StoreFaqCategoryRequest $request
      * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(StoreFaqCategoryRequest $request)
     {
         FaqCategory::query()->create($request->except('_token'));
 
@@ -65,11 +66,11 @@ class FaqCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param StoreFaqCategoryRequest $request
      * @param FaqCategory $faqCategory
      * @return RedirectResponse
      */
-    public function update(Request $request, FaqCategory $faqCategory)
+    public function update(StoreFaqCategoryRequest $request, FaqCategory $faqCategory)
     {
         $faqCategory->update($request->except('_token', '_method'));
 

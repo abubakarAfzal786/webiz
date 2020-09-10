@@ -23,7 +23,19 @@ class RoomTypeDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', 'roomtype.action');
+            ->editColumn('created_at', function ($member) {
+                return $member->created_at ? $member->created_at->diffForHumans() : '';
+            })
+            ->editColumn('updated_at', function ($member) {
+                return $member->updated_at ? $member->updated_at->diffForHumans() : '';
+            })
+            ->addColumn('action', function ($roomType) {
+                return '
+                <div class="btn-group btn-group-sm">
+                <a class="btn btn-success" href="' . route('admin.room-type.edit', $roomType->id) . '">Edit</a>
+                <a class="btn btn-danger delete-swal" data-id="' . $roomType->id . '">Delete</a>
+                </div>';
+            });
     }
 
     /**
@@ -67,15 +79,16 @@ class RoomTypeDataTable extends DataTable
     protected function getColumns()
     {
         return [
+
+            Column::make('id'),
+            Column::make('name'),
+            Column::make('created_at'),
+            Column::make('updated_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
                 ->width(60)
                 ->addClass('text-center'),
-            Column::make('id'),
-
-            Column::make('created_at'),
-            Column::make('updated_at'),
         ];
     }
 

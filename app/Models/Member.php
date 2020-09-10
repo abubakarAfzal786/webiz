@@ -77,7 +77,7 @@ class Member extends Authenticatable implements JWTSubject
     /**
      * @return MorphOne
      */
-    public function mainImage()
+    public function main_image()
     {
         return $this->morphOne(Image::class, 'imageable')->where('main', true);
     }

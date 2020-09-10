@@ -72,7 +72,7 @@ class Room extends Model
     /**
      * @return MorphOne
      */
-    public function mainImage()
+    public function main_image()
     {
         return $this->morphOne(Image::class, 'imageable')->where('main', true);
     }

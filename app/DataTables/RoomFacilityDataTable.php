@@ -26,6 +26,12 @@ class RoomFacilityDataTable extends DataTable
             ->editColumn('icon', function ($facility) {
                 return $facility->icon ? '<i class="' . $facility->icon . ' fa-2x"></i>' : '';
             })
+            ->editColumn('created_at', function ($member) {
+                return $member->created_at ? $member->created_at->diffForHumans() : '';
+            })
+            ->editColumn('updated_at', function ($member) {
+                return $member->updated_at ? $member->updated_at->diffForHumans() : '';
+            })
             ->addColumn('action', function ($facility) {
                 return '
                 <div class="btn-group btn-group-sm">
@@ -80,6 +86,8 @@ class RoomFacilityDataTable extends DataTable
             Column::make('id'),
             Column::make('name'),
             Column::make('icon')->width(30),
+            Column::make('created_at'),
+            Column::make('updated_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

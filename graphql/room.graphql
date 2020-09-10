@@ -1,11 +1,13 @@
 extend type Query @guard {
     rooms(orderBy: [SortOption!]! @orderBy): [Room!]! @paginate(defaultCount: 10)
     room(id: ID @eq): Room @find
+    roomTypes(orderBy: [SortOption!]! @orderBy): [RoomType!]! @all
+    roomFacilities(orderBy: [SortOption!]! @orderBy): [RoomFacility!]! @all
 
     searchRoom(
-        types: [Int], @rulesForArray(apply: ["exists:room_types,id"])
+        types: [ID], @rulesForArray(apply: ["exists:room_types,id"])
         seats: Int!, @rules(apply: ["integer"])
-        facilities: [Int], @rulesForArray(apply: ["exists:room_facilities,id"])
+        facilities: [ID], @rulesForArray(apply: ["exists:room_facilities,id"])
         start: DateTimeOrDate,
         end: DateTimeOrDate
     ): [Room!]!
@@ -22,14 +24,14 @@ type Room {
     average_rate: Float!
     rates_count: Int!
     type: RoomType! @belongsTo
-    facilities: [Facility]! @hasMany
-    mainImage: Image @morphOne
+    facilities: [RoomFacility]! @hasMany
+    main_image: Image @morphOne
     images: [Image]! @morphMany
     created_at: DateTime!
     updated_at: DateTime!
 }
 
-type Facility {
+type RoomFacility {
     id: ID!
     name: String!
     icon: String
