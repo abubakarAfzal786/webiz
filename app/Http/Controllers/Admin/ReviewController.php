@@ -81,7 +81,7 @@ class ReviewController extends Controller
      */
     public function update(StoreReviewRequest $request, Review $review)
     {
-        $review->update($request->except('_token'));
+        $review->update($request->except('_token', '_method'));
 
         return redirect()->route('admin.reviews.index')->with([
             'message' => __('Reviews successfully updated.'),

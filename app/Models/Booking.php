@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Booking extends Model
 {
@@ -67,5 +67,15 @@ class Booking extends Model
     public function member()
     {
         return $this->belongsTo(Member::class, 'member_id', 'id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function room_attributes()
+    {
+        return $this->belongsToMany(RoomAttribute::class, 'booking_attributes_pivot', 'booking_id', 'attribute_id')
+            ->withPivot('quantity')
+            ->withTimestamps();
     }
 }

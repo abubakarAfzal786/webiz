@@ -72,7 +72,7 @@ class RoomTypeController extends Controller
      */
     public function update(StoreRoomTypeRequest $request, RoomType $roomType)
     {
-        $roomType->update($request->except('_token'));
+        $roomType->update($request->except('_token', '_method'));
 
         return redirect()->route('admin.room-type.index')->with([
             'message' => __('Room Type successfully updated.'),

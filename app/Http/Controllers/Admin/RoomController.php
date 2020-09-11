@@ -104,7 +104,7 @@ class RoomController extends Controller
     public function update(StoreRoomRequest $request, Room $room)
     {
         $request['status'] = (bool)$request->status;
-        $room->update($request->except('_token', 'facilities'));
+        $room->update($request->except('_token', 'facilities', '_method'));
         $room->facilities()->sync($request->get('facilities'));
 
         $images = $request->file('images');

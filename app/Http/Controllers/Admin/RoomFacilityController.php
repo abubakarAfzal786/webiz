@@ -72,7 +72,7 @@ class RoomFacilityController extends Controller
      */
     public function update(StoreRoomFacilityRequest $request, RoomFacility $roomFacility)
     {
-        $roomFacility->update($request->except('_token'));
+        $roomFacility->update($request->except('_token', '_method'));
 
         return redirect()->route('admin.room-facility.index')->with([
             'message' => __('Room Facility successfully updated.'),

@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -122,6 +122,13 @@ return [
     'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Other variables from env
+    |--------------------------------------------------------------------------
+    */
+    'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -226,7 +233,6 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
     ],
 
 ];

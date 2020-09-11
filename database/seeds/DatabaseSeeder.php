@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(RoomTypeSeeder::class);
         $this->call(RoomFacilitySeeder::class);
+        $this->call(RoomAttributeSeeder::class);
     }
 }

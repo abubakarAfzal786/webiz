@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@push('header-post-scripts')
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key="{{ config('app.google_maps_api_key') }}></script>
+@endpush
+
 @section('content')
     <div class="row">
         <div class="col-md-6 offset-3">
@@ -170,3 +174,16 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(function () {
+            function initialize() {
+                let input = document.getElementById('location');
+                new google.maps.places.Autocomplete(input);
+            }
+
+            google.maps.event.addDomListener(window, 'load', initialize);
+        });
+    </script>
+@endpush

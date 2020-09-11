@@ -83,7 +83,7 @@ class BookingController extends Controller
      */
     public function update(StoreBookingRequest $request, Booking $booking)
     {
-        $booking->update($request->except('_token'));
+        $booking->update($request->except('_token', '_method'));
 
         return redirect()->route('admin.bookings.index')->with([
             'message' => __('Booking successfully updated.'),

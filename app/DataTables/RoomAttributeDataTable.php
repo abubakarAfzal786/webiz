@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Booking;
+use App\Models\RoomAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Yajra\DataTables\DataTableAbstract;
 use Yajra\DataTables\Html\Button;
@@ -11,7 +11,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class BookingsDataTable extends DataTable
+class RoomAttributeDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -23,32 +23,20 @@ class BookingsDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('room', function ($booking) {
-                return $booking->room ? $booking->room->name : '';
+            ->editColumn('unit', function ($roomAttribute) {
+                return RoomAttribute::listUnits()[$roomAttribute->unit] ?? '';
             })
-            ->addColumn('member', function ($booking) {
-                return $booking->member ? $booking->member->name : '';
+            ->editColumn('created_at', function ($roomAttribute) {
+                return $roomAttribute->created_at ? $roomAttribute->created_at->diffForHumans() : '';
             })
-            ->editColumn('start_date', function ($booking) {
-                return $booking->start_date ? $booking->created_at->format('Y-m-d h:i A') : '';
+            ->editColumn('updated_at', function ($roomAttribute) {
+                return $roomAttribute->updated_at ? $roomAttribute->updated_at->diffForHumans() : '';
             })
-            ->editColumn('end_date', function ($booking) {
-                return $booking->end_date ? $booking->created_at->format('Y-m-d h:i A') : '';
-            })
-            ->editColumn('status', function ($booking) {
-                return $booking->status_name;
-            })
-            ->editColumn('created_at', function ($booking) {
-                return $booking->created_at ? $booking->created_at->diffForHumans() : '';
-            })
-            ->editColumn('updated_at', function ($booking) {
-                return $booking->updated_at ? $booking->updated_at->diffForHumans() : '';
-            })
-            ->addColumn('action', function ($booking) {
+            ->addColumn('action', function ($roomAttribute) {
                 return '
                 <div class="btn-group btn-group-sm">
-                <a class="btn btn-success" href="' . route('admin.bookings.edit', $booking->id) . '">Edit</a>
-                <a class="btn btn-danger delete-swal" data-id="' . $booking->id . '">Delete</a>
+                <a class="btn btn-success" href="' . route('admin.room-attribute.edit', $roomAttribute->id) . '">Edit</a>
+                <a class="btn btn-danger delete-swal" data-id="' . $roomAttribute->id . '">Delete</a>
                 </div>';
             });
     }
@@ -56,10 +44,10 @@ class BookingsDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param Booking $model
+     * @param RoomAttribute $model
      * @return Builder
      */
-    public function query(Booking $model)
+    public function query(RoomAttribute $model)
     {
         return $model->newQuery();
     }
@@ -72,18 +60,17 @@ class BookingsDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('bookings-table')
+            ->setTableId('room-attribute-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('Bfrtip')
-            ->orderBy(0)
+            ->orderBy(1)
             ->buttons(
                 Button::make('create'),
                 Button::make('export'),
                 Button::make('print'),
                 Button::make('reset'),
-                Button::make('reload'),
-                Button::make('create')->action("window.location = '" . route('admin.room-attribute.index') . "';")->text(__('Room Attributes'))
+                Button::make('reload')
             );
     }
 
@@ -96,12 +83,9 @@ class BookingsDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('room'),
-            Column::make('member'),
-            Column::make('start_date'),
-            Column::make('end_date'),
+            Column::make('name'),
+            Column::make('unit'),
             Column::make('price'),
-            Column::make('status'),
             Column::make('created_at'),
             Column::make('updated_at'),
             Column::computed('action')
@@ -119,6 +103,6 @@ class BookingsDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Bookings_' . date('YmdHis');
+        return 'RoomAttribute_' . date('YmdHis');
     }
 }
