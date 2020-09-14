@@ -6,7 +6,7 @@ extend type Query @guard {
 
     searchRoom(
         types: [ID], @rulesForArray(apply: ["exists:room_types,id"])
-        seats: Int!, @rules(apply: ["integer"])
+        seats: Int, @rules(apply: ["integer"])
         facilities: [ID], @rulesForArray(apply: ["exists:room_facilities,id"])
         start: DateTimeOrDate,
         end: DateTimeOrDate

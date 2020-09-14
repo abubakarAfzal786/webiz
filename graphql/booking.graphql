@@ -12,6 +12,7 @@ type Booking {
     end_date: DateTimeOrDate!
     created_at: DateTime!
     updated_at: DateTime!
+    price: Float!
     room_attributes: [RoomAttribute] @belongsToMany
 }
 

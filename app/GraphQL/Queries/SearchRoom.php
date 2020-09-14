@@ -16,7 +16,7 @@ class SearchRoom
     public function __invoke($_, array $args)
     {
         $types = $args['types'] ?? null;
-        $seats = $args['seats'];
+        $seats = $args['seats'] ?? 0;
         $facilities = $args['facilities'] ?? [];
         $start = $args['start'] ?? null;
         $end = $args['end'] ?? null;

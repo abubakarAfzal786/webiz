@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @push('header-post-scripts')
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key="{{ config('app.google_maps_api_key') }}></script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key={{ config('app.google_maps_api_key') }}&libraries=places"></script>
 @endpush
 
 @section('content')
@@ -157,10 +158,8 @@
                             </div>
                         </div>
 
-                        <input type="hidden" name="lat">
-                        <input type="hidden" name="lon">
-
-                        {{--                        TODO implement autocomplete with google --}}
+                        <input type="hidden" name="lat" id="lat">
+                        <input type="hidden" name="lon" id="lon">
 
                         <div class="form-group row">
                             <div class="col-sm-10">
@@ -178,12 +177,14 @@
 @push('scripts')
     <script>
         $(function () {
-            function initialize() {
-                let input = document.getElementById('location');
-                new google.maps.places.Autocomplete(input);
-            }
+            let autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));
 
-            google.maps.event.addDomListener(window, 'load', initialize);
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var place = autocomplete.getPlace();
+
+                $('#lat').val(place.geometry.location.lat());
+                $('#lon').val(place.geometry.location.lng());
+            });
         });
     </script>
 @endpush
