@@ -35,6 +35,7 @@ class Room extends Model
     protected $appends = [
         'average_rate',
         'rates_count',
+        'is_favorite',
     ];
 
     protected $casts = [
@@ -132,5 +133,15 @@ class Room extends Model
     public function getRatesCountAttribute()
     {
         return $this->reviews()->count();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsFavoriteAttribute()
+    {
+        /** @var Member|User $user */
+        $user = auth()->user();
+        return $user->favorite_rooms ? in_array($this->id, $user->favorite_rooms()->get()->pluck('id')->toArray()) : false;
     }
 }

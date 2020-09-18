@@ -3,6 +3,7 @@ extend type Query @guard {
     room(id: ID @eq): Room @find
     roomTypes(orderBy: [SortOption!]! @orderBy): [RoomType!]! @all
     roomFacilities(orderBy: [SortOption!]! @orderBy): [RoomFacility!]! @all
+    favoriteRooms: [Room]!
 
     searchRoom(
         types: [ID], @rulesForArray(apply: ["exists:room_types,id"])
@@ -23,8 +24,10 @@ type Room {
     status: Boolean!
     average_rate: Float!
     rates_count: Int!
+    is_favorite: Boolean!
     type: RoomType! @belongsTo
     facilities: [RoomFacility]! @hasMany
+    reviews: [Review]! @hasMany
     main_image: Image @morphOne
     images: [Image]! @morphMany
     created_at: DateTime!
@@ -44,4 +47,10 @@ type RoomType {
 
 type SearchRoomResponse {
     success: Boolean!
+}
+
+extend type Mutation @guard {
+    makeRoomFavorite(
+        id: ID!, @rules(apply: ["exists:rooms,id"]),
+    ): Room
 }

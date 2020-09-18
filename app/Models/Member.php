@@ -7,6 +7,7 @@ use App\User;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -24,6 +25,10 @@ class Member extends Authenticatable implements JWTSubject
         'status',
         'balance',
         'user_id',
+    ];
+
+    protected $appends = [
+        'favorites_count',
     ];
 
     /**
@@ -104,6 +109,22 @@ class Member extends Authenticatable implements JWTSubject
     public function reviews()
     {
         return $this->hasMany(Review::class, 'member_id', 'id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function favorite_rooms()
+    {
+        return $this->belongsToMany(Room::class, 'member_room_favorite_pivot', 'member_id', 'room_id');
+    }
+
+    /**
+     * @return int
+     */
+    public function getFavoritesCountAttribute()
+    {
+        return $this->favorite_rooms()->count();
     }
 
 }

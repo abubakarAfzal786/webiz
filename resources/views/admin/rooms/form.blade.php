@@ -147,7 +147,7 @@
                             <div class="col-sm-10">
                                 @isset($room)
                                     @foreach($room->images as $photo)
-                                        <img class="img-thumbnail" src="{{ $photo->url }}" alt="">
+                                        <img class="img-thumbnail p-1 col-md-3 col-sm-6" src="{{ $photo->url }}" alt="">
                                     @endforeach
                                 @endisset
                                 <input type="file" class="form-control mt-2 p-1" name="images[]" placeholder="images"

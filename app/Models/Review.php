@@ -14,6 +14,10 @@ class Review extends Model
         'rate',
     ];
 
+    protected $appends = [
+        'member_name'
+    ];
+
     protected $casts = [
         'rate' => 'float',
     ];
@@ -32,5 +36,13 @@ class Review extends Model
     public function member()
     {
         return $this->belongsTo(Member::class, 'member_id', 'id');
+    }
+
+    /**
+     * @return string
+     */
+    public function getMemberNameAttribute()
+    {
+        return $this->member ? $this->member->name : '';
     }
 }

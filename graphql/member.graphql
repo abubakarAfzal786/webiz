@@ -10,6 +10,7 @@ type Member {
     phone: String!
     status: Boolean!
     balance: Float!
+    favorites_count: Int!
     created_at: DateTime!
     updated_at: DateTime!
 }
