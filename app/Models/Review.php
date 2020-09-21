@@ -15,7 +15,9 @@ class Review extends Model
     ];
 
     protected $appends = [
-        'member_name'
+        'member_name',
+        'member_avatar_url',
+        'room_name',
     ];
 
     protected $casts = [
@@ -44,5 +46,21 @@ class Review extends Model
     public function getMemberNameAttribute()
     {
         return $this->member ? $this->member->name : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getMemberAvatarUrlAttribute()
+    {
+        return $this->member ? $this->member->avatar_url : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getRoomNameAttribute()
+    {
+        return $this->room ? $this->room->name : '';
     }
 }

@@ -25,10 +25,17 @@ class Member extends Authenticatable implements JWTSubject
         'status',
         'balance',
         'user_id',
+        'car_number',
+        'password',
     ];
 
     protected $appends = [
         'favorites_count',
+        'avatar_url',
+    ];
+
+    protected $hidden = [
+        'password',
     ];
 
     /**
@@ -82,7 +89,7 @@ class Member extends Authenticatable implements JWTSubject
     /**
      * @return MorphOne
      */
-    public function main_image()
+    public function avatar()
     {
         return $this->morphOne(Image::class, 'imageable')->where('main', true);
     }
@@ -125,6 +132,14 @@ class Member extends Authenticatable implements JWTSubject
     public function getFavoritesCountAttribute()
     {
         return $this->favorite_rooms()->count();
+    }
+
+    /**
+     * @return string
+     */
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar ? $this->avatar->url : '';
     }
 
 }

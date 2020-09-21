@@ -1,15 +1,20 @@
 extend type Query @guard {
-    reviews: [Review!]! @paginate(defaultCount: 10)
-    review(id: ID @eq): Review @find
+    reviews: [Review]!
+    review(id: ID!): Review
+#    reviews: [Review!]! @paginate(defaultCount: 10)
+#    review(id: ID @eq): Review @find
 }
 
 type Review {
     id: ID!
     room_id: Int!
+    room_name: String!
     member_id: Int!
     member_name: String!
+    member_avatar_url: String!
     description: String!
     rate: Float!
+    room: Room! @belongsTo
     created_at: DateTime!
     updated_at: DateTime!
 }

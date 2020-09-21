@@ -4,7 +4,7 @@ namespace App\GraphQL\Queries;
 
 use Illuminate\Support\Collection;
 
-class FavoriteRooms
+class Reviews
 {
     /**
      * @param  null $_
@@ -13,8 +13,8 @@ class FavoriteRooms
      */
     public function __invoke($_, array $args)
     {
-        /** @var Collection $favorite_rooms */
-        $favorite_rooms = auth()->user()->favorite_rooms;
-        return $favorite_rooms ? $favorite_rooms->sortBy('created_at', SORT_DESC) : [];
+        /** @var Collection $reviews */
+        $reviews = auth()->user()->reviews;
+        return $reviews ? $reviews->sortBy('created_at', SORT_DESC) : [];
     }
 }

@@ -48,7 +48,6 @@ enum SortOrder {
 }
 
 #import image.graphql
-#import user.graphql
 #import member.graphql
 #import room.graphql
 #import review.graphql
