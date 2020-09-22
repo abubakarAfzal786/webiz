@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\DataTables\MembersDataTable;
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\ImageUploadHelper;
 use App\Http\Requests\StoreMemberRequest;
 use App\Models\Member;
 use Exception;
@@ -17,6 +18,8 @@ use Illuminate\View\View;
 
 class MemberController extends Controller
 {
+    use ImageUploadHelper;
+
     /**
      * Display a listing of the resource.
      *
@@ -46,7 +49,21 @@ class MemberController extends Controller
     public function store(StoreMemberRequest $request)
     {
         $request->merge(['user_id' => Auth::id()]);
-        Member::query()->create($request->except('_token'));
+        if (isset($request['password'])) $request['password'] = bcrypt($request['password']);
+        /** @var Member $member */
+        $member = Member::query()->create($request->except('_token'));
+
+        $avatar = $request->file('avatar');
+        if ($avatar) {
+            $path = $this->uploadImage($avatar);
+            if ($path) {
+                $member->avatar()->create([
+                    'path' => $path,
+                    'size' => $avatar->getSize(),
+                    'main' => true,
+                ]);
+            }
+        }
 
         return redirect()->route('admin.members.index')->with([
             'message' => __('Member successfully created.'),
@@ -74,7 +91,21 @@ class MemberController extends Controller
      */
     public function update(StoreMemberRequest $request, Member $member)
     {
+        if (isset($request['password'])) $request['password'] = bcrypt($request['password']);
         $member->update($request->except('_token', '_method'));
+
+        $avatar = $request->file('avatar');
+        if ($avatar) {
+            $path = $this->uploadImage($avatar);
+            if ($path) {
+                $member->avatar()->delete();
+                $member->avatar()->create([
+                    'path' => $path,
+                    'size' => $avatar->getSize(),
+                    'main' => true,
+                ]);
+            }
+        }
 
         return redirect()->route('admin.members.index')->with([
             'message' => __('Member successfully updated.'),

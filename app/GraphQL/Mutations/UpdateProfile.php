@@ -36,8 +36,8 @@ class UpdateProfile
         if ($avatar) {
             $path = $this->uploadImage($avatar);
             if ($path) {
-                $member->images()->where('main', true)->delete();
-                $member->images()->create([
+                $member->avatar()->delete();
+                $member->avatar()->create([
                     'path' => $path,
                     'size' => $avatar->getSize(),
                     'main' => true,
