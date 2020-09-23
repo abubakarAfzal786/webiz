@@ -16,6 +16,8 @@ type Member {
     favorites_count: Int!
     created_at: DateTime!
     updated_at: DateTime!
+    reviews: [Review]! @hasMany
+    bookings: [Booking]! @hasMany
 }
 
 extend type Mutation @guard {

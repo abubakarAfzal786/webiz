@@ -30,6 +30,7 @@ type Room {
     reviews: [Review]! @hasMany
     main_image: Image @morphOne
     images: [Image]! @morphMany
+    bookings: [Booking]! @hasMany
     created_at: DateTime!
     updated_at: DateTime!
 }

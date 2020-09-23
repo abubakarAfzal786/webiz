@@ -10,6 +10,7 @@ class Review extends Model
     protected $fillable = [
         'room_id',
         'member_id',
+        'booking_id',
         'description',
         'rate',
     ];
@@ -18,6 +19,8 @@ class Review extends Model
         'member_name',
         'member_avatar_url',
         'room_name',
+        'date_from',
+        'date_to',
     ];
 
     protected $casts = [
@@ -38,6 +41,14 @@ class Review extends Model
     public function member()
     {
         return $this->belongsTo(Member::class, 'member_id', 'id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class, 'booking_id', 'id');
     }
 
     /**
@@ -62,5 +73,21 @@ class Review extends Model
     public function getRoomNameAttribute()
     {
         return $this->room ? $this->room->name : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateFromAttribute()
+    {
+        return $this->booking ? $this->booking->start_date : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateToAttribute()
+    {
+        return $this->booking ? $this->booking->end_date : '';
     }
 }

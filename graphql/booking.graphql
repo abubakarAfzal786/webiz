@@ -14,6 +14,7 @@ type Booking {
     updated_at: DateTime!
     price: Float!
     room_attributes: [RoomAttribute] @belongsToMany
+    reviews: [Review]! @hasMany
 }
 
 extend type Mutation @guard {

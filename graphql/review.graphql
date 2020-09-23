@@ -12,9 +12,12 @@ type Review {
     member_id: Int!
     member_name: String!
     member_avatar_url: String!
+    date_from: DateTime!
+    date_to: DateTime!
     description: String!
     rate: Float!
     room: Room! @belongsTo
+    booking: Booking! @belongsTo
     created_at: DateTime!
     updated_at: DateTime!
 }
@@ -22,15 +25,13 @@ type Review {
 extend type Mutation @guard {
     createReview(
         room_id: ID!, @rules(apply: ["exists:rooms,id"]),
-        member_id: ID!, @rules(apply: ["exists:members,id"]),
+        booking_id: ID!, @rules(apply: ["exists:bookings,id"]),
         description: String!
         rate: Float!, @rules(apply: ["between:0,5"])
     ): Review
 
     updateReview(
         id: ID! @rules(apply: ["exists:reviews,id"]),
-        room_id: ID!, @rules(apply: ["exists:rooms,id"]),
-        member_id: ID!, @rules(apply: ["exists:members,id"]),
         description: String!
         rate: Float! @rules(apply: ["numeric", "between:0,5"])
     ): Review
