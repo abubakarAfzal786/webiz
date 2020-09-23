@@ -36,9 +36,10 @@
                     </label>
                     <div class="btn">
                         <button type="submit">{{ __('Login') }}</button>
-
-                        <a href="javascript:void(0)">{{ __('Remember password') }}</a>
-                        {{--TODO remember me - checkbox--}}
+                        <label>
+                            <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                            <span>{{ __('Remember password') }}</span>
+                        </label>
                         {{--TODO forgot you password--}}
                     </div>
                 </form>
