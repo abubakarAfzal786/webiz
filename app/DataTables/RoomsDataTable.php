@@ -91,14 +91,14 @@ class RoomsDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('id'),
+//            Column::make('id'),
             Column::make('name'),
             Column::make('price'),
+            Column::make('images'),
             Column::make('seats'),
-            Column::make('location'),
             Column::make('status'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
+//            Column::make('created_at'),
+//            Column::make('updated_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

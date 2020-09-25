@@ -124,7 +124,7 @@ class Room extends Model
      */
     public function getAverageRateAttribute()
     {
-        $reviews = $this->reviews->pluck('rate')->toArray();
+        $reviews = $this->reviews()->get()->pluck('rate')->toArray();
         return $reviews ? number_format(array_sum($reviews) / count($reviews), 2) : 0;
     }
 
