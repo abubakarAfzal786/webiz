@@ -61,17 +61,17 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label" for="car_number">{{ __('Car Number') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" id="car_number" type="text"
-                                       placeholder="{{ __('Car Number') }}" name="car_number"
-                                       value="{{ old('car_number', isset($member) ? $member->car_number : null) }}">
-                                @error('car_number')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
+                        {{--<div class="form-group row">--}}
+                            {{--<label class="col-sm-2 col-form-label" for="car_number">{{ __('Car Number') }}</label>--}}
+                            {{--<div class="col-sm-10">--}}
+                                {{--<input class="form-control" id="car_number" type="text"--}}
+                                       {{--placeholder="{{ __('Car Number') }}" name="car_number"--}}
+                                       {{--value="{{ old('car_number', isset($member) ? $member->car_number : null) }}">--}}
+                                {{--@error('car_number')--}}
+                                {{--<div class="invalid-feedback d-block">{{ $message }}</div>--}}
+                                {{--@enderror--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label" for="password">{{ __('Password') }}</label>

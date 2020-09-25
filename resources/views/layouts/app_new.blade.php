@@ -14,9 +14,9 @@
     @stack('header-pre-scripts')
     <link rel="stylesheet" href="{{ asset('css/bundle.css') }}" type="text/css"/>
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"/>
-    <link rel="stylesheet" href="//cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.css"/>
-    <link rel="stylesheet" href="//cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+    {{--<link rel="stylesheet" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"/>--}}
+    {{--<link rel="stylesheet" href="//cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.css"/>--}}
+    {{--<link rel="stylesheet" href="//cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">--}}
     @stack('header-post-scripts')
 
     <link rel="apple-touch-icon-precomposed" sizes="57x57"
@@ -61,7 +61,10 @@
 <body>
 @if(!request()->is('login'))
     @include('partials.header')
-    @include('partials.toolbar', ['toolbar_menu_items' => $toolbar_menu_items ?? []])
+    @include('partials.toolbar', [
+    'toolbar_menu_items' => $toolbar_menu_items ?? [],
+    'toolbar_options' => $toolbar_options ?? [],
+    ])
 
     <div class="page-menu">
         <div class="container">
@@ -82,7 +85,7 @@
 <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
 <script src="{{ asset('js/libs.js') }}"></script>
 <script src="{{ asset('js/common.js') }}"></script>
-<script src="{{ asset('js/ajaxSetup.js') }}"></script>
+<script src="{{ asset('js/initial.js') }}"></script>
 <script src="//cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.js"></script>
 <script src="//cdn.datatables.net/buttons/1.6.3/js/dataTables.buttons.min.js"></script>
 <script src="{{ asset('vendor/datatables/buttons.server-side.js') }}"></script>

@@ -1,6 +1,8 @@
 extend type Query @guard {
-    bookings: [Booking!]! @paginate(defaultCount: 10)
-    booking(id: ID @eq): Booking @find
+    bookings: [Booking]!
+    booking(id: ID!): Booking
+#    bookings: [Booking!]! @paginate(defaultCount: 10)
+#    booking(id: ID @eq): Booking @find
     roomAttributes(orderBy: [SortOption!]! @orderBy): [RoomAttribute!]! @all
 }
 
@@ -15,6 +17,7 @@ type Booking {
     price: Float!
     room_attributes: [RoomAttribute] @belongsToMany
     reviews: [Review]! @hasMany
+    room: Room! @belongsTo
 }
 
 extend type Mutation @guard {

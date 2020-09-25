@@ -25,11 +25,19 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return JsonResponse|Response
      */
-    public function index(RoomsDataTable $dataTable)
+    public function index(Request $request, RoomsDataTable $dataTable)
     {
-        return $dataTable->render('admin.rooms.index');
+        /** @var Room}Collection $data */
+        $data = Room::all();
+        $rooms_count = $data->count();
+
+        if ($request->ajax()) {
+            return $dataTable->ajax();
+        }
+
+        return view('admin.rooms.test', compact('rooms_count'));
     }
 
     /**

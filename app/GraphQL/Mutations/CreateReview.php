@@ -30,8 +30,6 @@ class CreateReview
             return $review;
         }
 
-        $member->reviews()->create($args);
-
-        return Review::query()->create($args);
+        return $member->reviews()->create($args);
     }
 }

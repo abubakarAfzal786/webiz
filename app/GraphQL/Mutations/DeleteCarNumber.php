@@ -2,16 +2,16 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Models\CarNumber;
 use App\Models\Member;
-use App\Models\Review;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class DeleteReview
+class DeleteCarNumber
 {
     /**
-     * @param null $_
-     * @param array <string, mixed> $args
+     * @param  null $_
+     * @param  array <string, mixed>  $args
      * @return bool
      */
     public function __invoke($_, array $args)
@@ -19,11 +19,11 @@ class DeleteReview
         /** @var Member $member */
         $member = auth()->user();
 
-        /** @var Review $review */
-        $review = $member->reviews()->findOrFail($args['id']);
+        /** @var CarNumber $number */
+        $number = $member->car_numbers()->findOrFail($args['id']);
 
         try {
-            $review->delete();
+            $number->delete();
             return true;
         } catch (Exception $e) {
             Log::error($e);

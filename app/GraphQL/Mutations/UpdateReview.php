@@ -18,7 +18,7 @@ class UpdateReview
         $member = auth()->user();
 
         /** @var Review $review */
-        $member->reviews()->findOrFail($args['id']);
+        $review = $member->reviews()->findOrFail($args['id']);
 
         unset($args['id']);
 

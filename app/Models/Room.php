@@ -57,9 +57,10 @@ class Room extends Model
 
     protected static function booted()
     {
-        static::addGlobalScope('active', function (Builder $builder) {
-            $builder->where('status', true);
-        });
+//        static::addGlobalScope('active', function (Builder $builder) {
+//            $builder->where('status', true);
+//        });
+//        TODO check this
     }
 
     /**

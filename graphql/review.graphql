@@ -10,6 +10,7 @@ type Review {
     room_id: Int!
     room_name: String!
     member_id: Int!
+    booking_id: Int!
     member_name: String!
     member_avatar_url: String!
     date_from: DateTime!

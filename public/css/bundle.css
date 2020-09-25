@@ -797,14 +797,17 @@ html {
 
 @media (min-width: 992px) {
   .container {
-    max-width: 991px;
+    /*max-width: 991px;*/
+    max-width: 100%;
     padding-right: 21px;
     padding-left: 21px; } }
 
-@media (min-width: 1200px) {
+/*@media (min-width: 1200px) {
   .container {
-    max-width: 1366px; } }
-
+    max-width: 1366px;
+  }
+}
+*/
 .row {
   display: -ms-flexbox;
   display: -webkit-box;

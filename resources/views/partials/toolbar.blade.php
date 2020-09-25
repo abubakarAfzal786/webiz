@@ -18,6 +18,9 @@
                             @endforeach
                         </ul>
                     </div>
+                    <div class="toolbar-options">
+                        @stack('toolbar-options')
+                    </div>
                 </div>
             </div>
         </div>

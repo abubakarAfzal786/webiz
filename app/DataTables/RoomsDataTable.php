@@ -24,22 +24,28 @@ class RoomsDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->editColumn('status', function ($room) {
-                return $room->status ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Block</span>';
+                return $room->status ?
+                    '<div class="status"><p style="background: #0A8FEF;">' . __('Active') . '</p></div>' :
+                    '<div class="status"><p style="background: #FF5260;">' . __('Block') . '</p></div>';
             })
-            ->editColumn('created_at', function ($room) {
-                return $room->created_at ? $room->created_at->diffForHumans() : '';
-            })
-            ->editColumn('updated_at', function ($room) {
-                return $room->updated_at ? $room->updated_at->diffForHumans() : '';
+            ->addColumn('images', function ($room) {
+                $imagesHTML = '';
+                $images = $room->images;
+                $count = count($images);
+                if ($count) {
+                    for ($i = 0; $i < ($count < 2 ? $count : 2); $i++) {
+                        $imagesHTML .= '<div class="item"><span class="photo"><img src="' . $images[$i]->url . '" alt=""></span></div>';
+                    }
+                    if ($count > 2) $imagesHTML .= '<div class="item"><p>' . ($count - 2) . '+</p></div>';
+                }
+
+                return '<div class="photo-preview">' . $imagesHTML . '</div>';
             })
             ->addColumn('action', function ($room) {
-                return '
-                <div class="btn-group btn-group-sm">
-                <a class="btn btn-success" href="' . route('admin.rooms.edit', $room->id) . '">Edit</a>
-                <a class="btn btn-danger delete-swal" data-id="' . $room->id . '">Delete</a>
-                </div>';
+                return '<div class="action"><a href="' . route('admin.rooms.edit', $room->id) . '" class="main-btn yellow">' . __('Edit') . '</a></div>';
+//                <a class="btn btn-danger delete-swal" data-id="' . $room->id . '">Delete</a>
             })
-            ->rawColumns(['status', 'action']);
+            ->rawColumns(['status', 'images', 'action']);
     }
 
     /**

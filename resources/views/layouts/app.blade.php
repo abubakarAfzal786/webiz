@@ -107,7 +107,7 @@
 
 </div>
 <script src="{{ asset('js/app.js') }}"></script>
-<script src="{{ asset('js/ajaxSetup.js') }}"></script>
+<script src="{{ asset('js/initial.js') }}"></script>
 <script src="//cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.js"></script>
 <script src="//cdn.datatables.net/buttons/1.6.3/js/dataTables.buttons.min.js"></script>
 <script src="{{ asset('vendor/datatables/buttons.server-side.js') }}"></script>

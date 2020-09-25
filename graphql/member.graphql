@@ -11,6 +11,7 @@ type Member {
     status: Boolean!
     balance: Float!
     car_number: String
+    car_numbers: [CarNumber]! @hasMany
     avatar: Image @morphOne
     avatar_url: String
     favorites_count: Int!
@@ -20,13 +21,33 @@ type Member {
     bookings: [Booking]! @hasMany
 }
 
+type CarNumber {
+    member_id: ID!
+    number: String!
+    default: Boolean
+    member: Member @belongsTo
+}
+
 extend type Mutation @guard {
     updateProfile(
         name: String!, @rules(apply: ["string", "min:2", "max:191"]),
         email: String!, @rules(apply: ["email"]),
         phone: String, @rules(apply: ["integer", "regex:/^\\+[1-9]\\d{1,14}$/"]),
         password: String, @rules(apply: ["string", "min:2", "max:191"]),
-        car_number: String, @rules(apply: ["string", "min:2", "max:191"]),
+        #        car_number: String, @rules(apply: ["string", "min:2", "max:191"]),
         avatar: Upload, @rules(apply: ["image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"]),
     ): Member
+
+    createCarNumber(
+        number: String!
+        #        default: Boolean!
+    ): CarNumber
+
+    setDefaultCarNumber(
+        id: ID!, @rules(apply: ["exists:car_numbers,id"]),
+    ): CarNumber
+
+    deleteCarNumber(
+        id: ID! @rules(apply: ["exists:car_numbers,id"])
+    ): Boolean
 }

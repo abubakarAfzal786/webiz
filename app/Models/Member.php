@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -25,13 +26,13 @@ class Member extends Authenticatable implements JWTSubject
         'status',
         'balance',
         'user_id',
-        'car_number',
         'password',
     ];
 
     protected $appends = [
         'favorites_count',
         'avatar_url',
+        'car_number',
     ];
 
     protected $hidden = [
@@ -140,6 +141,30 @@ class Member extends Authenticatable implements JWTSubject
     public function getAvatarUrlAttribute()
     {
         return $this->avatar ? $this->avatar->url : '';
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function car_numbers()
+    {
+        return $this->hasMany(CarNumber::class, 'member_id', 'id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function car_number_default()
+    {
+        return $this->hasOne(CarNumber::class, 'member_id', 'id')->where('default', true);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCarNumberAttribute()
+    {
+        return $this->car_number_default ? $this->car_number_default->number: '';
     }
 
 }
