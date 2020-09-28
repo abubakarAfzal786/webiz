@@ -12,7 +12,7 @@
                         </div>
                         <ul>
                             @foreach($toolbar_menu_items as $item)
-                                <li class="active">
+                                <li class="{{ isset($item['active']) && $item['active'] ? 'active' : '' }}">
                                     <a href="{{ $item['href'] ?? 'javascript:void(0)' }}">{{ $item['name'] ?? '' }}</a>
                                 </li>
                             @endforeach

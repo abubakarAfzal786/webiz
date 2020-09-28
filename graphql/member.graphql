@@ -7,9 +7,9 @@ type Member {
     id: ID!
     name: String!
     email: String!
-    phone: String!
-    status: Boolean!
-    balance: Float!
+    phone: String
+    status: Boolean
+    balance: Float
     car_number: String
     car_numbers: [CarNumber]! @hasMany
     avatar: Image @morphOne
@@ -36,7 +36,7 @@ extend type Mutation @guard {
         password: String, @rules(apply: ["string", "min:2", "max:191"]),
         #        car_number: String, @rules(apply: ["string", "min:2", "max:191"]),
         avatar: Upload, @rules(apply: ["image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"]),
-    ): Member
+    ): UpdateProfileResponse
 
     createCarNumber(
         number: String!
@@ -50,4 +50,10 @@ extend type Mutation @guard {
     deleteCarNumber(
         id: ID! @rules(apply: ["exists:car_numbers,id"])
     ): Boolean
+}
+
+type UpdateProfileResponse {
+    message: String
+    success: Boolean
+    user: Member
 }

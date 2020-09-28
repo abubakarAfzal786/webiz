@@ -24,22 +24,18 @@ class MembersDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->editColumn('status', function ($member) {
-                return $member->status ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Block</span>';
+                return $member->status ?
+                    '<div class="status"><p style="background: #0A8FEF;">' . __('Active') . '</p></div>' :
+                    '<div class="status"><p style="background: #FF5260;">' . __('Block') . '</p></div>';
             })
-            ->editColumn('created_at', function ($member) {
-                return $member->created_at ? $member->created_at->diffForHumans() : '';
-            })
-            ->editColumn('updated_at', function ($member) {
-                return $member->updated_at ? $member->updated_at->diffForHumans() : '';
+            ->addColumn('avatar', function ($member) {
+                return $member->avatar_url ? '<div class="member-img"><img src="' . $member->avatar_url . '" alt=""></div>' : '';
             })
             ->addColumn('action', function ($member) {
-                return '
-                <div class="btn-group btn-group-sm">
-                <a class="btn btn-success" href="' . route('admin.members.edit', $member->id) . '">Edit</a>
-                <a class="btn btn-danger delete-swal" data-id="' . $member->id . '">Delete</a>
-                </div>';
+                return '<div class="action"><a href="' . route('admin.members.edit', $member->id) . '" class="main-btn yellow">' . __('Edit & More') . '</a></div>';
+//                <a class="btn btn-danger delete-swal" data-id="' . $member->id . '">Delete</a>
             })
-            ->rawColumns(['status', 'action']);
+            ->rawColumns(['status', 'avatar', 'action']);
     }
 
     /**
@@ -83,14 +79,14 @@ class MembersDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('id'),
+//            Column::make('id'),
             Column::make('name'),
             Column::make('phone'),
             Column::make('email'),
             Column::make('status'),
-            Column::make('balance'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
+//            Column::make('balance'),
+//            Column::make('created_at'),
+//            Column::make('updated_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

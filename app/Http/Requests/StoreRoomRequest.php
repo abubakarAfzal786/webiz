@@ -37,6 +37,8 @@ class StoreRoomRequest extends FormRequest
             'images' => 'array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'type_id' => 'required|exists:room_types,id',
+            'wifi_ssid' => 'nullable|string|min:2|max:191',
+            'wifi_pass' => 'nullable|string|min:2|max:191',
         ];
 
         return $rules;

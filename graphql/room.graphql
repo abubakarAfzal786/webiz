@@ -33,6 +33,8 @@ type Room {
     bookings: [Booking]! @hasMany
     created_at: DateTime!
     updated_at: DateTime!
+    wifi_ssid: String
+    wifi_pass: String
 }
 
 type RoomFacility {

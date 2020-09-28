@@ -13,20 +13,23 @@ class UpdateProfile
     /**
      * @param  null $_
      * @param  array <string, mixed>  $args
-     * @return Member
+     * @return array
      */
     public function __invoke($_, array $args)
     {
         /** @var Member $member */
-//        $member = auth()->user();
-        $member = Member::query()->first();
+        $member = auth()->user();
 
-        // TODO implement email and phone unique validation
-//        $exist = Member::query()->where('id', '<>', $member->id)
-//            ->where(function (Builder $query) use ($args) {
-//                $query->where('email', $args['email'])->orWhere('phone', $args['phone']);
-//            })->exists();
-//        if ($exist) return null;
+        $exist = Member::query()->where('id', '<>', $member->id)
+            ->where(function (Builder $query) use ($args) {
+                $query->where('email', $args['email'])->orWhere('phone', $args['phone']);
+            })->exists();
+
+        if ($exist) return [
+            'message' => 'Email and phone number must be unique.',
+            'success' => false,
+            'user' => null,
+        ];
 
         if (isset($args['password'])) $args['password'] = bcrypt($args['password']);
 
@@ -45,6 +48,10 @@ class UpdateProfile
             }
         }
 
-        return $member;
+        return [
+            'message' => 'Successfully updated.',
+            'success' => true,
+            'user' => $member,
+        ];
     }
 }

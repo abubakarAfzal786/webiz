@@ -129,6 +129,30 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label" for="wifi_ssid">{{ __('Wi-Fi SSID') }}</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" id="wifi_ssid" type="text" placeholder="{{ __('Wi-Fi SSID') }}"
+                                       name="wifi_ssid"
+                                       value="{{ old('wifi_ssid', isset($room) ? $room->wifi_ssid : null) }}">
+                                @error('wifi_ssid')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label" for="wifi_pass">{{ __('Wi-Fi Password') }}</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" id="wifi_pass" type="text" placeholder="{{ __('Wi-Fi Password') }}"
+                                       name="wifi_pass"
+                                       value="{{ old('wifi_pass', isset($room) ? $room->wifi_pass : null) }}">
+                                @error('wifi_pass')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
                         @isset($room)
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="status">{{ __('Room Status') }}</label>

@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -23,11 +24,19 @@ class MemberController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return JsonResponse|Response
      */
-    public function index(MembersDataTable $dataTable)
+    public function index(Request $request, MembersDataTable $dataTable)
     {
-        return $dataTable->render('admin.members.index');
+        /** @var Member|Collection $data */
+        $data = Member::all();
+        $members_count = $data->count();
+
+        if ($request->ajax()) {
+            return $dataTable->ajax();
+        }
+
+        return view('admin.members.test', compact('members_count'));
     }
 
     /**

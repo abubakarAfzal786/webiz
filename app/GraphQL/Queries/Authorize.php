@@ -9,7 +9,8 @@ class Authorize
 {
     /**
      * @param null $_
-     * @param array<string, mixed> $args
+     * @param array <string, mixed> $args
+     * @return bool
      */
     public function __invoke($_, array $args)
     {
