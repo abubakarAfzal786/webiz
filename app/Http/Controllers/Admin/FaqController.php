@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\DataTables\FaqDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFaqRequest;
 use App\Models\Faq;
 use App\Models\FaqCategory;
 use Exception;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class FaqController extends Controller
@@ -19,11 +21,33 @@ class FaqController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return JsonResponse|Response
      */
-    public function index(FaqDataTable $dataTable)
+    public function index(Request $request)
     {
-        return $dataTable->render('admin.faq.index');
+        /** @var Faq|Collection $data */
+        $categories = FaqCategory::query()->pluck('name', 'id')->toArray();
+        $data = Faq::with('category')->orderBy('created_at', 'DESC')->get();
+        $faq_count = $data->count();
+
+        if ($request->ajax()) {
+            $search = $request->get('search');
+            $category_id = $request->get('category_id');
+
+            /** @var Builder $data */
+            $data = Faq::with('category');
+
+            if ($category_id) $data = $data->where('category_id', $category_id);
+            if ($search) $data = $data->where('question', 'like', '%' . $search . '%');
+
+            $data = $data->orderBy('created_at', 'DESC')->get();
+
+            $view = view('admin.faq._item', compact('data'))->render();
+
+            return response()->json(['html' => $view]);
+        }
+
+        return view('admin.faq.test', compact('data', 'faq_count', 'categories'));
     }
 
     /**

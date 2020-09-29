@@ -23,25 +23,41 @@ class ReviewsDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('room', function ($review) {
-                return $review->room ? $review->room->name : '';
+            ->addColumn('avatar', function ($review) {
+                return $review->member->avatar_url ? '<div class="member-img"><img src="' . $review->member->avatar_url . '" alt=""></div>' : '';
             })
-            ->addColumn('member', function ($review) {
+            ->addColumn('member_name', function ($review) {
                 return $review->member ? $review->member->name : '';
             })
-            ->editColumn('created_at', function ($review) {
+            ->addColumn('room_name', function ($review) {
+                return $review->room ? $review->room->name : '';
+            })
+            ->editColumn('rate', function ($review) {
+                $stars = '';
+                for ($i = 1; $i < round($review->rate); $i++) {
+                    $stars .= '<span class="icon-star"></span>';
+                }
+
+                for ($i = 1; $i <= round(5 - $review->rate); $i++) {
+                    $stars .= '<span class="icon-empty"></span>';
+                }
+
+                return '<div class="rating"><p>' . $stars . '</p></div>';
+            })
+            ->addColumn('date', function ($review) {
                 return $review->created_at ? $review->created_at->diffForHumans() : '';
             })
-            ->editColumn('updated_at', function ($review) {
-                return $review->updated_at ? $review->updated_at->diffForHumans() : '';
-            })
-            ->addColumn('action', function ($review) {
-                return '
-                <div class="btn-group btn-group-sm">
-                <a class="btn btn-success" href="' . route('admin.reviews.edit', $review->id) . '">Edit</a>
-                <a class="btn btn-danger delete-swal" data-id="' . $review->id . '">Delete</a>
-                </div>';
-            });
+            ->rawColumns(['avatar', 'rate']);
+//            ->editColumn('updated_at', function ($review) {
+//                return $review->updated_at ? $review->updated_at->diffForHumans() : '';
+//            })
+//            ->addColumn('action', function ($review) {
+//                return '
+//                <div class="btn-group btn-group-sm">
+//                <a class="btn btn-success" href="' . route('admin.reviews.edit', $review->id) . '">Edit</a>
+//                <a class="btn btn-danger delete-swal" data-id="' . $review->id . '">Delete</a>
+//                </div>';
+//            });
     }
 
     /**
@@ -52,7 +68,7 @@ class ReviewsDataTable extends DataTable
      */
     public function query(Review $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('member.avatar', 'room');
     }
 
     /**

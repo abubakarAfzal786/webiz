@@ -46,7 +46,7 @@ class MembersDataTable extends DataTable
      */
     public function query(Member $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('avatar');
     }
 
     /**

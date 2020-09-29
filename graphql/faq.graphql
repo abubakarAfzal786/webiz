@@ -1,0 +1,20 @@
+extend type Query @guard {
+    faqs(category_id: ID, orderBy: [SortOption!]! @orderBy): [Faq!]! @paginate(defaultCount: 10)
+    faq(id: ID @eq): Faq @find
+    faq_categories: [FaqCategory!]! @all
+}
+
+type Faq {
+    id: ID!
+    question: String!
+    answer: String!
+    category_id: ID!
+    category: FaqCategory! @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type FaqCategory {
+    id: ID!
+    name: String!
+}

@@ -58,3 +58,4 @@ enum SortOrder {
 #import room.graphql
 #import review.graphql
 #import booking.graphql
+#import faq.graphql

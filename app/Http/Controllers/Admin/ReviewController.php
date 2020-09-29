@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class ReviewController extends Controller
@@ -22,11 +23,19 @@ class ReviewController extends Controller
      * Display a listing of the resource.
      *
      * @param ReviewsDataTable $dataTable
-     * @return Response
+     * @return JsonResponse|Response
      */
-    public function index(ReviewsDataTable $dataTable)
+    public function index(Request $request, ReviewsDataTable $dataTable)
     {
-        return $dataTable->render('admin.reviews.index');
+        /** @var Review|Collection $data */
+        $data = Review::all();
+        $reviews_count = $data->count();
+
+        if ($request->ajax()) {
+            return $dataTable->ajax();
+        }
+
+        return view('admin.reviews.test', compact('reviews_count'));
     }
 
     /**

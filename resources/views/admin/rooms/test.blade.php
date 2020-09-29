@@ -1,5 +1,5 @@
 @extends('layouts.app_new', ['toolbar_menu_items' => [
-    ['name' => __('Rooms'), /*'href' => '/'*/],
+    ['name' => __('Rooms'), 'active' => true, /*'href' => '/'*/],
 ]])
 
 @push('toolbar-options')

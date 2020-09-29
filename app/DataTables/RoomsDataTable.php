@@ -56,7 +56,7 @@ class RoomsDataTable extends DataTable
      */
     public function query(Room $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('images');
     }
 
     /**

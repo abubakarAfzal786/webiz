@@ -5,23 +5,23 @@
     <div class="item-wrap">
         <div class="item">
             <ul>
-                <li class="active"><a href="{{ url('/') }}">{{ __('Dashboard') }}</a></li>
-                <li><a href="{{ route('admin.bookings.index') }}">{{ __('Bookings') }}</a><span>4</span></li>
-                <li><a href="{{ route('admin.members.index') }}">{{ __('Members') }}</a></li>
+                <li class="{{ request()->is(['dashboard']) ? 'active' : '' }}"><a href="{{ url('/') }}">{{ __('Dashboard') }}</a></li>
+                <li class="{{ request()->is(['dashboard/bookings', 'dashboard/bookings/*']) ? 'active' : '' }}"><a href="{{ route('admin.bookings.index') }}">{{ __('Bookings') }}</a></li>
+                <li class="{{ request()->is(['dashboard/members', 'dashboard/members/*']) ? 'active' : '' }}"><a href="{{ route('admin.members.index') }}">{{ __('Members') }}</a></li>
             </ul>
         </div>
         <div class="item">
-            <p>Support</p>
+            <p>{{ __('Support') }}</p>
             <ul>
                 <li><a href="javascript:void(0)">{{ __('Support Chat') }}</a><span>45</span></li>
-                <li><a href="{{ route('admin.faq.index') }}">{{ __('FAQ Base') }}</a></li>
+                <li class="{{ request()->is(['dashboard/faq', 'dashboard/faq/*']) ? 'active' : '' }}"><a href="{{ route('admin.faq.index') }}">{{ __('FAQ Base') }}</a></li>
             </ul>
         </div>
         <div class="item">
             <p>{{ __('Service Administration') }}</p>
             <ul>
-                <li><a href="{{ route('admin.rooms.index') }}">{{ __('Rooms') }}</a></li>
-                <li><a href="{{ route('admin.reviews.index') }}">{{ __('Reviews') }}</a></li>
+                <li class="{{ request()->is(['dashboard/rooms', 'dashboard/rooms/*']) ? 'active' : '' }}"><a href="{{ route('admin.rooms.index') }}">{{ __('Rooms') }}</a></li>
+                <li class="{{ request()->is(['dashboard/reviews', 'dashboard/reviews/*']) ? 'active' : '' }}"><a href="{{ route('admin.reviews.index') }}">{{ __('Reviews') }}</a></li>
                 <li><a href="javascript:void(0)">{{ __('Notifications') }}</a><span>10</span></li>
             </ul>
         </div>

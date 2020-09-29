@@ -1,21 +1,22 @@
 @extends('layouts.app_new', ['toolbar_menu_items' => [
     ['name' => __('Members'), 'active' => true /*'href' => '/'*/],
     ['name' => __('Managers'), 'active' => false /*'href' => '/'*/],
+    // TODO implement
 ]])
 
 @push('toolbar-options')
 <div class="item">
     <label class="select-field">
-        <span class="name">Filters:</span>
+        <span class="name">{{ __('Filters') }}:</span>
         <select>
-            <option>All</option>
-            <option>All</option>
-            <option>All</option>
+            <option>{{ __('All') }}</option>
+            {{--TODO add filters--}}
         </select>
     </label>
 </div>
 <div class="item">
-    <button type="button" class="main-btn gray-blank export-excel-button">EXPORT (EXCEL)</button>
+    <button type="button" class="main-btn gray-blank export-excel-button">{{ __('EXPORT (EXCEL)') }}</button>
+    {{--TODO implement functionality--}}
 </div>
 <div class="item left-border">
     <a href="{{ route('admin.members.create') }}" class="main-btn yellow-blank">{{ __('Add new member') }}</a>
