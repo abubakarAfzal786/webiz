@@ -2,8 +2,8 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Models\Booking;
 use App\Models\Member;
-use App\Models\Review;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,17 +19,19 @@ class CreateReview
         /** @var Member $member */
         $member = auth()->user();
 
-        $review = Review::query()
+        $review = $member->reviews()
             ->where('room_id', $args['room_id'])
             ->where('booking_id', $args['booking_id'])
-            ->where('member_id', $member->id)
             ->first();
+
+        $member->bookings()->find($args['booking_id'])->update(['status' => Booking::STATUS_COMPLETED]);
 
         if ($review) {
             $review->update($args);
-            return $review;
+        } else {
+            $review = $member->reviews()->create($args);
         }
 
-        return $member->reviews()->create($args);
+        return $review;
     }
 }

@@ -29,6 +29,7 @@ class Booking extends Model
 
     const STATUS_PENDING = 10;
     const STATUS_ACTIVE = 20;
+    const STATUS_COMPLETED = 30;
 
     const DATE_TIME_LOCAL = 'Y-m-d\TH:i';
 
@@ -37,6 +38,7 @@ class Booking extends Model
         return [
             self::STATUS_PENDING => __('Pending'),
             self::STATUS_ACTIVE => __('Active'),
+            self::STATUS_COMPLETED => __('Completed'),
         ];
     }
 
