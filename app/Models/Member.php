@@ -27,6 +27,7 @@ class Member extends Authenticatable implements JWTSubject
         'balance',
         'user_id',
         'password',
+        'mobile_token',
     ];
 
     protected $appends = [
@@ -74,9 +75,10 @@ class Member extends Authenticatable implements JWTSubject
 
     protected static function booted()
     {
-        static::addGlobalScope('active', function (Builder $builder) {
-            $builder->where('status', true);
-        });
+//        static::addGlobalScope('active', function (Builder $builder) {
+//            $builder->where('status', true);
+//        });
+//        TODO check this
     }
 
     /**
@@ -164,7 +166,15 @@ class Member extends Authenticatable implements JWTSubject
      */
     public function getCarNumberAttribute()
     {
-        return $this->car_number_default ? $this->car_number_default->number: '';
+        return $this->car_number_default ? $this->car_number_default->number : '';
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function push_notifications()
+    {
+        return $this->hasMany(PushNotification::class, 'member_id', 'id');
     }
 
 }

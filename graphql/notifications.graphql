@@ -1,0 +1,21 @@
+extend type Query @guard {
+    pushNotifications(seen: Boolean!): [PushNotification]!
+}
+
+type PushNotification {
+    id: ID!
+    title: String!
+    body: String!
+    seen: Boolean!
+    member_id: ID!
+    member: Member @belongsTo
+    images: [Image]! @morphMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+extend type Mutation @guard {
+    makeNotificationSeen(
+        id: ID!, @rules(apply: ["exists:push_notifications,id"]),
+    ): Boolean!
+}

@@ -105,6 +105,12 @@ return [
             'path' => storage_path('logs/twilio.log'),
             'level' => 'debug',
         ],
+
+        'push' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/push.log'),
+            'level' => 'debug',
+        ],
     ],
 
 ];

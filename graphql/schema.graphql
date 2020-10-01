@@ -27,7 +27,7 @@ type Mutation {
         password: String, @rules(apply: ["string", "min:2", "max:191"]),
         password_confirmation: String, @rules(apply: ["string", "min:2", "max:191", "same:password"]),
     ): VerifyResponse
-    upload(file: Upload!): String
+    updateToken(token: String!): Boolean! @guard
 }
 
 type AuthResponse {
@@ -59,3 +59,4 @@ enum SortOrder {
 #import review.graphql
 #import booking.graphql
 #import faq.graphql
+#import notifications.graphql
