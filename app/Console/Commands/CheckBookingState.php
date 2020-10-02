@@ -47,6 +47,7 @@ class CheckBookingState extends Command
         $bookings = Booking::query()
             ->with(['member', 'room'])
             ->where(DB::raw('DATE(start_date)'), '=', $today)
+            ->where('status', '<>', Booking::STATUS_COMPLETED)
             ->get();
 
         foreach ($bookings as $booking) {
