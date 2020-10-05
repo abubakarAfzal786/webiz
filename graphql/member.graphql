@@ -22,9 +22,11 @@ type Member {
 }
 
 type CarNumber {
+    id: ID!
     member_id: ID!
     number: String!
     default: Boolean
+    label: String
     member: Member @belongsTo
 }
 
@@ -40,6 +42,7 @@ extend type Mutation @guard {
 
     createCarNumber(
         number: String!
+        label: String!
         #        default: Boolean!
     ): CarNumber
 

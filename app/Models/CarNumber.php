@@ -11,6 +11,7 @@ class CarNumber extends Model
         'member_id',
         'number',
         'default',
+        'label',
     ];
 
     protected $casts = [
