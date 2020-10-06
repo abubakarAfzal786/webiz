@@ -80,7 +80,7 @@ class Review extends Model
      */
     public function getDateFromAttribute()
     {
-        return $this->booking ? $this->booking->start_date : '';
+        return $this->booking ? $this->booking->start_date : null;
     }
 
     /**
@@ -88,6 +88,6 @@ class Review extends Model
      */
     public function getDateToAttribute()
     {
-        return $this->booking ? $this->booking->end_date : '';
+        return $this->booking ? $this->booking->end_date : null;
     }
 }
