@@ -60,3 +60,4 @@ enum SortOrder {
 #import booking.graphql
 #import faq.graphql
 #import notifications.graphql
+#import team.graphql

@@ -17,7 +17,7 @@ type Booking {
     price: Float!
     status: Int!
     status_name: String
-    room_attributes: [RoomAttribute] @belongsToMany
+    room_attributes: [RoomAttribute]! @belongsToMany
     reviews: [Review]! @hasMany
     room: Room! @belongsTo
 }

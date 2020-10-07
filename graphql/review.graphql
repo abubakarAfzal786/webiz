@@ -18,7 +18,7 @@ type Review {
     description: String!
     rate: Float!
     room: Room! @belongsTo
-    booking: Booking! @belongsTo
+    booking: Booking @belongsTo
     created_at: DateTime!
     updated_at: DateTime!
 }

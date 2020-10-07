@@ -1,8 +1,8 @@
 extend type Query @guard {
-    rooms(orderBy: [SortOption!]! @orderBy): [Room!]! @paginate(defaultCount: 10)
+    rooms(orderBy: [SortOption!]! @orderBy): [Room]! @paginate(defaultCount: 10)
     room(id: ID @eq): Room @find
-    roomTypes(orderBy: [SortOption!]! @orderBy): [RoomType!]! @all
-    roomFacilities(orderBy: [SortOption!]! @orderBy): [RoomFacility!]! @all
+    roomTypes(orderBy: [SortOption!]! @orderBy): [RoomType]! @all
+    roomFacilities(orderBy: [SortOption!]! @orderBy): [RoomFacility]! @all
     favoriteRooms: [Room]!
 
     searchRoom(

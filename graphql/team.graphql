@@ -1,0 +1,34 @@
+extend type Query @guard {
+    myTeams: [Team]!
+    teams: [Team]!
+    team(id: ID!): Team
+}
+
+type Team {
+    id: ID!
+    title: String!
+    owner_id: ID!
+    owner: Member! @belongsTo
+    members: [Member]! @belongsToMany
+    booking_id: ID
+    booking: Booking @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+extend type Mutation @guard {
+    createTeam(
+        title: String!,
+        member_ids: [ID] @rules(apply: ["required", "array", "min:1"]) @rulesForArray(apply: ["exists:members,id"])
+    ): Team
+
+    addTeamMember(
+        team_id: ID!, @rules(apply: ["exists:teams,id"]),
+        member_id: ID!, @rules(apply: ["exists:members,id"]),
+    ): Team
+
+    attachBookingToTeam(
+        team_id: ID!, @rules(apply: ["exists:teams,id"]),
+        booking_id: ID!, @rules(apply: ["exists:bookings,id"]),
+    ): Team
+}

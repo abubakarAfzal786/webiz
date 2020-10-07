@@ -177,4 +177,22 @@ class Member extends Authenticatable implements JWTSubject
         return $this->hasMany(PushNotification::class, 'member_id', 'id');
     }
 
+    /**
+     * @return HasMany
+     */
+    public function my_teams()
+    {
+        return $this->hasMany(Team::class, 'owner_id', 'id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function teams()
+    {
+        return $this->belongsToMany(Member::class, 'team_member_pivot', 'member_id', 'team_id')
+            ->withPivot(['phone', 'joined'])
+            ->withTimestamps();
+    }
+
 }
