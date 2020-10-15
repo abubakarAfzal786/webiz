@@ -59,12 +59,35 @@ trait TwilioHelper
      */
     public function verifyWithOTP($code, $number)
     {
-        $this->setCredentials();
-
         try {
             $twilio = $this->setCredentials();
-            $verification = $twilio->verify->v2->services($this->verify_sid)->verificationChecks->create($code, ['to' => $number]);
+            $options = [
+                'to' => $number
+            ];
+            $verification = $twilio->verify->v2->services($this->verify_sid)->verificationChecks->create($code, $options);
             if ($verification->valid) return true;
+        } catch (TwilioException $e) {
+            Log::channel('twilio')->error($e);
+        } catch (Exception $exception) {
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $number
+     * @return bool
+     */
+    public function sendRegistrationSMS($number)
+    {
+        try {
+            $twilio = $this->setCredentials();
+            $options = [
+                "body" => "Test registration sms",
+                "from" => config('twilio.from_number'),
+            ];
+            $twilio->messages->create($number, $options);
+            return true;
         } catch (TwilioException $e) {
             Log::channel('twilio')->error($e);
         } catch (Exception $exception) {

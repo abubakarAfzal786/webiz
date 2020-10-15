@@ -2,6 +2,8 @@
 
 namespace App\GraphQL\Queries;
 
+use App\Models\Booking;
+use App\Models\Member;
 use Illuminate\Support\Collection;
 
 class Bookings
@@ -13,8 +15,15 @@ class Bookings
      */
     public function __invoke($_, array $args)
     {
+        /** @var Member $user */
+        $user = auth()->user();
+
+        $team_bookings = $user->teams->pluck('booking_id')->toArray();
+        $my_bookings = $user->bookings->pluck('id')->toArray();
+
+        $ids = $team_bookings + $my_bookings;
+
         /** @var Collection $bookings */
-        $bookings = auth()->user()->bookings;
-        return $bookings ? $bookings->sortBy('created_at', SORT_DESC) : [];
+        return Booking::query()->whereIn('id', $ids)->orderBy('created_at', 'DESC')->get();
     }
 }

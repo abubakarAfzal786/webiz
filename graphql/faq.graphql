@@ -1,5 +1,5 @@
 extend type Query @guard {
-    faqs(category_ids: [ID], orderBy: [SortOption!]! @orderBy): [Faq!]! @paginate(defaultCount: 10)
+    faqs(category_ids: [ID], orderBy: [SortOption!]! @orderBy): [Faq]!
     faq(id: ID @eq): Faq @find
     faq_categories: [FaqCategory!]! @all
 }

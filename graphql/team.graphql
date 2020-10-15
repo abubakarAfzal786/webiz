@@ -18,13 +18,15 @@ type Team {
 
 extend type Mutation @guard {
     createTeam(
-        title: String!,
-        member_ids: [ID] @rules(apply: ["required", "array", "min:1"]) @rulesForArray(apply: ["exists:members,id"])
+        title: String!
+        phone_numbers: [String!]
+#        member_ids: [ID] @rules(apply: ["required", "array", "min:1"]) @rulesForArray(apply: ["exists:members,id"])
     ): Team
 
     addTeamMember(
         team_id: ID!, @rules(apply: ["exists:teams,id"]),
-        member_id: ID!, @rules(apply: ["exists:members,id"]),
+        phone_numbers: [String]
+#        member_id: ID!, @rules(apply: ["exists:members,id"]),
     ): Team
 
     attachBookingToTeam(

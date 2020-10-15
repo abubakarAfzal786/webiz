@@ -19,6 +19,8 @@ type Member {
     updated_at: DateTime!
     reviews: [Review]! @hasMany
     bookings: [Booking]! @hasMany
+    teams: [Team]! @belongsToMany
+    pivot: TeamMemberPivot
 }
 
 type CarNumber {
@@ -28,6 +30,11 @@ type CarNumber {
     default: Boolean
     label: String
     member: Member @belongsTo
+}
+
+type TeamMemberPivot {
+    phone: String
+    joined: Boolean
 }
 
 extend type Mutation @guard {

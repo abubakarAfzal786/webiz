@@ -3,6 +3,7 @@
 namespace App\GraphQL\Queries;
 
 use App\Models\Member;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Booking
@@ -10,12 +11,21 @@ class Booking
     /**
      * @param  null $_
      * @param  array <string, mixed>  $args
-     * @return HasMany
+     * @return Builder|HasMany
      */
     public function __invoke($_, array $args)
     {
+        $booking_id = $args['id'];
         /** @var Member $user */
         $user = auth()->user();
-        return $user->bookings()->where('id', $args['id'])->first();
+
+        $team_bookings = $user->teams->pluck('booking_id')->toArray();
+        $bookings = $user->bookings->pluck('id')->toArray();
+
+        if (in_array($booking_id, $bookings) || in_array($booking_id, $team_bookings)) {
+            return \App\Models\Booking::query()->find($booking_id);
+        }
+
+        return null;
     }
 }
