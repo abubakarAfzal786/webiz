@@ -4,8 +4,30 @@
 
 @push('toolbar-options')
 <div class="item">
-    <a href="{{ route('admin.rooms.create') }}" class="main-btn yellow-blank">{{ __('Add new room') }}</a>
+    <a href="{{ route('admin.room-facility.index') }}" class="main-btn yellow-blank">{{ __('Facilities') }}</a>
 </div>
+<div class="item">
+    <a href="{{ route('admin.room-type.index') }}" class="main-btn yellow-blank">{{ __('Types') }}</a>
+</div>
+<div class="item">
+    <a href="{{ route('admin.room-attribute.index') }}" class="main-btn yellow-blank">{{ __('Attributes') }}</a>
+</div>
+
+<div class="item left-border">
+    {{--    <a href="{{ route('admin.rooms.create') }}" class="main-btn yellow-blank">{{ __('Add new room') }}</a>--}}
+    <button type="button" class="main-btn yellow-blank" data-fancybox id="open-test-rooms"
+            data-src='#test-rooms'>{{ __('Add new room') }}</button>
+</div>
+@endpush
+
+@push('header-post-scripts')
+<style>
+    div.pac-container.pac-logo {
+        z-index: 999999;
+    }
+</style>
+<script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key={{ config('app.google_maps_api_key') }}&libraries=places"></script>
 @endpush
 
 @section('content')
@@ -39,9 +61,13 @@
         </div>
     </div>
 @endsection
-@push('scripts')
 
-<script type="text/javascript">
+@push('modals')
+@include('admin.rooms.modal')
+@endpush
+
+@push('scripts')
+<script>
     $(function () {
         let myDataTable = $('#myDataTable').DataTable({
             processing: true,
@@ -68,7 +94,20 @@
 
         $('#search-box').doneTyping(function () {
             myDataTable.search($(this).val()).draw();
-        })
+        });
+
+        $('#open-test-rooms').on('click', function () {
+            $(document).find('input.pac-target-input').removeAttr('placeholder');
+        });
+
+        let autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));
+
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            let place = autocomplete.getPlace();
+
+            $('#lat').val(place.geometry.location.lat());
+            $('#lon').val(place.geometry.location.lng());
+        });
     });
 </script>
 @endpush

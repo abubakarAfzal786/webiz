@@ -14,6 +14,9 @@
         </select>
     </label>
 </div>
+<div class="item">
+    <a href="{{ route('admin.faq-category.index') }}" class="main-btn yellow-blank">{{ __('Categories') }}</a>
+</div>
 <div class="item left-border">
     <a href="{{ route('admin.faq.create') }}" class="main-btn yellow-blank">{{ __('Add new') }}</a>
 </div>

@@ -33,12 +33,14 @@ class RoomController extends Controller
         /** @var Room|Collection $data */
         $data = Room::all();
         $rooms_count = $data->count();
+        $facilities = RoomFacility::query()->get();
+        $types = RoomType::query()->get()->pluck('name', 'id');
 
         if ($request->ajax()) {
             return $dataTable->ajax();
         }
 
-        return view('admin.rooms.test', compact('rooms_count'));
+        return view('admin.rooms.test', compact('rooms_count', 'facilities', 'types'));
     }
 
     /**
@@ -62,30 +64,30 @@ class RoomController extends Controller
      */
     public function store(StoreRoomRequest $request)
     {
-        /** @var Room $room */
-        $request->merge(['user_id' => Auth::id()]);
-        $room = Room::query()->create($request->except('_token', 'facilities'));
-        $room->facilities()->sync($request->get('facilities'));
+        if ($request->ajax()) {
+            /** @var Room $room */
+            $request->merge(['user_id' => Auth::id()]);
+            $room = Room::query()->create($request->except('_token', 'facilities'));
+            $room->facilities()->sync($request->get('facilities'));
 
-        $images = $request->file('images');
-        if ($images) {
-            foreach ($images as $image) {
-                $path = $this->uploadImage($image);
-                if ($path) {
-                    $room->images()->create([
-                        'path' => $path,
-                        'size' => $image->getSize(),
-                        'main' => false,
-                    ]);
-                    // TODO implement main image choose functionality
+            $images = $request->file('images');
+            if ($images) {
+                foreach ($images as $image) {
+                    $path = $this->uploadImage($image);
+                    if ($path) {
+                        $room->images()->create([
+                            'path' => $path,
+                            'size' => $image->getSize(),
+                            'main' => false,
+                        ]);
+                        // TODO implement main image choose functionality
+                    }
                 }
             }
-        }
 
-        return redirect()->route('admin.rooms.index')->with([
-            'message' => __('Room successfully created.'),
-            'class' => 'success'
-        ]);
+            return response()->json(['success' => true]);
+        }
+        return abort(404);
     }
 
     /**
