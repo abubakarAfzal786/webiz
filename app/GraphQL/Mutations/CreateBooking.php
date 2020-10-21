@@ -26,6 +26,7 @@ class CreateBooking
             $attributes = $args['attributes'] ?? null;
             $attributesToSync = get_attributes_to_sync($attributes);
             $args['price'] = calculate_room_price($attributesToSync, $roomPrice, $time);
+            $args['door_key'] = generate_door_key();
 
             /** @var Booking $booking */
             $booking = $member->bookings()->create($args);

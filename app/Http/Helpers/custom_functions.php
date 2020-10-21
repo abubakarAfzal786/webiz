@@ -103,3 +103,23 @@ if (!function_exists('similar_free_room')) {
         return false;
     }
 }
+
+if (!function_exists('generate_door_key')) {
+    /**
+     * @return int
+     */
+    function generate_door_key()
+    {
+        return rand(1000, 9999);
+    }
+}
+
+if (!function_exists('generate_door_pin')) {
+    /**
+     * @return int
+     */
+    function generate_door_pin()
+    {
+        return rand(10000000, 99999999);
+    }
+}

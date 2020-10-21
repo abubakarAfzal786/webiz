@@ -16,6 +16,7 @@ class Booking extends Model
         'end_date',
         'price',
         'status',
+        'door_key',
     ];
 
     protected $appends = [

@@ -20,6 +20,7 @@ type Booking {
     room_attributes: [RoomAttribute]! @belongsToMany
     reviews: [Review]! @hasMany
     room: Room! @belongsTo
+    door_key: Int
 }
 
 extend type Mutation @guard {

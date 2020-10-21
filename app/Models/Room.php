@@ -32,6 +32,7 @@ class Room extends Model
         'type_id',
         'wifi_ssid',
         'wifi_pass',
+        'pin',
     ];
 
     protected $appends = [
