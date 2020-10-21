@@ -4,55 +4,35 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\Booking;
 use App\Models\Room;
-use App\Models\RoomAttribute;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 class CreateBooking
 {
     /**
      * @param null $_
      * @param array<string, mixed> $args
-     * @return Booking|void
+     * @return Booking|null
      */
     public function __invoke($_, array $args)
     {
         $start_date = $args['start_date'];
         $end_date = $args['end_date'];
 
-        $isBusy = Booking::query()
-            ->where('room_id', $args['room_id'])
-            ->where('start_date', '<=', $start_date)
-            ->where('end_date', '>=', $end_date)
-            ->exists();
+        $member = auth()->user();
 
-        if (!$isBusy) {
+        if (!room_is_busy($args['room_id'], $start_date, $end_date)) {
             $room = Room::query()->find($args['room_id']);
             $time = $end_date->diffInMinutes($start_date) / 60;
             $roomPrice = $room->price * $time;
-
-            $attributes = $args['attributes'];
-            $attributesToSync = [];
-            if (!empty($args['attributes'])) {
-                foreach ($attributes as $attribute) {
-                    $attributesToSync[$attribute['id']] = ['quantity' => $attribute['quantity']];
-                }
-            }
-
-            $roomAttributes = RoomAttribute::query()->whereIn('id', array_keys($attributesToSync))->get();
-
-            foreach ($roomAttributes as $roomAttribute) {
-                $roomPrice += $roomAttribute->price * $attributesToSync[$roomAttribute->id]['quantity'] * ($roomAttribute->unit == RoomAttribute::UNIT_HR ? $time : 1);
-            }
-
-            $args['price'] = $roomPrice;
+            $attributes = $args['attributes'] ?? null;
+            $attributesToSync = get_attributes_to_sync($attributes);
+            $args['price'] = calculate_room_price($attributesToSync, $roomPrice, $time);
 
             /** @var Booking $booking */
-            $booking = Booking::query()->create($args);
-
+            $booking = $member->bookings()->create($args);
             $booking->room_attributes()->attach($attributesToSync);
 
             return $booking;
         }
+        return null;
     }
 }

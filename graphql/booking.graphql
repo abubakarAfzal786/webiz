@@ -1,8 +1,8 @@
 extend type Query @guard {
     bookings: [Booking]!
     booking(id: ID!): Booking
-#    bookings: [Booking!]! @paginate(defaultCount: 10)
-#    booking(id: ID @eq): Booking @find
+    #    bookings: [Booking!]! @paginate(defaultCount: 10)
+    #    booking(id: ID @eq): Booking @find
     roomAttributes(orderBy: [SortOption!]! @orderBy): [RoomAttribute!]! @all
 }
 
@@ -25,7 +25,7 @@ type Booking {
 extend type Mutation @guard {
     createBooking(
         room_id: ID!, @rules(apply: ["exists:rooms,id"]),
-        member_id: ID!, @rules(apply: ["exists:members,id"]),
+        #        member_id: ID!, @rules(apply: ["exists:members,id"]),
         start_date: DateTimeOrDate! @rules(apply: ["date", "after:now"])
         end_date: DateTimeOrDate! @rules(apply: ["date", "after:start_date"])
         attributes: [BookingAttribute]
@@ -40,6 +40,10 @@ extend type Mutation @guard {
     ): Booking
 
     deleteBooking(
+        id: ID! @rules(apply: ["exists:bookings,id"])
+    ): Boolean
+
+    continueBooking(
         id: ID! @rules(apply: ["exists:bookings,id"])
     ): Boolean
 }

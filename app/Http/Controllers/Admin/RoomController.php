@@ -26,7 +26,7 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResponse|Response
+     * @return JsonResponse|Response|View
      */
     public function index(Request $request, RoomsDataTable $dataTable)
     {
@@ -60,7 +60,7 @@ class RoomController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreRoomRequest $request
-     * @return RedirectResponse
+     * @return JsonResponse|void
      */
     public function store(StoreRoomRequest $request)
     {

@@ -18,14 +18,18 @@ class CreateReview
     {
         /** @var Member $member */
         $member = auth()->user();
+        $booking_id = ($args['booking_id']);
+        $booking = $member->bookings()->find($booking_id);
+        if (!in_array($booking->status, [Booking::STATUS_EXTENDED, Booking::STATUS_COMPLETED])) {
+            return null;
+        }
 
-        $review = $member->reviews()
-            ->where('room_id', $args['room_id'])
-            ->where('booking_id', $args['booking_id'])
-            ->first();
+//        if ($booking->status == Booking::STATUS_EXTENDED) {
+//            // TODO calculate new price
+//        }
 
-        $member->bookings()->find($args['booking_id'])->update(['status' => Booking::STATUS_COMPLETED]);
-
+        $booking->update(['status' => Booking::STATUS_COMPLETED]);
+        $review = $member->reviews()->where('booking_id', $booking_id)->first();
         if ($review) {
             $review->update($args);
         } else {

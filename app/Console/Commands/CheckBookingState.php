@@ -53,16 +53,17 @@ class CheckBookingState extends Command
         foreach ($bookings as $booking) {
             $token = $booking->member->mobile_token;
 
-            if ($booking->end_date <= $now) {
+            if (($booking->status != Booking::STATUS_EXTENDED) && ($booking->end_date <= $now)) {
                 if ($token) {
                     $data = [
-                        'title' => 'Booking ended.',
-                        'body' => 'Booking for "' . $booking->room->name . '" ended.',
+                        'title' => 'Your book time has expired',
+                        'body' => 'Open the notification to take action',
                     ];
                     echo ($this->sendPush($booking->member->mobile_token, $data) ? 'success' : 'failure') . "\n";
                 }
 
-                $booking->update(['status' => Booking::STATUS_COMPLETED]);
+                // TODO check
+                // $booking->update(['status' => Booking::STATUS_COMPLETED]);
             }
 
             if ($booking->status == Booking::STATUS_PENDING) {
