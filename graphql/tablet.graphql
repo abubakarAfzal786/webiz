@@ -1,0 +1,10 @@
+extend type Query {
+    authTablet(pin: Int!): AuthTabletResponse
+}
+
+type AuthTabletResponse {
+    message: String
+    token: String
+    success: Boolean
+    room: Room
+}

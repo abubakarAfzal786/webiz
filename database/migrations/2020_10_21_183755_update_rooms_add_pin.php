@@ -14,7 +14,7 @@ class UpdateRoomsAddPin extends Migration
     public function up()
     {
         Schema::table('rooms', function (Blueprint $table) {
-            $table->integer('pin')->nullable();
+            $table->integer('pin')->nullable()->unique();
         });
     }
 

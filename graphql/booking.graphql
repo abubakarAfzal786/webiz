@@ -26,7 +26,7 @@ type Booking {
 extend type Mutation @guard {
     createBooking(
         room_id: ID!, @rules(apply: ["exists:rooms,id"]),
-        #        member_id: ID!, @rules(apply: ["exists:members,id"]),
+        member_id: ID, @rules(apply: ["exists:members,id"]),
         start_date: DateTimeOrDate! @rules(apply: ["date", "after:now"])
         end_date: DateTimeOrDate! @rules(apply: ["date", "after:start_date"])
         attributes: [BookingAttribute]

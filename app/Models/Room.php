@@ -12,12 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Collection;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * @property Collection reviews
  * @property Collection images
  */
-class Room extends Model
+class Room extends Model implements JWTSubject
 {
     protected $fillable = [
         'name',
@@ -44,6 +45,26 @@ class Room extends Model
     protected $casts = [
         'average_rate' => 'float'
     ];
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
     /**
      * @return bool|void|null
