@@ -16,6 +16,7 @@ class Image extends Model
         'path',
         'size',
         'main',
+        'is_logo',
     ];
 
     protected $appends = [

@@ -21,6 +21,7 @@ type Member {
     bookings: [Booking]! @hasMany
     teams: [Team]! @belongsToMany
     pivot: TeamMemberPivot
+    logos: [Image]! @morphMany
 }
 
 type CarNumber {
@@ -60,6 +61,10 @@ extend type Mutation @guard {
     deleteCarNumber(
         id: ID! @rules(apply: ["exists:car_numbers,id"])
     ): Boolean
+
+    uploadLogos(
+        logos: [Upload!], @rules(apply: ["image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"]),
+    ): [Image]
 }
 
 type UpdateProfileResponse {

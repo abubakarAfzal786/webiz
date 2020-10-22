@@ -46,6 +46,12 @@ return [
             'provider' => 'members',
             'hash' => false,
         ],
+
+        'api-tablet' => [
+            'driver' => 'jwt',
+            'provider' => 'rooms',
+            'hash' => false,
+        ],
     ],
 
     /*
@@ -74,6 +80,11 @@ return [
         'members' => [
             'driver' => 'eloquent',
             'model' => App\Models\Member::class,
+        ],
+
+        'rooms' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Room::class,
         ],
 
         // 'users' => [

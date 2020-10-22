@@ -35,6 +35,7 @@ type Room {
     updated_at: DateTime!
     wifi_ssid: String
     wifi_pass: String
+    qr_token: String
 }
 
 type RoomFacility {

@@ -1,5 +1,10 @@
 extend type Query {
     authTablet(pin: Int!): AuthTabletResponse
+    getRoomState: Booking @guardTablet
+}
+
+extend type Mutation @guardTablet {
+    openDoor(door_key: Int!): Boolean
 }
 
 type AuthTabletResponse {

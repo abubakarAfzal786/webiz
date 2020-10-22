@@ -195,4 +195,12 @@ class Member extends Authenticatable implements JWTSubject
             ->withTimestamps();
     }
 
+    /**
+     * @return MorphMany
+     */
+    public function logos()
+    {
+        return $this->morphMany(Image::class, 'imageable')->where('is_logo', true);
+    }
+
 }

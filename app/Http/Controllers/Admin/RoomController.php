@@ -68,6 +68,7 @@ class RoomController extends Controller
             /** @var Room $room */
             $request->merge(['user_id' => Auth::id()]);
             $request->merge(['pin' => generate_door_pin()]);
+            $request->merge(['qr_token' => generate_room_qr_token()]);
             $room = Room::query()->create($request->except('_token', 'facilities'));
             $room->facilities()->sync($request->get('facilities'));
 

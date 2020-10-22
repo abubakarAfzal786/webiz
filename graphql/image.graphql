@@ -5,6 +5,7 @@ type Image {
     url: String!
     size: Float!
     main: Boolean!
+    is_logo: Boolean
     created_at: DateTime!
     updated_at: DateTime!
     imageable: Imageable! @morphTo

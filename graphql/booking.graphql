@@ -21,6 +21,7 @@ type Booking {
     reviews: [Review]! @hasMany
     room: Room! @belongsTo
     door_key: Int
+    logo: Image @belongsTo
 }
 
 extend type Mutation @guard {
@@ -47,6 +48,11 @@ extend type Mutation @guard {
     continueBooking(
         id: ID! @rules(apply: ["exists:bookings,id"])
     ): Boolean
+
+    useLogo(
+        booking_id: ID! @rules(apply: ["exists:bookings,id"])
+        logo_id: ID! @rules(apply: ["exists:images,id"])
+    ): Image
 }
 
 type RoomAttribute {

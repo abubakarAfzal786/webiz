@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -18,7 +19,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property Collection reviews
  * @property Collection images
  */
-class Room extends Model implements JWTSubject
+class Room extends Authenticatable implements JWTSubject
 {
     protected $fillable = [
         'name',
@@ -34,6 +35,7 @@ class Room extends Model implements JWTSubject
         'wifi_ssid',
         'wifi_pass',
         'pin',
+        'qr_token',
     ];
 
     protected $appends = [

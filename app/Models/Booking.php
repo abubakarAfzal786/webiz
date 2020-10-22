@@ -17,6 +17,7 @@ class Booking extends Model
         'price',
         'status',
         'door_key',
+        'logo_id',
     ];
 
     protected $appends = [
@@ -93,5 +94,13 @@ class Booking extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class, 'booking_id', 'id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function logo()
+    {
+        return $this->belongsTo(Image::class, 'logo_id', 'id')->where('is_logo', true);
     }
 }

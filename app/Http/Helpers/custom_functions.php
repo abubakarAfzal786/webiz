@@ -6,6 +6,8 @@ use App\Models\RoomAttribute;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Ramsey\Uuid\UuidInterface;
 
 if (!function_exists('room_is_busy')) {
     /**
@@ -121,5 +123,32 @@ if (!function_exists('generate_door_pin')) {
     function generate_door_pin()
     {
         return rand(10000000, 99999999);
+    }
+}
+
+if (!function_exists('generate_room_qr_token')) {
+    /**
+     * @return UuidInterface
+     */
+    function generate_room_qr_token()
+    {
+        return Str::uuid();
+    }
+}
+
+if (!function_exists('get_current_booking')) {
+    /**
+     * @param $room_id
+     * @return object|bool
+     */
+    function get_current_booking($room_id)
+    {
+        /** @var Room $room */
+        $room = Room::query()->find($room_id);
+        if ($room) {
+            $now = Carbon::now();
+            return $room->bookings()->where('start_date', '<=', $now)->where('end_date', '>=', $now)->first();
+        }
+        return null;
     }
 }
