@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Http\Helpers\FCMHelper;
 use App\Models\Booking;
+use App\Models\PushNotification;
 use App\Models\Room;
 
 class ContinueBooking
@@ -29,6 +30,7 @@ class ContinueBooking
             $freeExist = similar_free_room($next_booked);
 
             if (!$freeExist) {
+//                $booking->update(['status' => Booking::STATUS_COMPLETED]);
                 return false;
             } else {
                 $newBooking = $next_booked->replicate();
@@ -43,6 +45,20 @@ class ContinueBooking
                     'title' => 'Your booked room has been changed',
                     'body' => 'Open the notification to take action',
                 ];
+
+                $extraData = [
+                    'id' => $newBooking->id,
+                    'type' => 'bookings',
+                ];
+
+                PushNotification::query()->create([
+                    'title' => $data['title'],
+                    'body' => $data['body'],
+                    'member_id' => $newBooking->member_id,
+                    'seen' => false,
+                    'additional' => json_encode($extraData),
+                ]);
+
                 $this->sendPush($newBooking->member->mobile_token, $data);
             }
         }

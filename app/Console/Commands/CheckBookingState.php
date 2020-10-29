@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Http\Helpers\FCMHelper;
 use App\Models\Booking;
+use App\Models\PushNotification;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -59,7 +60,21 @@ class CheckBookingState extends Command
                         'title' => 'Your book time has expired',
                         'body' => 'Open the notification to take action',
                     ];
-                    echo ($this->sendPush($booking->member->mobile_token, $data) ? 'success' : 'failure') . "\n";
+
+                    $extraData = [
+                        'id' => $booking->id,
+                        'type' => 'bookings',
+                    ];
+
+                    PushNotification::query()->create([
+                        'title' => $data['title'],
+                        'body' => $data['body'],
+                        'member_id' => $booking->member_id,
+                        'seen' => false,
+                        'additional' => json_encode($extraData),
+                    ]);
+
+                    echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
                 }
 
                 // TODO check
@@ -73,7 +88,21 @@ class CheckBookingState extends Command
                             'title' => 'Booking started.',
                             'body' => 'Booking for "' . $booking->room->name . '" started.',
                         ];
-                        echo ($this->sendPush($booking->member->mobile_token, $data) ? 'success' : 'failure') . "\n";
+
+                        $extraData = [
+                            'id' => $booking->id,
+                            'type' => 'bookings',
+                        ];
+
+                        PushNotification::query()->create([
+                            'title' => $data['title'],
+                            'body' => $data['body'],
+                            'member_id' => $booking->member_id,
+                            'seen' => false,
+                            'additional' => json_encode($extraData),
+                        ]);
+
+                        echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
                     }
 
                     $booking->update(['status' => Booking::STATUS_ACTIVE]);
