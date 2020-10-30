@@ -20,19 +20,21 @@ class UploadLogos
         $member = auth()->user();
         $logos = $args['logos'] ?? null;
 
+        $ids = [];
         if ($logos) {
             foreach ($logos as $logo) {
                 $path = $this->uploadImage($logo);
                 if ($path) {
-                    $member->logos()->create([
+                    $newLogo = $member->logos()->create([
                         'path' => $path,
                         'size' => $logo->getSize(),
                         'is_logo' => true,
                     ]);
+                    $ids[] = $newLogo->id;
                 }
             }
         }
 
-        return $member->logos;
+        return $member->logos()->whereIn('id', $ids)->get();
     }
 }

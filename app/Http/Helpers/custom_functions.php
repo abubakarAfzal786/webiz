@@ -16,7 +16,7 @@ if (!function_exists('room_is_busy')) {
      * @param $end
      * @return bool
      */
-    function room_is_busy($id, $start, $end)
+    function room_is_busy(int $id, $start, $end)
     {
         return Booking::query()
             ->where('room_id', $id)
@@ -31,7 +31,7 @@ if (!function_exists('get_attributes_to_sync')) {
      * @param array $attributes
      * @return array
      */
-    function get_attributes_to_sync($attributes)
+    function get_attributes_to_sync(array $attributes)
     {
         $attributesToSync = [];
         if (!empty($attributes)) {
@@ -50,7 +50,7 @@ if (!function_exists('calculate_room_price')) {
      * @param $time
      * @return float|int
      */
-    function calculate_room_price($attributesToSync, $roomPrice, $time)
+    function calculate_room_price(array $attributesToSync, $roomPrice, $time)
     {
         $roomAttributes = RoomAttribute::query()->whereIn('id', array_keys($attributesToSync))->get();
 
@@ -65,7 +65,7 @@ if (!function_exists('calculate_room_price')) {
 if (!function_exists('next_booked')) {
 
     /**
-     * @param $id
+     * @param $booking
      * @return Builder|Model|object|null
      */
     function next_booked($booking)
@@ -81,7 +81,7 @@ if (!function_exists('next_booked')) {
 
 if (!function_exists('similar_free_room')) {
     /**
-     * @param $room
+     * @param $booked
      * @return Room|bool|Builder|mixed
      */
     function similar_free_room($booked)
