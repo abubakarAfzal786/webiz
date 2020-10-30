@@ -23,6 +23,10 @@ class Image extends Model
         'url'
     ];
 
+    protected $casts = [
+        'size' => 'float'
+    ];
+
     /**
      * @return string
      */

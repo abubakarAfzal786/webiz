@@ -25,10 +25,10 @@ class DoorKeysSeeder extends Seeder
             $roomPin->update(['pin' => generate_door_pin()]);
         }
 
-        // seed room qr token
-        $roomsQr = Room::query()->whereNull('qr_token')->get();
-        foreach ($roomsQr as $roomQr) {
-            $roomQr->update(['qr_token' => generate_room_qr_token()]);
-        }
+//        // seed room qr token
+//        $roomsQr = Room::query()->whereNull('qr_token')->get();
+//        foreach ($roomsQr as $roomQr) {
+//            $roomQr->update(['qr_token' => generate_room_qr_token()]);
+//        }
     }
 }

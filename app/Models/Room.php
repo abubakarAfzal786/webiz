@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -35,13 +37,13 @@ class Room extends Authenticatable implements JWTSubject
         'wifi_ssid',
         'wifi_pass',
         'pin',
-        'qr_token',
     ];
 
     protected $appends = [
         'average_rate',
         'rates_count',
         'is_favorite',
+        'available_at',
     ];
 
     protected $casts = [
@@ -170,5 +172,46 @@ class Room extends Authenticatable implements JWTSubject
         /** @var Member|User $user */
         $user = auth()->user();
         return $user->favorite_rooms ? in_array($this->id, $user->favorite_rooms()->get()->pluck('id')->toArray()) : false;
+    }
+
+    /**
+     * @return Carbon|HigherOrderBuilderProxy|mixed
+     */
+    public function getAvailableAtAttribute()
+    {
+        $now = Carbon::now();
+        $tomorrow = Carbon::now()->addDay();
+
+        $current = $this->bookings()
+            ->where('start_date', '<=', $now)
+            ->where('end_date', '>=', $now)
+            ->first();
+
+        if (!$current) {
+            return $now;
+        } else {
+            $next_bookings = $this->bookings()
+                ->whereBetween('start_date', [$current->end_date, $tomorrow])
+                ->orderBy('start_date', 'ASC')
+                ->get();
+
+            if (!$next_bookings->count()) {
+                return $current->end_date;
+            }
+
+            $end_date = $current->end_date;
+            $inter = null;
+
+            foreach ($next_bookings as $next_booking) {
+                // TODO get minimum booking time from settings
+                if ($next_booking->start_date->diffInMinutes($end_date) < 30) {
+                    $end_date = $next_booking->end_date;
+                } else {
+                    return $next_booking->end_date;
+                }
+            }
+
+            return $end_date;
+        }
     }
 }
