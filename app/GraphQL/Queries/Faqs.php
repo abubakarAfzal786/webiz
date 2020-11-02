@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Collection;
 class Faqs
 {
     /**
-     * @param  null $_
-     * @param  array <string, mixed>  $args
+     * @param null $_
+     * @param array <string, mixed>  $args
      * @return Collection|static[]
      */
     public function __invoke($_, array $args)
@@ -18,6 +18,11 @@ class Faqs
         $orderByField = $args['orderBy']['field'] ?? 'question';
         $orderByDir = $args['orderBy']['order'] ?? 'ASC';
 
-        return Faq::query()->whereIn('category_id', $category_ids)->orderBy($orderByField, $orderByDir)->get();
+        $faqs = Faq::query();
+        if (!empty($category_ids)) {
+            $faqs = $faqs->whereIn('category_id', $category_ids);
+        }
+        $faqs = $faqs->orderBy($orderByField, $orderByDir)->get();
+        return $faqs;
     }
 }
