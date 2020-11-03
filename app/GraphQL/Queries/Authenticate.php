@@ -30,6 +30,7 @@ class Authenticate
                     'token' => '',
                     'message' => 'invalid_credentials',
                     'success' => false,
+                    'user' => null
                 ];
             }
         } catch (JWTException $e) {
@@ -39,13 +40,17 @@ class Authenticate
                 'token' => '',
                 'message' => 'could_not_create_token',
                 'success' => false,
+                'user' => null
             ];
         }
 
+        $user = auth()->user();
+        $code = 200;
         return [
             'token' => $token,
             'message' => 'success',
             'success' => true,
+            'user' => $user
         ];
     }
 }

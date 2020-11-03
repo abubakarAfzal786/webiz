@@ -50,6 +50,7 @@
                         <td>{{ __('Credit/hr') }}</td>
                         <td>{{ __('Photos') }}</td>
                         <td>{{ __('Number of seats') }}</td>
+                        <td>{{ __('PIN') }}</td>
                         <td>{{ __('Status') }}</td>
                         <td>{{ __('Action') }}</td>
                     </tr>
@@ -82,6 +83,7 @@
                 {data: 'price', name: 'price'},
                 {data: 'images', name: 'images'},
                 {data: 'seats', name: 'seats'},
+                {data: 'pin', name: 'pin'},
                 {data: 'status', name: 'status'},
                 {
                     data: 'action',

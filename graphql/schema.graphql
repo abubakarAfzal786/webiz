@@ -34,6 +34,7 @@ type AuthResponse {
     message: String
     token: String
     success: Boolean
+    user: Member
 }
 
 type VerifyResponse {

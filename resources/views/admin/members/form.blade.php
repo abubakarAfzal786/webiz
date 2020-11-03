@@ -42,7 +42,7 @@
                             <div class="col-sm-10">
                                 <input class="form-control" id="phone" type="text"
                                        placeholder="{{ __('Phone Number') }}" name="phone"
-                                       required value="{{ old('phone', isset($member) ? $member->phone : null) }}">
+                                       value="{{ old('phone', isset($member) ? $member->phone : null) }}">
                                 @error('phone')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror

@@ -53,7 +53,7 @@ class Verify
                     'token' => '',
                     'message' => 'invalid_code',
                     'success' => false,
-                    'user' => []
+                    'user' => null
                 ];
             }
         } else {
@@ -62,7 +62,7 @@ class Verify
                 'token' => '',
                 'message' => 'invalid_credentials',
                 'success' => false,
-                'user' => []
+                'user' => null
             ];
         }
     }

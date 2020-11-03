@@ -44,6 +44,7 @@ class CheckBookingState extends Command
     {
         $today = Carbon::today()->format('Y-m-d');
         $now = Carbon::now();
+        $nowSub10 = Carbon::now()->subMinutes(10);
 
         $bookings = Booking::query()
             ->with(['member', 'room'])
@@ -66,15 +67,26 @@ class CheckBookingState extends Command
                         'type' => 'bookings',
                     ];
 
-                    PushNotification::query()->create([
-                        'title' => $data['title'],
-                        'body' => $data['body'],
-                        'member_id' => $booking->member_id,
-                        'seen' => false,
-                        'additional' => json_encode($extraData),
-                    ]);
+                    $checkPush = PushNotification::query()
+                        ->where('member_id', '=', $booking->member_id)
+                        ->where('additional->id', $booking->id)
+                        ->where('additional->type', 'bookings')
+                        ->where('seen', true)
+//                        ->where('additional', 'like', '%"id":' . $booking->id . '%')
+//                        ->where('additional', 'like', '%"type":"bookings"%')
+                        ->exists();
 
-                    echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
+                    if (!$checkPush) {
+                        PushNotification::query()->create([
+                            'title' => $data['title'],
+                            'body' => $data['body'],
+                            'member_id' => $booking->member_id,
+                            'seen' => false,
+                            'additional' => json_encode($extraData),
+                        ]);
+
+                        echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
+                    }
                 }
 
                 // TODO check
