@@ -24,7 +24,7 @@ class Authenticate
     public function __invoke($_, array $args)
     {
         try {
-            if (!$token = $this->jwt->attempt($args)) {
+            if (!$token = auth('api')->attempt($args)) {
                 $code = 401;
                 return [
                     'token' => '',
@@ -44,7 +44,7 @@ class Authenticate
             ];
         }
 
-        $user = auth()->user();
+        $user = auth('api')->user();
         $code = 200;
         return [
             'token' => $token,
