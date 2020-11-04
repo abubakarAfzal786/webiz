@@ -25,7 +25,7 @@ class CreateReview
         }
 
 //        if ($booking->status == Booking::STATUS_EXTENDED) {
-//            // TODO calculate new price
+//            TODO calculate new price
 //        }
 
         $booking->update(['status' => Booking::STATUS_COMPLETED]);

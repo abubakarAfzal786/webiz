@@ -5,9 +5,9 @@ namespace App\Models;
 use App\User;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
+//use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
-use Illuminate\Database\Eloquent\Model;
+//use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,6 +20,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 /**
  * @property Collection reviews
  * @property Collection images
+ * @property Collection facilities
+ * @property mixed price
+ * @property int id
  */
 class Room extends Authenticatable implements JWTSubject
 {
@@ -148,6 +151,14 @@ class Room extends Authenticatable implements JWTSubject
     }
 
     /**
+     * @return HasMany
+     */
+    public function devices()
+    {
+        return $this->hasMany(Device::class, 'room_id', 'id');
+    }
+
+    /**
      * @return float|int
      */
     public function getAverageRateAttribute()
@@ -169,7 +180,7 @@ class Room extends Authenticatable implements JWTSubject
      */
     public function getIsFavoriteAttribute()
     {
-        /** @var Member|User $user */
+        /** @var Member $user */
         $user = auth()->user();
         return $user->favorite_rooms ? in_array($this->id, $user->favorite_rooms()->get()->pluck('id')->toArray()) : false;
     }
@@ -203,8 +214,7 @@ class Room extends Authenticatable implements JWTSubject
             $inter = null;
 
             foreach ($next_bookings as $next_booking) {
-                // TODO get minimum booking time from settings
-                if ($next_booking->start_date->diffInMinutes($end_date) < 30) {
+                if ($next_booking->start_date->diffInMinutes($end_date) < Setting::getValue('booking_minimum_time', 30)) {
                     $end_date = $next_booking->end_date;
                 } else {
                     return $next_booking->end_date;

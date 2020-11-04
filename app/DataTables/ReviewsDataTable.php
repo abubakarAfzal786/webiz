@@ -34,20 +34,20 @@ class ReviewsDataTable extends DataTable
             })
             ->editColumn('rate', function ($review) {
                 $stars = '';
-                for ($i = 1; $i < round($review->rate); $i++) {
+                for ($i = 1; $i <= round($review->rate); $i++) {
                     $stars .= '<span class="icon-star"></span>';
                 }
 
-                for ($i = 1; $i <= round(5 - $review->rate); $i++) {
+                for ($i = 1; $i <= round(5 - round($review->rate)); $i++) {
                     $stars .= '<span class="icon-empty"></span>';
                 }
 
                 return '<div class="rating"><p>' . $stars . '</p></div>';
             })
             ->addColumn('date', function ($review) {
-                return $review->created_at ? $review->created_at->diffForHumans() : '';
+                return $review->created_at ? '<span data-order="' . $review->created_at . '">' . $review->created_at->diffForHumans() . '</span>' : '';
             })
-            ->rawColumns(['avatar', 'rate']);
+            ->rawColumns(['avatar', 'rate', 'date']);
 //            ->editColumn('updated_at', function ($review) {
 //                return $review->updated_at ? $review->updated_at->diffForHumans() : '';
 //            })

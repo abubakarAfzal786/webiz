@@ -8,6 +8,7 @@ use App\Http\Helpers\ImageUploadHelper;
 use App\Http\Requests\StoreMemberRequest;
 use App\Models\Member;
 use Exception;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -24,7 +25,9 @@ class MemberController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResponse|Response
+     * @param Request $request
+     * @param MembersDataTable $dataTable
+     * @return Application|Factory|JsonResponse|Response|View
      */
     public function index(Request $request, MembersDataTable $dataTable)
     {

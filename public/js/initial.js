@@ -19,12 +19,11 @@ $.fn.doneTyping = function (callback, $wait_time = 350) {
 };
 
 $(document).on('click', '.delete-swal', function () {
-    let item_id = $(this).data('id');
     let url = $(this).data('url');
 
     if (confirm("Are you sure?")) {
         $.ajax({
-            url: url + item_id,
+            url: url,
             type: 'DELETE',
             success: function () {
                 $('#myDataTable').DataTable().draw();

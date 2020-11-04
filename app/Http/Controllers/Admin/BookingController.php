@@ -12,7 +12,6 @@ use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 
@@ -50,8 +49,9 @@ class BookingController extends Controller
      */
     public function store(StoreBookingRequest $request)
     {
-        $price = Room::query()->find($request->get('room_id'))->price;
-        $request->merge(['price' => $price]);
+        /** @var Room $room */
+        $room = Room::query()->findOrFail($request->get('room_id'));
+        $request->merge(['price' => $room->price]);
         Booking::query()->create($request->except('_token'));
 
         return redirect()->route('admin.bookings.index')->with([

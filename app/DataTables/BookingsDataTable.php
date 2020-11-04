@@ -30,10 +30,10 @@ class BookingsDataTable extends DataTable
                 return $booking->member ? $booking->member->name : '';
             })
             ->editColumn('start_date', function ($booking) {
-                return $booking->start_date ? $booking->created_at->format('Y-m-d h:i A') : '';
+                return $booking->start_date ? $booking->start_date->format('Y-m-d h:i A') : '';
             })
             ->editColumn('end_date', function ($booking) {
-                return $booking->end_date ? $booking->created_at->format('Y-m-d h:i A') : '';
+                return $booking->end_date ? $booking->end_date->format('Y-m-d h:i A') : '';
             })
             ->editColumn('status', function ($booking) {
                 return $booking->status_name;

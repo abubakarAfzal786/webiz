@@ -9,6 +9,7 @@ use App\Models\Member;
 use App\Models\Review;
 use App\Models\Room;
 use Exception;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -22,8 +23,9 @@ class ReviewController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @param ReviewsDataTable $dataTable
-     * @return JsonResponse|Response
+     * @return Application|Factory|JsonResponse|Response|View
      */
     public function index(Request $request, ReviewsDataTable $dataTable)
     {

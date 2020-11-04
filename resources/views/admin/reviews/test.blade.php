@@ -3,23 +3,23 @@
 ]])
 
 @push('toolbar-options')
-<div class="item">
-    <label class="select-field">
-        <span class="name">{{ __('Rates') }}</span>
-        <select>
-            <option>{{ __('All') }}</option>
-        </select>
-        {{--TODO implement--}}
-    </label>
-</div>
-<div class="item left-border">
-    <label class="select-date">
-        <span class="name">{{ __('Date') }}:</span>
-        <input type="text" placeholder="Select date">
-        {{--TODO implement--}}
-        <span class="icon-calendar"></span>
-    </label>
-</div>
+    <div class="item">
+        <label class="select-field">
+            <span class="name">{{ __('Rates') }}</span>
+            <select>
+                <option>{{ __('All') }}</option>
+            </select>
+            {{--TODO implement--}}
+        </label>
+    </div>
+    <div class="item left-border">
+        <label class="select-date">
+            <span class="name">{{ __('Date') }}:</span>
+            <input type="text" placeholder="Select date">
+            {{--TODO implement--}}
+            <span class="icon-calendar"></span>
+        </label>
+    </div>
 @endpush
 
 @section('content')
@@ -48,25 +48,29 @@
 @endsection
 @push('scripts')
 
-<script type="text/javascript">
-    $(function () {
-        let myDataTable = $('#myDataTable').DataTable({
-            processing: true,
-            serverSide: true,
-            bPaginate: false,
-            bLengthChange: false,
-            bInfo: false,
-            sDom: 'lrtip',
-            ajax: "{{ route('admin.reviews.index') }}",
-            columns: [
-                {data: 'avatar', name: 'avatar'},
-                {data: 'member_name', name: 'member_name'},
-                {data: 'description', name: 'description'},
-                {data: 'room_name', name: 'room_name'},
-                {data: 'rate', name: 'rate'},
-                {data: 'date', name: 'date'},
-            ]
+    <script type="text/javascript">
+        $(function () {
+            let myDataTable = $('#myDataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                bPaginate: false,
+                bLengthChange: false,
+                bInfo: false,
+                sDom: 'lrtip',
+                ajax: "{{ route('admin.reviews.index') }}",
+                order: [[5, 'desc']],
+                columns: [
+                    {data: 'avatar', name: 'avatar'},
+                    {data: 'member_name', name: 'member_name'},
+                    {data: 'description', name: 'description'},
+                    {data: 'room_name', name: 'room_name'},
+                    {data: 'rate', name: 'rate'},
+                    {data: 'date', name: 'date'},
+                ],
+                createdRow: function (row, data, dataIndex) {
+                    $(row).find('td:eq(5)').attr('data-order', $(data.date).data('order'));
+                }
+            });
         });
-    });
-</script>
+    </script>
 @endpush

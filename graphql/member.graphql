@@ -43,7 +43,7 @@ extend type Mutation @guard {
         name: String!, @rules(apply: ["string", "min:2", "max:191"]),
         email: String!, @rules(apply: ["email"]),
         phone: String, @rules(apply: ["integer", "regex:/^\\+[1-9]\\d{1,14}$/"]),
-        password: String, @rules(apply: ["string", "min:2", "max:191"]),
+        password: String, @rules(apply: ["string", "min:6", "max:191"]),
         #        car_number: String, @rules(apply: ["string", "min:2", "max:191"]),
         avatar: Upload, @rules(apply: ["image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"]),
     ): UpdateProfileResponse

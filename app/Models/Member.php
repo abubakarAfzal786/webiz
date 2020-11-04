@@ -13,8 +13,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * @property Collection favorite_rooms
+ */
 class Member extends Authenticatable implements JWTSubject
 {
     use ImageUploadHelper;

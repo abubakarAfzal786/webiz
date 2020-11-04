@@ -10,7 +10,6 @@ use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 
@@ -19,6 +18,7 @@ class RoomAttributeController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param RoomAttributeDataTable $dataTable
      * @return Response
      */
     public function index(RoomAttributeDataTable $dataTable)

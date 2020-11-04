@@ -26,6 +26,8 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
+     * @param RoomsDataTable $dataTable
      * @return JsonResponse|Response|View
      */
     public function index(Request $request, RoomsDataTable $dataTable)
@@ -68,24 +70,10 @@ class RoomController extends Controller
             /** @var Room $room */
             $request->merge(['user_id' => Auth::id()]);
             $request->merge(['pin' => generate_door_pin()]);
-//            $request->merge(['qr_token' => generate_room_qr_token()]);
+
             $room = Room::query()->create($request->except('_token', 'facilities'));
             $room->facilities()->sync($request->get('facilities'));
-
-            $images = $request->file('images');
-            if ($images) {
-                foreach ($images as $image) {
-                    $path = $this->uploadImage($image);
-                    if ($path) {
-                        $room->images()->create([
-                            'path' => $path,
-                            'size' => $image->getSize(),
-                            'main' => false,
-                        ]);
-                        // TODO implement main image choose functionality
-                    }
-                }
-            }
+            $this->saveImages($room, $request->file('images'));
 
             return response()->json(['success' => true]);
         }
@@ -120,21 +108,7 @@ class RoomController extends Controller
         $room->update($request->except('_token', 'facilities', '_method'));
         $room->facilities()->sync($request->get('facilities'));
 
-        $images = $request->file('images');
-        if ($images) {
-            foreach ($images as $image) {
-                $path = $this->uploadImage($image);
-                if ($path) {
-                    $room->images()->create([
-                        'path' => $path,
-                        'size' => $image->getSize(),
-                        'main' => false,
-                    ]);
-                    // TODO implement main image choose functionality
-                    // TODO implement images delete functionality
-                }
-            }
-        }
+        $this->saveImages($room, $request->file('images'));
 
         return redirect()->route('admin.rooms.index')->with([
             'message' => __('Room successfully updated.'),
@@ -155,6 +129,28 @@ class RoomController extends Controller
             return response()->json(['message' => 'success'], 200);
         } catch (Exception $exception) {
             return response()->json(['message' => 'fail'], 422);
+        }
+    }
+
+    /**
+     * @param $room
+     * @param $images
+     */
+    private function saveImages($room, $images)
+    {
+        if ($images) {
+            foreach ($images as $image) {
+                $path = $this->uploadImage($image);
+                if ($path) {
+                    $room->images()->create([
+                        'path' => $path,
+                        'size' => $image->getSize(),
+                        'main' => false,
+                    ]);
+                    // TODO implement main image choose functionality
+                    // TODO implement images delete functionality
+                }
+            }
         }
     }
 }

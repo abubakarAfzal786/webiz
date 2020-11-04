@@ -2,16 +2,19 @@
 
 namespace App\Http\Helpers;
 
+use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 trait ImageUploadHelper
 {
+    /**
+     * @return string
+     */
     private function getDisk()
     {
-        // TODO get setting from db (public, s3, gcs)
-        return 'gcs';
+        return Setting::getValue('storage_disk', 'gcs');
     }
 
     /**
@@ -27,7 +30,7 @@ trait ImageUploadHelper
      * @param $url
      * @return string
      */
-    public function uploadS3External($url)
+    public function uploadExternalUrl($url)
     {
         $info = pathinfo($url);
         $contents = file_get_contents($url);
@@ -35,14 +38,14 @@ trait ImageUploadHelper
         file_put_contents($file, $contents);
         $file = new UploadedFile($file, $info['basename']);
 
-        return Storage::disk('s3')->put('images', $file);
+        return Storage::disk($this->getDisk())->put('images', $file);
     }
 
     /**
      * @param string $attr
      * @return string
      */
-    public function imageUrlGetter($attr)
+    public function imageUrlGetter(string $attr)
     {
         $$attr = isset($this->$attr) && trim($this->$attr) ? $this->$attr : '';
         if ($$attr) {

@@ -7,21 +7,24 @@ use App\Http\Requests\StoreFaqRequest;
 use App\Models\Faq;
 use App\Models\FaqCategory;
 use Exception;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use Throwable;
 
 class FaqController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResponse|Response
+     * @param Request $request
+     * @return Application|Factory|JsonResponse|Response|View
+     * @throws Throwable
      */
     public function index(Request $request)
     {
@@ -34,7 +37,6 @@ class FaqController extends Controller
             $search = $request->get('search');
             $category_id = $request->get('category_id');
 
-            /** @var Builder $data */
             $data = Faq::with('category');
 
             if ($category_id) $data = $data->where('category_id', $category_id);

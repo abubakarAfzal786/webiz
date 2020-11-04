@@ -2,8 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\RoomFacility;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\DeviceType;
 use Yajra\DataTables\DataTableAbstract;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -11,7 +10,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class RoomFacilityDataTable extends DataTable
+class DeviceTypeDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -23,20 +22,20 @@ class RoomFacilityDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->editColumn('icon', function ($facility) {
-                return $facility->icon ? '<i class="' . $facility->icon . ' fa-2x"></i>' : '';
+            ->editColumn('icon', function ($type) {
+                return $type->icon ? '<i class="' . $type->icon . ' fa-2x"></i>' : '';
             })
-            ->editColumn('created_at', function ($facility) {
-                return $facility->created_at ? $facility->created_at->diffForHumans() : '';
+            ->editColumn('created_at', function ($type) {
+                return $type->created_at ? $type->created_at->diffForHumans() : '';
             })
-            ->editColumn('updated_at', function ($facility) {
-                return $facility->updated_at ? $facility->updated_at->diffForHumans() : '';
+            ->editColumn('updated_at', function ($type) {
+                return $type->updated_at ? $type->updated_at->diffForHumans() : '';
             })
-            ->addColumn('action', function ($facility) {
+            ->addColumn('action', function ($type) {
                 return '
                 <div class="btn-group btn-group-sm">
-                <a class="btn btn-success" href="' . route('admin.room-facility.edit', $facility->id) . '">Edit</a>
-                <a class="btn btn-danger delete-swal" data-id="' . $facility->id . '">Delete</a>
+                <a class="btn btn-success" href="' . route('admin.device-type.edit', $type->id) . '">Edit</a>
+                <a class="btn btn-danger delete-swal" data-url="' . route('admin.device-type.destroy', [$type->id]) . '">Delete</a>
                 </div>';
             })
             ->rawColumns(['icon', 'action']);
@@ -45,10 +44,10 @@ class RoomFacilityDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param RoomFacility $model
-     * @return Builder
+     * @param DeviceType $model
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(RoomFacility $model)
+    public function query(DeviceType $model)
     {
         return $model->newQuery();
     }
@@ -61,7 +60,7 @@ class RoomFacilityDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('room-facility-table')
+            ->setTableId('myDataTable')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('Bfrtip')
@@ -103,6 +102,6 @@ class RoomFacilityDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'RoomFacility_' . date('YmdHis');
+        return 'DeviceType_' . date('YmdHis');
     }
 }

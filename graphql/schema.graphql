@@ -24,7 +24,7 @@ type Mutation {
     signUp(
         name: String!, @rules(apply: ["string", "min:2", "max:191"]),
         email: String!, @rules(apply: ["email", "unique:members"]),
-        password: String, @rules(apply: ["string", "min:2", "max:191"]),
+        password: String, @rules(apply: ["string", "min:6", "max:191"]),
         password_confirmation: String, @rules(apply: ["string", "min:2", "max:191", "same:password"]),
     ): VerifyResponse
     updateToken(token: String!): Boolean! @guard

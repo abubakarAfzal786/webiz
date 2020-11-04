@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -39,7 +38,7 @@ class Setting extends Model
     /**
      * @param string $key
      * @param mixed|null $default
-     * @return HigherOrderBuilderProxy|mixed|null
+     * @return mixed|null
      */
     public static function getValue(string $key, $default = null)
     {
@@ -49,7 +48,7 @@ class Setting extends Model
 
     /**
      * @param string $key
-     * @return HigherOrderBuilderProxy|mixed|null
+     * @return mixed|null
      */
     public static function getAdditional(string $key)
     {

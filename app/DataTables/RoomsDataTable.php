@@ -42,7 +42,11 @@ class RoomsDataTable extends DataTable
                 return '<div class="photo-preview">' . $imagesHTML . '</div>';
             })
             ->addColumn('action', function ($room) {
-                return '<div class="action"><a href="' . route('admin.rooms.edit', $room->id) . '" class="main-btn yellow">' . __('Edit') . '</a></div>';
+                return '
+                    <div class="action">
+                    <a href="' . route('admin.rooms.edit', $room->id) . '" class="main-btn yellow">' . __('Edit') . '</a>
+                    <a href="' . route('admin.devices.index', $room->id) . '" class="main-btn gray-blank">' . __('Devices') . '</a></div>
+                ';
 //                <a class="btn btn-danger delete-swal" data-id="' . $room->id . '">Delete</a>
             })
             ->rawColumns(['status', 'images', 'action']);

@@ -63,6 +63,8 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
+     * USING GRAPHQL INSTEAD
+     *
      * Define the "api" routes for the application.
      *
      * These routes are typically stateless.
@@ -82,7 +84,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::middleware(['web', 'auth'])
             ->prefix('dashboard')
-            ->as('admin.')
             ->namespace($this->namespace . '\Admin')
             ->group(base_path('routes/admin.php'));
     }
