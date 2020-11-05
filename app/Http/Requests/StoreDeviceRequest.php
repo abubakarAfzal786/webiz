@@ -25,8 +25,8 @@ class StoreDeviceRequest extends FormRequest
     {
         return [
             'type_id' => 'required|exists:device_types,id',
-            'device_id' => 'required|string',
-            'description' => 'nullable|string',
+            'device_id' => 'required|string|max:191',
+            'description' => 'nullable|string|max:191',
 //            'state' => 'nullable|integer',
             'additional_information' => 'nullable|string',
         ];

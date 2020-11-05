@@ -53,6 +53,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.reviews.index') }}">{{ __('Reviews') }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.settings.index') }}">{{ __('Settings') }}</a>
+                        </li>
                     @endauth
                 </ul>
 

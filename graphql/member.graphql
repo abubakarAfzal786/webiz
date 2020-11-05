@@ -22,6 +22,7 @@ type Member {
     teams: [Team]! @belongsToMany
     pivot: TeamMemberPivot
     logos: [Image]! @morphMany
+    payment_methods: [PaymentMethod]! @hasMany
 }
 
 type CarNumber {

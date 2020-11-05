@@ -1,0 +1,26 @@
+extend type Query @guard {
+    paymentMethods: [PaymentMethod]!
+}
+
+type PaymentMethod {
+    id: ID!
+    member_id: Int!
+    type: String
+    mode: String
+    identifier: String
+    service: String
+    card_number: String
+    created_at: DateTime!
+    updated_at: DateTime!
+    member: Member! @belongsTo
+}
+
+extend type Mutation @guard {
+    addPaymentMethod(
+        type: String,
+        mode: String,
+        identifier: String,
+        service: String,
+        card_number: String,
+    ): PaymentMethod
+}

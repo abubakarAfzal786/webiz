@@ -25,6 +25,11 @@
                 <li><a href="javascript:void(0)">{{ __('Notifications') }}</a><span>10</span></li>
             </ul>
         </div>
+        <div class="item">
+            <ul>
+                <li class="{{ request()->is(['dashboard/settings', 'dashboard/settings/*']) ? 'active' : '' }}"><a href="{{ route('admin.settings.index') }}">{{ __('Settings') }}</a></li>
+            </ul>
+        </div>
     </div>
     <div class="user-data d-sm-none">
         <div class="info">
