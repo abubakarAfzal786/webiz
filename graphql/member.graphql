@@ -23,6 +23,7 @@ type Member {
     pivot: TeamMemberPivot
     logos: [Image]! @morphMany
     payment_methods: [PaymentMethod]! @hasMany
+    support_tickets: [SupportTicket]! @hasMany
 }
 
 type CarNumber {
@@ -48,6 +49,18 @@ extend type Mutation @guard {
         #        car_number: String, @rules(apply: ["string", "min:2", "max:191"]),
         avatar: Upload, @rules(apply: ["image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"]),
     ): UpdateProfileResponse
+
+    updatePassword(
+        old_password: String, @rules(apply: ["string", "max:191"]),
+        new_password: String, @rules(apply: ["string", "min:6", "max:191", "different:old_password"]),
+        password_confirmation: String, @rules(apply: ["same:new_password"]),
+    ): MessageAndSuccessResponse
+
+    updatePhone(
+        first: Boolean!,
+        phone: String!,
+        code: Int
+    ): MessageAndSuccessResponse
 
     createCarNumber(
         number: String!

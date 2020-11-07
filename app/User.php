@@ -2,12 +2,16 @@
 
 namespace App;
 
+use App\Models\SupportTicket;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * @property string name
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
@@ -57,5 +61,13 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function support_tickets()
+    {
+        return $this->hasMany(SupportTicket::class, 'user_id', 'id');
     }
 }

@@ -20,18 +20,21 @@ class UpdateProfile
         /** @var Member $member */
         $member = auth()->user();
 
-        $exist = Member::query()->where('id', '<>', $member->id)
-            ->where(function (Builder $query) use ($args) {
-                $query->where('email', $args['email'])->orWhere('phone', $args['phone']);
-            })->exists();
+        $exist = Member::query()
+            ->where('id', '<>', $member->id)
+            ->where('email', $args['email'])
+//            ->where(function (Builder $query) use ($args) {
+//                $query->where('email', $args['email'])->orWhere('phone', $args['phone']);
+//            })
+            ->exists();
 
         if ($exist) return [
-            'message' => 'Email and phone number must be unique.',
+            'message' => 'Email already used. Try another one',
             'success' => false,
             'user' => null,
         ];
 
-        if (isset($args['password'])) $args['password'] = bcrypt($args['password']);
+//        if (isset($args['password'])) $args['password'] = bcrypt($args['password']);
 
         $member->update($args);
 

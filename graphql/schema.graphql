@@ -44,6 +44,11 @@ type VerifyResponse {
     user: Member
 }
 
+type MessageAndSuccessResponse {
+    message: String
+    success: Boolean
+}
+
 input SortOption {
     field: String
     order: SortOrder
@@ -63,5 +68,6 @@ enum SortOrder {
 #import notifications.graphql
 #import team.graphql
 #import payments.graphql
+#import support_ticket.graphql
 
 #import tablet.graphql

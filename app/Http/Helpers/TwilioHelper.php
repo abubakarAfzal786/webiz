@@ -11,8 +11,6 @@ use Twilio\Rest\Client;
 
 trait TwilioHelper
 {
-    private $token;
-    private $sid;
     private $verify_sid;
 
     /**
@@ -20,12 +18,10 @@ trait TwilioHelper
      */
     private function setCredentials()
     {
-        $this->token = config('twilio.token');
-        $this->sid = config('twilio.sid');
         $this->verify_sid = config('twilio.verify_sid');
 
         try {
-            $twilio = new Client($this->sid, $this->token, $this->sid, null, new CurlClient([CURLOPT_CONNECTTIMEOUT => 0, CURLOPT_TIMEOUT => 0]));
+            $twilio = new Client(config('twilio.sid'), config('twilio.token'), config('twilio.sid'), null, new CurlClient([CURLOPT_CONNECTTIMEOUT => 0, CURLOPT_TIMEOUT => 0]));
         } catch (ConfigurationException $e) {
             Log::channel('twilio')->error($e);
             $twilio = null;
@@ -47,6 +43,7 @@ trait TwilioHelper
         } catch (TwilioException $e) {
             Log::channel('twilio')->error($e);
         } catch (Exception $exception) {
+            Log::channel('twilio')->error($exception);
         }
 
         return false;
@@ -69,6 +66,7 @@ trait TwilioHelper
         } catch (TwilioException $e) {
             Log::channel('twilio')->error($e);
         } catch (Exception $exception) {
+            Log::channel('twilio')->error($exception);
         }
 
         return false;
@@ -91,6 +89,7 @@ trait TwilioHelper
         } catch (TwilioException $e) {
             Log::channel('twilio')->error($e);
         } catch (Exception $exception) {
+            Log::channel('twilio')->error($exception);
         }
 
         return false;

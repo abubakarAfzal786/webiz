@@ -36,13 +36,13 @@ class SearchRoom
 
         if (!$start && $end) {
             $rooms = $rooms->whereHas('bookings', function (Builder $q) use ($end) {
-                $q->where('start_date', '>=', $end)->orwhere('end_date', '<', $end);
+                $q->where('start_date', '>=', $end)->orWhere('end_date', '<', $end);
             })->orWhereDoesntHave('bookings');
         }
 
         if (!$end && $start) {
             $rooms = $rooms->whereHas('bookings', function (Builder $q) use ($start) {
-                $q->where('start_date', '>', $start)->orwhere('end_date', '>=', $start);
+                $q->where('start_date', '>', $start)->orWhere('end_date', '>=', $start);
             })->orWhereDoesntHave('bookings');
         }
 

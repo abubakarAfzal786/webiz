@@ -18,6 +18,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * @property Collection favorite_rooms
+ * @property string password
  */
 class Member extends Authenticatable implements JWTSubject
 {
@@ -213,6 +214,14 @@ class Member extends Authenticatable implements JWTSubject
     public function payment_methods()
     {
         return $this->hasMany(PaymentMethod::class, 'member_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function support_tickets()
+    {
+        return $this->hasMany(SupportTicket::class, 'member_id', 'id');
     }
 
 }

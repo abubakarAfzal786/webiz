@@ -1,0 +1,35 @@
+extend type Query @guard {
+    ticketsActive: [SupportTicket]!
+    ticketsComplete: [SupportTicket]!
+    ticketMessages(id: ID!): [TicketMessages]!
+}
+
+extend type Mutation @guard {
+    sendMessageToSupport(
+        text: String!,
+        ticket_id: ID, @rules(apply: ["nullable", "exists:support_tickets,id"]),
+    ): MessageAndSuccessResponse
+}
+
+type SupportTicket {
+    id: ID!
+    support_specialist: String
+    messages: [TicketMessages]! @hasMany
+    member_id: ID!
+    member: Member! @belongsTo
+    completed: Boolean
+    last_message: String
+    messages_count: Int
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type TicketMessages {
+    id: ID!
+    ticket_id: ID!
+    text: String!
+    is_member: Boolean
+    seen: Boolean
+    created_at: DateTime!
+    updated_at: DateTime!
+}

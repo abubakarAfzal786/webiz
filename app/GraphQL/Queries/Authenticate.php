@@ -28,7 +28,7 @@ class Authenticate
                 $code = 401;
                 return [
                     'token' => '',
-                    'message' => 'invalid_credentials',
+                    'message' => 'Invalid credentials',
                     'success' => false,
                     'user' => null
                 ];
