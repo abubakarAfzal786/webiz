@@ -69,11 +69,11 @@ class CheckBookingState extends Command
 
                     $checkPush = PushNotification::query()
                         ->where('member_id', '=', $booking->member_id)
-                        ->where('additional->id', $booking->id)
-                        ->where('additional->type', 'bookings')
+//                        ->where('additional->id', $booking->id)
+//                        ->where('additional->type', 'bookings')
                         ->where('seen', true)
-//                        ->where('additional', 'like', '%"id":' . $booking->id . '%')
-//                        ->where('additional', 'like', '%"type":"bookings"%')
+                        ->where('additional', 'like', '%"id":' . $booking->id . '%')
+                        ->where('additional', 'like', '%"type":"bookings"%')
                         ->exists();
 
                     if (!$checkPush) {

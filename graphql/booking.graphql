@@ -15,7 +15,7 @@ type Booking {
     created_at: DateTime!
     updated_at: DateTime!
     price: Float!
-    status: Int!
+    status: Int
     status_name: String
     room_attributes: [RoomAttribute]! @belongsToMany
     reviews: [Review]! @hasMany
