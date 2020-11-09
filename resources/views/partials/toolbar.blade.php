@@ -10,13 +10,17 @@
                         <div class="open-menu d-lg-none">
                             <button type="button"><i class="icon-dashboard"></i></button>
                         </div>
-                        <ul>
-                            @foreach($toolbar_menu_items as $item)
-                                <li class="{{ isset($item['active']) && $item['active'] ? 'active' : '' }}">
-                                    <a href="{{ $item['href'] ?? 'javascript:void(0)' }}">{{ $item['name'] ?? '' }}</a>
-                                </li>
-                            @endforeach
-                        </ul>
+                        <div class="touch-scroll">
+                            <div class="scroll-wrap">
+                                <ul>
+                                    @foreach($toolbar_menu_items as $item)
+                                        <li class="{{ isset($item['active']) && $item['active'] ? 'active' : '' }}">
+                                            <a href="{{ $item['href'] ?? 'javascript:void(0)' }}">{{ $item['name'] ?? '' }}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                     <div class="toolbar-options">
                         @stack('toolbar-options')
