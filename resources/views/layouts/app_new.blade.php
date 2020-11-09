@@ -60,33 +60,36 @@
     <!-- open graph -->
 </head>
 <body>
-@if(!request()->is('login'))
-    @include('partials.header')
-    @include('partials.toolbar', [
-    'toolbar_menu_items' => $toolbar_menu_items ?? [],
-    'toolbar_options' => $toolbar_options ?? [],
-    ])
+<div id="app">
+    @if(!request()->is('login'))
+        @include('partials.header')
+        @include('partials.toolbar', [
+        'toolbar_menu_items' => $toolbar_menu_items ?? [],
+        'toolbar_options' => $toolbar_options ?? [],
+        ])
 
-    <div class="page-menu">
-        <div class="container">
-            <div class="flex wrap">
-                @include('partials.side-menu')
-                <div class="content-wrap col-lg-10 col-sm-12">
-                    <div class="row">
-                        @yield('content')
+        <div class="page-menu">
+            <div class="container">
+                <div class="flex wrap">
+                    @include('partials.side-menu')
+                    <div class="content-wrap col-lg-10 col-sm-12">
+                        <div class="row">
+                            @yield('content')
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    @else
+        @yield('content')
+    @endif
+    <div class="modals-section">
+        @include('partials.success-modal')
+        @stack('modals')
     </div>
-@else
-    @yield('content')
-@endif
-<div class="modals-section">
-    @include('partials.success-modal')
-    @stack('modals')
 </div>
 
+<script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
 <script src="{{ asset('js/libs.js') }}"></script>
 <script src="{{ asset('js/common.js') }}"></script>

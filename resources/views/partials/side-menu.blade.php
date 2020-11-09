@@ -13,7 +13,9 @@
         <div class="item">
             <p>{{ __('Support') }}</p>
             <ul>
-                <li><a href="javascript:void(0)">{{ __('Support Chat') }}</a><span>45</span></li>
+                <li class="{{ request()->is(['dashboard/support-chat', 'dashboard/support-chat/*']) ? 'active' : '' }}"><a href="{{ route('admin.support-chat.index') }}">{{ __('Support Chat') }}</a>
+                    <counter></counter>
+                </li>
                 <li class="{{ request()->is(['dashboard/faq', 'dashboard/faq/*']) ? 'active' : '' }}"><a href="{{ route('admin.faq.index') }}">{{ __('FAQ Base') }}</a></li>
             </ul>
         </div>
