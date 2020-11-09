@@ -5,9 +5,8 @@ namespace App\Models;
 use App\User;
 use Carbon\Carbon;
 use Exception;
-//use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
-//use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -88,10 +87,9 @@ class Room extends Authenticatable implements JWTSubject
 
     protected static function booted()
     {
-//        static::addGlobalScope('active', function (Builder $builder) {
-//            $builder->where('status', true);
-//        });
-//        TODO check this
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder->where('status', true);
+        });
     }
 
     /**

@@ -46,7 +46,7 @@ class MembersDataTable extends DataTable
      */
     public function query(Member $model)
     {
-        return $model->newQuery()->with('avatar');
+        return $model->newQuery()->withoutGlobalScopes()->with('avatar')->orderBy('id', 'desc');
     }
 
     /**

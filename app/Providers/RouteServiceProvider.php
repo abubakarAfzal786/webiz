@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Member;
+use App\Models\Room;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -30,7 +32,13 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Route::bind('room', function($id) {
+            return Room::query()->withoutGlobalScopes()->findOrFail($id);
+        });
+
+        Route::bind('member', function($id) {
+            return Member::query()->withoutGlobalScopes()->findOrFail($id);
+        });
 
         parent::boot();
     }

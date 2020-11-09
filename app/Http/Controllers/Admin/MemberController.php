@@ -14,7 +14,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -31,9 +30,7 @@ class MemberController extends Controller
      */
     public function index(Request $request, MembersDataTable $dataTable)
     {
-        /** @var Member|Collection $data */
-        $data = Member::all();
-        $members_count = $data->count();
+        $members_count = Member::query()->withoutGlobalScopes()->count();
 
         if ($request->ajax()) {
             return $dataTable->ajax();

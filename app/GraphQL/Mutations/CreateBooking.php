@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\Booking;
+use App\Models\Member;
 use App\Models\Room;
 
 class CreateBooking
@@ -17,10 +18,13 @@ class CreateBooking
         $start_date = $args['start_date'];
         $end_date = $args['end_date'];
 
+        /** @var Member $member */
         $member = auth()->user();
 
-        if (!room_is_busy($args['room_id'], $start_date, $end_date)) {
-            $room = Room::query()->find($args['room_id']);
+        /** @var Room $room */
+        $room = Room::query()->find($args['room_id']);
+
+        if ($room && !room_is_busy($args['room_id'], $start_date, $end_date)) {
             $time = $end_date->diffInMinutes($start_date) / 60;
             $roomPrice = $room->price * $time;
             $attributes = $args['attributes'] ?? null;

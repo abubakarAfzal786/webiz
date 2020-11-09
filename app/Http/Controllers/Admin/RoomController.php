@@ -15,7 +15,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -32,9 +31,7 @@ class RoomController extends Controller
      */
     public function index(Request $request, RoomsDataTable $dataTable)
     {
-        /** @var Room|Collection $data */
-        $data = Room::all();
-        $rooms_count = $data->count();
+        $rooms_count = Room::query()->withoutGlobalScopes()->count();
         $facilities = RoomFacility::query()->get();
         $types = RoomType::query()->get()->pluck('name', 'id');
 

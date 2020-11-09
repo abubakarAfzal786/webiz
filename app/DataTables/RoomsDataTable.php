@@ -60,7 +60,7 @@ class RoomsDataTable extends DataTable
      */
     public function query(Room $model)
     {
-        return $model->newQuery()->with('images')->orderBy('id', 'desc');
+        return $model->newQuery()->withoutGlobalScopes()->with('images')->orderBy('id', 'desc');
     }
 
     /**

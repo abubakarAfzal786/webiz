@@ -80,10 +80,9 @@ class Member extends Authenticatable implements JWTSubject
 
     protected static function booted()
     {
-//        static::addGlobalScope('active', function (Builder $builder) {
-//            $builder->where('status', true);
-//        });
-//        TODO check this
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder->where('status', true);
+        });
     }
 
     /**

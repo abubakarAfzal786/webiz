@@ -10,6 +10,9 @@
     "require": {
         "php": "^7.2.5",
         "ext-curl": "*",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "cboden/ratchet": "^0.4.3",
         "doctrine/dbal": "2.10.4",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
@@ -23,9 +26,7 @@
         "twilio/sdk": "^6.9",
         "tymon/jwt-auth": "^1.0",
         "yajra/laravel-datatables-buttons": "^4.0",
-        "yajra/laravel-datatables-oracle": "~9.0",
-        "ext-json": "*",
-        "ext-pdo": "*"
+        "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
