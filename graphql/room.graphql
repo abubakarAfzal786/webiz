@@ -9,8 +9,8 @@ extend type Query @guard {
         types: [ID], @rulesForArray(apply: ["exists:room_types,id"])
         seats: Int, @rules(apply: ["integer"])
         facilities: [ID], @rulesForArray(apply: ["exists:room_facilities,id"])
-        start: DateTimeOrDate,
-        end: DateTimeOrDate
+        start: DateTimeOrDate @rules(apply: ["date", "after:now"])
+        end: DateTimeOrDate @rules(apply: ["date", "after:start_date"])
     ): [Room!]!
 }
 

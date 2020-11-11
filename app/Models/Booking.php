@@ -67,7 +67,7 @@ class Booking extends Model
      */
     public function room()
     {
-        return $this->belongsTo(Room::class, 'room_id', 'id');
+        return $this->belongsTo(Room::class, 'room_id', 'id')->withoutGlobalScopes();
     }
 
     /**
@@ -75,7 +75,7 @@ class Booking extends Model
      */
     public function member()
     {
-        return $this->belongsTo(Member::class, 'member_id', 'id');
+        return $this->belongsTo(Member::class, 'member_id', 'id')->withoutGlobalScopes();
     }
 
     /**

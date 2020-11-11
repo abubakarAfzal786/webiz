@@ -19,7 +19,7 @@ type Booking {
     status_name: String
     room_attributes: [RoomAttribute]! @belongsToMany
     reviews: [Review]! @hasMany
-    room: Room! @belongsTo
+    room: Room @belongsTo
     door_key: Int
     logo: Image @belongsTo
 }
