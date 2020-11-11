@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Http\Helpers\FCMHelper;
 use App\Models\Booking;
+use App\Models\Member;
 use App\Models\PushNotification;
 use App\Models\Room;
 
@@ -20,7 +21,11 @@ class ContinueBooking
     {
         // booking ID
         $id = $args['id'];
-        $booking = Booking::query()->find($id);
+
+        /** @var Member $member */
+        $member = auth()->user();
+        $booking = $member->bookings()->find($id);
+        if (!$booking) return false;
 
         /** @var Booking $next_booked */
         $next_booked = next_booked($booking);
@@ -30,7 +35,8 @@ class ContinueBooking
             $freeExist = similar_free_room($next_booked);
 
             if (!$freeExist) {
-//                $booking->update(['status' => Booking::STATUS_COMPLETED]);
+//                TODO check
+                $booking->update(['status' => Booking::STATUS_COMPLETED]);
                 return false;
             } else {
                 $newBooking = $next_booked->replicate();
