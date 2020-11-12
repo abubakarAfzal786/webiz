@@ -65,6 +65,11 @@ type RoomAttribute {
     unit: Int!
     unit_name: String!
     price: Float!
+    pivot: RoomAttributePivot
+}
+
+type RoomAttributePivot {
+    quantity: Int
 }
 
 input BookingAttribute {
