@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
  * @property int id
  * @property User|Collection user
  * @property Member|Collection member
+ * @property SupportTicketMessage|Collection messages
  */
 class SupportTicket extends Model
 {
@@ -68,7 +69,8 @@ class SupportTicket extends Model
      */
     public function getLastMessageAttribute()
     {
-        return $this->messages()->orderBy('created_at', 'DESC')->first()->text;
+        $last = $this->messages()->orderBy('created_at', 'DESC')->first();
+        return $last ? $last->text : '';
     }
 
     /**

@@ -84,32 +84,26 @@
                     </div>
 
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="review-item">
-                                <div class="data-wrap">
-                                    <div class="img">
-                                        <img src="images/user.jpg" alt="">
-                                    </div>
-                                    <div class="info">
-                                        <div class="name">
-                                            <p>Arlene McCoy</p>
+                        @foreach($new_reviews as $review)
+                            <div class="swiper-slide">
+                                <div class="review-item">
+                                    <div class="data-wrap">
+                                        <div class="img">
+                                            <img src="{{ $review->member->avatar_url ? $review->member->avatar_url : asset('images/default-user.png') }}" alt="">
                                         </div>
-                                        <div class="rating">
-                                            <p><span class="icon-star like"></span>
-                                                <span class="icon-star like"></span>
-                                                <span class="icon-star like"></span>
-                                                <span class="icon-star like"></span>
-                                                <span class="icon-star like"></span></p>
+                                        <div class="info">
+                                            <div class="name">
+                                                <p>{{ $review->member->name }}</p>
+                                            </div>
+                                            {!! get_rating_stars_div($review->rate) !!}
                                         </div>
                                     </div>
-                                </div>
-                                <div class="text-wrap">
-                                    <p>As we look ahead, we’re using our insights, experience, and
-                                        real
-                                        estate portfolio to provide you with solutions...</p>
+                                    <div class="text-wrap">
+                                        <p>{{ $review->description }}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>

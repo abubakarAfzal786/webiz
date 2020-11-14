@@ -95,6 +95,27 @@
                                         <span class="icon-location"></span>
                                     </label>
                                 </div>
+
+                                <div class="item col-md-6 col-sm-12">
+                                    <span class="name">{{ __('Wi-Fi SSID') }}</span>
+                                    <label class="text-option">
+                                <span class="label-wrap">
+                                <input id="wifi_ssid" type="text" name="wifi_ssid" class="placeholder-effect">
+                                <span class="placeholder">{{ __('Wi-Fi SSID') }}</span>
+                                </span>
+                                    </label>
+                                </div>
+
+                                <div class="item col-md-6 col-sm-12">
+                                    <span class="name">{{ __('Wi-Fi Password') }}</span>
+                                    <label class="text-option">
+                                <span class="label-wrap">
+                                <input id="wifi_pass" type="text" name="wifi_pass" class="placeholder-effect">
+                                <span class="placeholder">{{ __('Wi-Fi Password') }}</span>
+                                </span>
+                                    </label>
+                                </div>
+
                                 <input type="hidden" name="lat" id="lat">
                                 <input type="hidden" name="lon" id="lon">
                                 <div class="item col-12">
@@ -118,7 +139,7 @@
                                                     <div class="photo-wrap">
                                                         <div class="add-extra">
                                                             <button type="button"><span
-                                                                        class="icon-plus"></span>{{ __('Add image') }}
+                                                                    class="icon-plus"></span>{{ __('Add image') }}
                                                             </button>
                                                         </div>
                                                     </div>
@@ -142,41 +163,41 @@
 </div>
 
 @push('scripts')
-<script>
-    $(function () {
-        $('#submit-rooms-form').click(function () {
-            let dataForm = new FormData($('#rooms-form')[0]);
-            $.ajax({
-                url: "{{ route('admin.rooms.store')}}",
-                method: 'post',
-                processData: false,
-                contentType: false,
-                data: dataForm,
-                success: function (response) {
-                    if (response.success) {
-                        $.fancybox.open({
-                            src: '#test-notification',
-                            afterClose: function () {
-                                location.reload();
-                            }
+    <script>
+        $(function () {
+            $('#submit-rooms-form').click(function () {
+                let dataForm = new FormData($('#rooms-form')[0]);
+                $.ajax({
+                    url: "{{ route('admin.rooms.store')}}",
+                    method: 'post',
+                    processData: false,
+                    contentType: false,
+                    data: dataForm,
+                    success: function (response) {
+                        if (response.success) {
+                            $.fancybox.open({
+                                src: '#test-notification',
+                                afterClose: function () {
+                                    location.reload();
+                                }
+                            });
+                        }
+                    },
+                    error: function (data) {
+                        let errors = data.responseJSON;
+                        $.each(errors.errors, function (key, value) {
+                            $('[name="' + key + '"]').closest('.item ').append('<span class="modal-span-error">' + value[0] + '</span>');
                         });
-                    }
-                },
-                error: function (data) {
-                    let errors = data.responseJSON;
-                    $.each(errors.errors, function (key, value) {
-                        $('[name="' + key + '"]').closest('.item ').append('<span class="modal-span-error">' + value[0] + '</span>');
-                    });
 
-                    $('.scroll-wrap').animate({
-                        scrollTop: $(document).find('.modal-span-error').first().offset().top
-                    }, 1000);
-                },
-                beforeSend: function () {
-                    $('span.modal-span-error').remove()
-                }
-            });
-        })
-    });
-</script>
+                        $('.scroll-wrap').animate({
+                            scrollTop: $(document).find('.modal-span-error').first().offset().top
+                        }, 1000);
+                    },
+                    beforeSend: function () {
+                        $('span.modal-span-error').remove()
+                    }
+                });
+            })
+        });
+    </script>
 @endpush

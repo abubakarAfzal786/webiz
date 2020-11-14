@@ -11,7 +11,7 @@
                 <p>{{ auth()->user()->name }}</p>
                 <div class="info">
                     <div class="img">
-                        <img src="{{ asset(auth()->user()->avatar ?? 'images/user.jpg') }}" alt="">
+                        <img src="{{ asset(auth()->user()->avatar ?? 'images/default-user.png') }}" alt="">
                     </div>
                     <button type="button"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('LOGOUT') }}</button>

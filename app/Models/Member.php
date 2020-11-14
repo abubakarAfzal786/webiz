@@ -223,4 +223,12 @@ class Member extends Authenticatable implements JWTSubject
         return $this->hasMany(SupportTicket::class, 'member_id', 'id');
     }
 
+    /**
+     * @return HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'member_id', 'id');
+    }
+
 }

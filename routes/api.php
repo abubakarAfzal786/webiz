@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
+
+Route::group(['prefix' => 'support'], function () {
+    Route::get('tickets', 'SupportController@tickets')->name('support.tickets.index');
+    Route::get('messages/{id}', 'SupportController@messages')->name('support.messages.index');
+    Route::get('messages-count', 'SupportController@messagesCount')->name('support.messages.count');
+});

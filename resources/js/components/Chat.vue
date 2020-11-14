@@ -1,320 +1,144 @@
 <template>
     <fragment>
-    <div class="data chat-list-wrap col-lg-5">
-        <div class="data-bg">
-            <div class="chat-list">
-                <div class="scroll-list">
-                    <ul>
-                        <li class="active">
-                            <div class="member-data">
-                                <div class="member-img">
-                                    <img src="/images/user.jpg" alt="">
-                                </div>
-                                <div class="text">
-                                    <div class="name">
-                                        <p>Lena Hawkins <span class="">Ticket 1214</span> <i
-                                            class="icon-star"></i></p>
-                                        <p class="time">12:23</p>
+        <div class="data chat-list-wrap col-lg-5">
+            <div class="data-bg">
+                <div class="chat-list">
+                    <div class="scroll-list">
+                        <ul v-model="tickets">
+                            <li
+                                v-for="(ticket, key) in tickets"
+                                :data-id="ticket.id"
+                                :data-key="key"
+                                :class="{ 'active' : ticket.id === active_ticket.id}"
+                                @click="getMessages"
+                            >
+                                <div class="member-data">
+                                    <div class="member-img">
+                                        <img :src="ticket.member.avatar_url ? ticket.member.avatar_url : '/images/default-user.png'" alt="">
                                     </div>
-                                    <div class="message">
-                                        <p>Amet minim mollit non deserunt ullamco est sit aliqua..</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="member-data">
-                                <div class="member-img">
-                                    <img src="/images/user.jpg" alt="">
-                                </div>
-                                <div class="text">
-                                    <div class="name">
-                                        <p>Lena Hawkins <span class="">Ticket 1214</span> <i
-                                            class="icon-empty"></i></p>
-                                        <p class="time">12:23</p>
-                                    </div>
-                                    <div class="message">
-                                        <p>Amet minim mollit non deserunt ullamco est sit aliqua..</p>
+                                    <div class="text">
+                                        <div class="name">
+                                            <p>{{ ticket.member.name }} <span class="">Ticket {{ ticket.id }}</span>
+                                                <i class="icon-empty"></i>
+                                                <!--<i class="icon-star"></i>-->
+                                            </p>
+                                            <p class="time">12:23</p>
+                                        </div>
+                                        <div class="message">
+                                            <p>{{ ticket.last_message }}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="member-data">
-                                <div class="member-img">
-                                    <img src="/images/user.jpg" alt="">
-                                </div>
-                                <div class="text">
-                                    <div class="name">
-                                        <p>Lena Hawkins <span class="">Ticket 1214</span> <i
-                                            class="icon-star"></i></p>
-                                        <p class="time">12:23</p>
-                                    </div>
-                                    <div class="message">
-                                        <p>Amet minim mollit non deserunt ullamco est sit aliqua..</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="member-data">
-                                <div class="member-img">
-                                    <img src="/images/user.jpg" alt="">
-                                </div>
-                                <div class="text">
-                                    <div class="name">
-                                        <p>Lena Hawkins <span class="">Ticket 1214</span> <i
-                                            class="icon-empty"></i></p>
-                                        <p class="time">12:23</p>
-                                    </div>
-                                    <div class="message">
-                                        <p>Amet minim mollit non deserunt ullamco est sit aliqua..</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="member-data">
-                                <div class="member-img">
-                                    <img src="/images/user.jpg" alt="">
-                                </div>
-                                <div class="text">
-                                    <div class="name">
-                                        <p>Lena Hawkins <span class="">Ticket 1214</span> <i
-                                            class="icon-empty"></i></p>
-                                        <p class="time">12:23</p>
-                                    </div>
-                                    <div class="message">
-                                        <p>Amet minim mollit non deserunt ullamco est sit aliqua..</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="member-data">
-                                <div class="member-img">
-                                    <img src="/images/user.jpg" alt="">
-                                </div>
-                                <div class="text">
-                                    <div class="name">
-                                        <p>Lena Hawkins <span class="">Ticket 1214</span> <i
-                                            class="icon-star"></i></p>
-                                        <p class="time">12:23</p>
-                                    </div>
-                                    <div class="message">
-                                        <p>Amet minim mollit non deserunt ullamco est sit aliqua..</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="member-data">
-                                <div class="member-img">
-                                    <img src="/images/user.jpg" alt="">
-                                </div>
-                                <div class="text">
-                                    <div class="name">
-                                        <p>Lena Hawkins <span class="">Ticket 1214</span> <i
-                                            class="icon-empty"></i></p>
-                                        <p class="time">12:23</p>
-                                    </div>
-                                    <div class="message">
-                                        <p>Amet minim mollit non deserunt ullamco est sit aliqua..</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="member-data">
-                                <div class="member-img">
-                                    <img src="/images/user.jpg" alt="">
-                                </div>
-                                <div class="text">
-                                    <div class="name">
-                                        <p>Lena Hawkins <span class="">Ticket 1214</span> <i
-                                            class="icon-empty"></i></p>
-                                        <p class="time">12:23</p>
-                                    </div>
-                                    <div class="message">
-                                        <p>Amet minim mollit non deserunt ullamco est sit aliqua..</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="member-data">
-                                <div class="member-img">
-                                    <img src="/images/user.jpg" alt="">
-                                </div>
-                                <div class="text">
-                                    <div class="name">
-                                        <p>Lena Hawkins <span class="">Ticket 1214</span> <i
-                                            class="icon-star"></i></p>
-                                        <p class="time">12:23</p>
-                                    </div>
-                                    <div class="message">
-                                        <p>Amet minim mollit non deserunt ullamco est sit aliqua..</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="member-data">
-                                <div class="member-img">
-                                    <img src="/images/user.jpg" alt="">
-                                </div>
-                                <div class="text">
-                                    <div class="name">
-                                        <p>Lena Hawkins <span class="">Ticket 1214</span> <i
-                                            class="icon-empty"></i></p>
-                                        <p class="time">12:23</p>
-                                    </div>
-                                    <div class="message">
-                                        <p>Amet minim mollit non deserunt ullamco est sit aliqua..</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
 
+                    </div>
                 </div>
-            </div>
-            <div class="close-chat-list d-lg-none">
-                <button type="button" class="main-btn yellow-blank">Close</button>
+                <div class="close-chat-list d-lg-none">
+                    <button type="button" class="main-btn yellow-blank">Close</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="data col-lg-7 col-md-12">
-        <div class="data-bg">
-            <div class="active-chat">
-                <div class="member-data">
-                    <div class="open-chat-list d-lg-none">
-                        <button type="button"><span class="icon-menu"></span></button>
-                    </div>
-                    <div class="member-img">
-                        <img src="/images/user.jpg" alt="">
-                    </div>
-                    <div class="text">
-                        <div class="name">
-                            <p>Lena Hawkins <span class="">Ticket 1214</span></p>
-                            <p><i class="icon-empty"></i></p>
+        <div class="data col-lg-7 col-md-12">
+            <div class="data-bg">
+                <div class="active-chat">
+                    <div class="member-data" v-if="active_ticket.id">
+                        <div class="open-chat-list d-lg-none">
+                            <button type="button"><span class="icon-menu"></span></button>
+                        </div>
+                        <div class="member-img">
+                            <img :src="active_ticket.member.avatar_url ? active_ticket.member.avatar_url : '/images/default-user.png'" alt="">
+                        </div>
+                        <div class="text">
+                            <div class="name">
+                                <p>{{ active_ticket.member.name }} <span class="">Ticket {{ active_ticket.id }}</span></p>
+                                <p><i class="icon-empty"></i></p>
+                            </div>
+                        </div>
+                        <div class="btn">
+                            <button type="button">Close Request</button>
                         </div>
                     </div>
-                    <div class="btn">
-                        <button type="button">Close Request</button>
-                    </div>
-                </div>
-                <div class="chat-message">
-                    <div class="chat-scroll">
-                        <div class="chat-wrap">
-                            <div class="message-text received">
-                                <div class="content">
-                                    <div class="name">
-                                        <p>Leslie Alexander</p>
+                    <div class="chat-message">
+                        <div class="chat-scroll">
+                            <div class="chat-wrap" v-model="messages">
+                                <div class="message-text"
+                                     v-for="message in messages"
+                                     :data-id="message.id"
+                                     :class="{
+                                         'received' : message.is_member === true,
+                                         'sent' : message.is_member === false
+                                     }"
+                                >
+                                    <div class="content">
+                                        <div class="name">
+                                            <p>{{ message.is_member ? active_ticket.member.name : 'You' }}</p>
+                                        </div>
+                                        <div class="text">
+                                            <p>{{ message.text }}</p>
+                                        </div>
+                                        <div class="status">
+                                            <p>10:55 AM <span class="icon-seen"></span></p>
+                                        </div>
                                     </div>
-                                    <div class="text">
-                                        <p>Lorem Ipsum is simply dummy text of the printing and
-                                            typesetting
-                                            industry. Lorem Ipsum has been the industry's</p>
+                                    <div class="user">
+                                        <img :src="active_ticket.member.avatar_url ? active_ticket.member.avatar_url : '/images/default-user.png'" alt="">
                                     </div>
-                                    <div class="status">
-                                        <p>10:55 AM <span class="icon-seen"></span></p>
-                                    </div>
-                                </div>
-                                <div class="user">
-                                    <img src="/images/user.jpg" alt="">
                                 </div>
                             </div>
-
-                            <div class="message-text sent">
-                                <div class="content">
-                                    <div class="name">
-                                        <p>You</p>
-                                    </div>
-                                    <div class="text">
-                                        <p>Lorem Ipsum is simply dummy text of the printing and
-                                            typesetting
-                                            industry. Lorem Ipsum has been the industry's</p>
-                                    </div>
-                                    <div class="status">
-                                        <p>10:55 AM <span class="icon-seen"></span></p>
-                                    </div>
-                                </div>
-                                <div class="user">
-                                    <img src="/images/user.jpg" alt="">
-                                </div>
-                            </div>
-
-                            <div class="message-text received">
-                                <div class="content">
-                                    <div class="name">
-                                        <p>Leslie Alexander</p>
-                                    </div>
-                                    <a href="javascript:void(0)" class="file">
-                                                <span class="icon">
-                                                    <span class="icon-document"></span>
-                                                </span>
-                                        <span class="info">
-                                                    <span class="text">IMG_912.jpeg <span
-                                                        class="weight">2,4 MB</span></span>
-                                                </span>
-                                    </a>
-                                    <div class="status">
-                                        <p>10:55 AM</p>
-                                    </div>
-                                </div>
-                                <div class="user">
-                                    <img src="/images/user.jpg" alt="">
-                                </div>
-                            </div>
-
-                            <div class="message-text sent">
-                                <div class="content">
-                                    <div class="name">
-                                        <p>Leslie Alexander</p>
-                                    </div>
-                                    <a href="javascript:void(0)" class="file">
-                                                <span class="icon">
-                                                    <span class="icon-document"></span>
-                                                </span>
-                                        <span class="info">
-                                                    <span class="text">IMG_912.jpeg <span
-                                                        class="weight">2,4 MB</span></span>
-                                                </span>
-                                    </a>
-                                    <div class="status">
-                                        <p>10:55 AM</p>
-                                    </div>
-                                </div>
-                                <div class="user">
-                                    <img src="/images/user.jpg" alt="">
-                                </div>
-                            </div>
-
                         </div>
                     </div>
-                </div>
-                <div class="chat-control">
-                    <label>
-                        <textarea placeholder="Type your message here..."></textarea>
-                    </label>
-                    <div class="btn">
-                        <button type="button"><span class="icon-smile"></span></button>
-                        <button type="button"><label><input type="file"><span class="icon-file"></span></label>
-                        </button>
-                        <button type="button"><span class="icon-send"></span></button>
+                    <div class="chat-control">
+                        <label>
+                            <textarea placeholder="Type your message here..."></textarea>
+                        </label>
+                        <div class="btn">
+                            <button type="button"><span class="icon-smile"></span></button>
+                            <button type="button"><label><input type="file"><span class="icon-file"></span></label>
+                            </button>
+                            <button type="button"><span class="icon-send"></span></button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </fragment>
 </template>
 <script>
-    export default {
-        mounted() {
-            console.log('chat mounted')
+export default {
+    mounted() {
+        this.getTickets().then(data => {
+            this.tickets = data;
+        });
+    },
+    data: function () {
+        return {
+            active_ticket: [],
+            tickets: [],
+            messages: []
         }
+    },
+    methods: {
+        getTickets: function () {
+            let d = $.Deferred();
+
+            axios.get('/api-admin/support/tickets')
+                .then((response) => {
+                    d.resolve(response.data.tickets);
+                });
+
+            return d.promise();
+        },
+        getMessages: function (e) {
+            this.active_ticket = this.tickets[e.currentTarget.getAttribute('data-key')];
+            let ticket_id = e.currentTarget.getAttribute('data-id');
+
+            axios.get('/api-admin/support/messages/' + ticket_id)
+                .then((response) => {
+                    this.messages = response.data.messages;
+                });
+        },
     }
+}
 </script>

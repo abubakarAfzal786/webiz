@@ -157,6 +157,14 @@ class Room extends Authenticatable implements JWTSubject
     }
 
     /**
+     * @return HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'room_id', 'id');
+    }
+
+    /**
      * @return float|int
      */
     public function getAverageRateAttribute()

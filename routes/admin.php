@@ -17,5 +17,6 @@ Route::group(['as' => 'admin.'], function () {
     Route::resource('rooms/{room_id}/devices', 'DeviceController')->except('show');
     Route::resource('device-type', 'DeviceTypeController')->except('show');
     Route::resource('settings', 'SettingController')->except('show');
+    Route::resource('transactions', 'TransactionController')->except('show');
     Route::get('support-chat', 'SupportChatController@index')->name('support-chat.index');
 });

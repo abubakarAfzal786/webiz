@@ -33,16 +33,7 @@ class ReviewsDataTable extends DataTable
                 return $review->room ? $review->room->name : '';
             })
             ->editColumn('rate', function ($review) {
-                $stars = '';
-                for ($i = 1; $i <= round($review->rate); $i++) {
-                    $stars .= '<span class="icon-star"></span>';
-                }
-
-                for ($i = 1; $i <= round(5 - round($review->rate)); $i++) {
-                    $stars .= '<span class="icon-empty"></span>';
-                }
-
-                return '<div class="rating"><p>' . $stars . '</p></div>';
+                return get_rating_stars_div($review->rate);
             })
             ->addColumn('date', function ($review) {
                 return $review->created_at ? '<span data-order="' . $review->created_at . '">' . $review->created_at->diffForHumans() . '</span>' : '';

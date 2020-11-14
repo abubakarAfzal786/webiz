@@ -152,3 +152,23 @@ if (!function_exists('get_current_booking')) {
         return null;
     }
 }
+
+if (!function_exists('get_rating_stars_div')) {
+    /**
+     * @param $rate
+     * @return string
+     */
+    function get_rating_stars_div($rate)
+    {
+        $stars = '';
+        for ($i = 1; $i <= round($rate); $i++) {
+            $stars .= '<span class="icon-star"></span>';
+        }
+
+        for ($i = 1; $i <= round(5 - round($rate)); $i++) {
+            $stars .= '<span class="icon-empty"></span>';
+        }
+
+        return '<div class="rating"><p>' . $stars . '</p></div>';
+    }
+}
