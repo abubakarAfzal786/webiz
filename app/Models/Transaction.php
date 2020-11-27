@@ -33,4 +33,6 @@ class Transaction extends Model
     {
         return $this->belongsTo(Room::class, 'room_id', 'id');
     }
+
+//    TODO add booking
 }

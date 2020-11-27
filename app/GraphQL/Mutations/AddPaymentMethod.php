@@ -17,6 +17,8 @@ class AddPaymentMethod
         /** @var Member $user */
         $user = auth()->user();
 
-        $user->payment_methods()->create(['card_number' => '**** **** **** 1234']);
+        $method = $user->payment_methods()->create(['card_number' => '**** **** **** 1234']);
+
+        return $method;
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Helpers\ImageUploadHelper;
 use App\User;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Collection;
+use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -22,7 +23,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  */
 class Member extends Authenticatable implements JWTSubject
 {
-    use ImageUploadHelper;
+    use ImageUploadHelper, Notifiable;
 
     protected $fillable = [
         'name',
@@ -33,6 +34,7 @@ class Member extends Authenticatable implements JWTSubject
         'user_id',
         'password',
         'mobile_token',
+        'reset_token',
     ];
 
     protected $appends = [
@@ -229,6 +231,15 @@ class Member extends Authenticatable implements JWTSubject
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'member_id', 'id');
+    }
+
+
+    /**
+     * @return Collection
+     */
+    public function getActiveBookingsAttribute()
+    {
+        return $this->bookings()->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_COMPLETED])->get();
     }
 
 }

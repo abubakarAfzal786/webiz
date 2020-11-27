@@ -1,5 +1,7 @@
 extend type Query @guard {
     paymentMethods: [PaymentMethod]!
+    credits(orderBy: [SortOption!]! @orderBy): [Credit]! @all
+    transactions: [Transaction]!
 }
 
 type PaymentMethod {
@@ -28,6 +30,12 @@ type Transaction {
     room: Room @belongsTo
 }
 
+type Credit {
+    id: ID!
+    amount: Int
+    price: Float
+}
+
 extend type Mutation @guard {
     addPaymentMethod(
         type: String,
@@ -36,4 +44,10 @@ extend type Mutation @guard {
         service: String,
         card_number: String,
     ): PaymentMethod
+
+    addCredits(
+        method_id: ID!, @rules(apply: ["exists:payment_methods,id"]),
+        credit_id: ID, @rules(apply: ["nullable", "required_without:amount", "exists:credits,id"]),
+        amount: Float, @rules(apply: ["nullable", "required_without:credit_id", "numeric"]),
+    ): Boolean
 }
