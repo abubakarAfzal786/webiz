@@ -10,6 +10,7 @@ class Transaction extends Model
     protected $fillable = [
         'member_id',
         'room_id',
+        'booking_id',
         'type',
         'credit',
         'price',
@@ -17,6 +18,14 @@ class Transaction extends Model
 
     const TYPE_ROOM = 10;
     const TYPE_CREDIT = 20;
+
+    public static function listTypes()
+    {
+        return [
+            self::TYPE_ROOM => __('Booking'),
+            self::TYPE_CREDIT => __('Credit'),
+        ];
+    }
 
     /**
      * @return BelongsTo
@@ -34,5 +43,11 @@ class Transaction extends Model
         return $this->belongsTo(Room::class, 'room_id', 'id');
     }
 
-//    TODO add booking
+    /**
+     * @return BelongsTo
+     */
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class, 'booking_id', 'id');
+    }
 }

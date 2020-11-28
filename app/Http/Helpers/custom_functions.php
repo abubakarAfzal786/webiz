@@ -3,6 +3,7 @@
 use App\Models\Booking;
 use App\Models\Room;
 use App\Models\RoomAttribute;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -170,5 +171,28 @@ if (!function_exists('get_rating_stars_div')) {
         }
 
         return '<div class="rating"><p>' . $stars . '</p></div>';
+    }
+}
+
+if (!function_exists('make_transaction')) {
+    /**
+     * @param int $member_id
+     * @param float $price
+     * @param int|null $room_id
+     * @param int|null $booking_id
+     * @param int|null $credit
+     * @param int $type
+     * @return Model|Transaction
+     */
+    function make_transaction($member_id, $price, $room_id = null, $booking_id = null, $credit = null, $type = Transaction::TYPE_CREDIT)
+    {
+        return Transaction::query()->create([
+            'member_id' => $member_id,
+            'room_id' => $room_id,
+            'booking_id' => $booking_id,
+            'type' => $type,
+            'credit' => $credit,
+            'price' => $price,
+        ]);
     }
 }

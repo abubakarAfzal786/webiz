@@ -17,7 +17,7 @@ class TransactionController extends Controller
      */
     public function index(TransactionDataTable $dataTable)
     {
-        return $dataTable->render('admin.bookings.index');
+        return $dataTable->render('admin.transactions.index');
     }
 
     /**

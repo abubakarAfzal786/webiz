@@ -20,6 +20,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 /**
  * @property Collection favorite_rooms
  * @property string password
+ * @property float balance
+ * @property int id
  */
 class Member extends Authenticatable implements JWTSubject
 {

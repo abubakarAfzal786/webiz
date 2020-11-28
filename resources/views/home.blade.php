@@ -34,7 +34,7 @@
         <div class="data-bg">
             <div class="data-title no-border">
                 <div class="title">
-                    <p>Today's <br>transactions</p>
+                    <a href="{{ route('admin.transactions.index') }}"><p>Today's <br>transactions</p></a>
                 </div>
                 <div class="more-options">
                     <div class="options-btn">
@@ -45,7 +45,7 @@
             <div class="data-charts">
                 <div class="description">
                     <div class="status">
-                        <p><span class="icon-pay"></span>21</p>
+                        <p><span class="icon-pay"></span>{{ $today_transactions_count }}</p>
                     </div>
                     <div class="name">
                         <p>Number of payments</p>
@@ -89,7 +89,9 @@
                                 <div class="review-item">
                                     <div class="data-wrap">
                                         <div class="img">
-                                            <img src="{{ $review->member->avatar_url ? $review->member->avatar_url : asset('images/default-user.png') }}" alt="">
+                                            <img
+                                                src="{{ $review->member->avatar_url ? $review->member->avatar_url : asset('images/default-user.png') }}"
+                                                alt="">
                                         </div>
                                         <div class="info">
                                             <div class="name">

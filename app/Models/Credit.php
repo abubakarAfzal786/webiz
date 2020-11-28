@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property float price
+ * @property int amount
+ */
 class Credit extends Model
 {
     protected $fillable = [

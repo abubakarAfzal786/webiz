@@ -22,7 +22,22 @@ class TransactionDataTable extends DataTable
     public function dataTable($query)
     {
         return datatables()
-            ->eloquent($query);
+            ->eloquent($query)
+            ->addColumn('member', function ($transaction) {
+                return $transaction->member ? $transaction->member->name : '';
+            })
+            ->addColumn('room', function ($transaction) {
+                return $transaction->room ? $transaction->room->name : '';
+            })
+            ->editColumn('type', function ($transaction) {
+                return Transaction::listTypes()[$transaction->type];
+            })
+            ->editColumn('created_at', function ($transaction) {
+                return $transaction->created_at ? $transaction->created_at->diffForHumans() : '';
+            })
+            ->editColumn('updated_at', function ($transaction) {
+                return $transaction->updated_at ? $transaction->updated_at->diffForHumans() : '';
+            });
     }
 
     /**
@@ -44,7 +59,7 @@ class TransactionDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('transaction-table')
+            ->setTableId('myDataTable')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('Bfrtip')
@@ -66,14 +81,14 @@ class TransactionDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('id'),
+            Column::make('id')->title('ID'),
+            Column::make('member'),
+            Column::make('room'),
+            Column::make('type'),
+            Column::make('credit'),
+            Column::make('price'),
             Column::make('created_at'),
             Column::make('updated_at'),
-            Column::computed('action')
-                ->exportable(false)
-                ->printable(false)
-                ->width(60)
-                ->addClass('text-center'),
         ];
     }
 

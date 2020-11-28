@@ -5,6 +5,9 @@ namespace App\GraphQL\Mutations;
 use App\Models\Booking;
 use App\Models\Member;
 use App\Models\Room;
+use App\Models\Transaction;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class CreateBooking
 {
@@ -33,10 +36,18 @@ class CreateBooking
             $args['door_key'] = generate_door_key();
             $args['status'] = Booking::STATUS_PENDING;
 
-            /** @var Booking $booking */
-            $booking = $member->bookings()->create($args);
-            $booking->room_attributes()->attach($attributesToSync);
+            DB::beginTransaction();
+            try {
+                /** @var Booking $booking */
+                $booking = $member->bookings()->create($args);
+                $booking->room_attributes()->attach($attributesToSync);
+                make_transaction($member->id, $args['price'], $args['room_id'], $booking->id, null, Transaction::TYPE_ROOM);
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return null;
+            }
 
+            DB::commit();
             return $booking;
         }
         return null;
