@@ -8,6 +8,7 @@ Route::group(['as' => 'admin.'], function () {
     Route::resource('faq', 'FaqController')->except('show');
     Route::resource('faq-category', 'FaqCategoryController')->except('show');
     Route::resource('members', 'MemberController')->except('show');
+    Route::get('members/{id}/profile', 'MemberController@profile')->name('members.profile');
     Route::resource('rooms', 'RoomController')->except('show');
     Route::resource('room-facility', 'RoomFacilityController')->except('show');
     Route::resource('room-type', 'RoomTypeController')->except('show');

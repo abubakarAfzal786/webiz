@@ -103,4 +103,12 @@ class Booking extends Model
     {
         return $this->belongsTo(Image::class, 'logo_id', 'id')->where('is_logo', true);
     }
+
+    /**
+     * @return HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'booking_id', 'id');
+    }
 }

@@ -23,6 +23,7 @@ type Member {
     pivot: TeamMemberPivot
     logos: [Image]! @morphMany
     payment_methods: [PaymentMethod]! @hasMany
+    default_payment_method: PaymentMethod
     support_tickets: [SupportTicket]! @hasMany
 }
 

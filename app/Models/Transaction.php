@@ -11,6 +11,7 @@ class Transaction extends Model
         'member_id',
         'room_id',
         'booking_id',
+        'method_id',
         'type',
         'credit',
         'price',
@@ -18,6 +19,9 @@ class Transaction extends Model
 
     const TYPE_ROOM = 10;
     const TYPE_CREDIT = 20;
+
+    const STATUS_PENDING = 10;
+    const STATUS_PAID = 20;
 
     public static function listTypes()
     {
@@ -49,5 +53,13 @@ class Transaction extends Model
     public function booking()
     {
         return $this->belongsTo(Booking::class, 'booking_id', 'id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function payment_method()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'method_id', 'id');
     }
 }

@@ -45,6 +45,14 @@ extend type Mutation @guard {
         card_number: String,
     ): PaymentMethod
 
+    choosePaymentMethod(
+        method_id: ID!, @rules(apply: ["exists:payment_methods,id"]),
+    ): PaymentMethod
+
+    deletePaymentMethod(
+        method_id: ID!, @rules(apply: ["exists:payment_methods,id"]),
+    ): Boolean
+
     addCredits(
         method_id: ID!, @rules(apply: ["exists:payment_methods,id"]),
         credit_id: ID, @rules(apply: ["nullable", "required_without:amount", "exists:credits,id"]),

@@ -137,4 +137,10 @@ class MemberController extends Controller
             return response()->json(['message' => 'fail'], 422);
         }
     }
+
+    public function profile($id, Request $request)
+    {
+        $member = Member::query()->withoutGlobalScopes()->findOrFail($id);
+        return view('admin.members.profile', compact('member'));
+    }
 }

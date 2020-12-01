@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PaymentMethod extends Model
 {
@@ -22,5 +23,13 @@ class PaymentMethod extends Model
     public function member()
     {
         return $this->belongsTo(Member::class, 'member_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'method_id', 'id');
     }
 }

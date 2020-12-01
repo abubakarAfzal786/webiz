@@ -22,6 +22,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string password
  * @property float balance
  * @property int id
+ * @property Collection payment_methods
  */
 class Member extends Authenticatable implements JWTSubject
 {
@@ -37,6 +38,7 @@ class Member extends Authenticatable implements JWTSubject
         'password',
         'mobile_token',
         'reset_token',
+        'pm_id',
     ];
 
     protected $appends = [
@@ -242,6 +244,14 @@ class Member extends Authenticatable implements JWTSubject
     public function getActiveBookingsAttribute()
     {
         return $this->bookings()->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_COMPLETED])->get();
+    }
+
+    /**
+     * @return self|object|null
+     */
+    public function getDefaultPaymentMethodAttribute()
+    {
+        return $this->payment_methods()->where('id', $this->pm_id)->first();
     }
 
 }
