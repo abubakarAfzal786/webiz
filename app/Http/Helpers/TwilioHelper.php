@@ -62,7 +62,13 @@ trait TwilioHelper
                 'to' => $number
             ];
             $verification = $twilio->verify->v2->services($this->verify_sid)->verificationChecks->create($code, $options);
-            if ($verification->valid) return true;
+            if ($verification->valid) {
+                try {
+                    $twilio->verify->v2->services($this->verify_sid)->verifications($number)->fetch();
+                } catch (Exception $exception) {
+                }
+                return true;
+            }
         } catch (TwilioException $e) {
             Log::channel('twilio')->error($e);
         } catch (Exception $exception) {

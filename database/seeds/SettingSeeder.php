@@ -29,6 +29,13 @@ class SettingSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
+            [
+                'key' => 'booking_time_resolution',
+                'value' => 15,
+                'title' => 'Time between bookings in minutes',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
         ];
 
         Setting::query()->insert($types);

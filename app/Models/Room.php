@@ -205,7 +205,7 @@ class Room extends Authenticatable implements JWTSubject
             ->first();
 
         if (!$current) {
-            return $now;
+            return $now->addMinutes(Setting::getValue('booking_time_resolution', 15));
         } else {
             $next_bookings = $this->bookings()
                 ->whereBetween('start_date', [$current->end_date, $tomorrow])
@@ -213,21 +213,21 @@ class Room extends Authenticatable implements JWTSubject
                 ->get();
 
             if (!$next_bookings->count()) {
-                return $current->end_date;
+                return $current->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15));
             }
 
             $end_date = $current->end_date;
             $inter = null;
 
             foreach ($next_bookings as $next_booking) {
-                if ($next_booking->start_date->diffInMinutes($end_date) < Setting::getValue('booking_minimum_time', 30)) {
-                    $end_date = $next_booking->end_date;
+                if ($next_booking->start_date->diffInMinutes($end_date) < Setting::getValue('booking_minimum_time', 30) + Setting::getValue('booking_time_resolution', 15)) {
+                    $end_date = $next_booking->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15));
                 } else {
-                    return $next_booking->end_date;
+                    return $next_booking->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15));
                 }
             }
 
-            return $end_date;
+            return $end_date->addMinutes(Setting::getValue('booking_time_resolution', 15));
         }
     }
 }

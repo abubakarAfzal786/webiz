@@ -159,7 +159,7 @@ function tableMobData() {
 
 $(document).ready(function () {
 
-    $("input[type=tel]").mask("(999) 999-9999");
+    // $("input[type=tel]").mask("(999) 999-9999");
 
     $('[data-fancybox]').fancybox({
         closeExisting: true,

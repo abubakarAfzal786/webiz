@@ -60,7 +60,7 @@
                             <div class="item col-lg-4 col-md-6 col-sm-12">
                                 <label class="text-option">
                                     <span class="label-wrap">
-                                        <input type="password" value="" readonly
+                                        <input type="password" value="******" readonly
                                                class="placeholder-effect">
                                         <span class="placeholder">Password</span>
                                     </span>
@@ -158,7 +158,7 @@
                         @foreach($member->transactions as $transaction)
                             <tr>
                                 <td>{{ $transaction->id }}</td>
-                                <td>{{ $transaction->created_at }}</td>
+                                <td>{{ $transaction->created_at ? $transaction->created_at->format('d.m.Y H:i') : '' }}</td>
                                 <td>{{ $transaction->payment_method ? $transaction->payment_method->mode : '' }}</td>
                                 <td>{{ $transaction->price }}</td>
                                 <td>

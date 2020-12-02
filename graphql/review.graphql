@@ -1,8 +1,6 @@
 extend type Query @guard {
     reviews: [Review]!
     review(id: ID!): Review
-#    reviews: [Review!]! @paginate(defaultCount: 10)
-#    review(id: ID @eq): Review @find
 }
 
 type Review {

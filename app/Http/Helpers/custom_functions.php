@@ -3,6 +3,7 @@
 use App\Models\Booking;
 use App\Models\Room;
 use App\Models\RoomAttribute;
+use App\Models\Setting;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,8 +14,8 @@ use Ramsey\Uuid\UuidInterface;
 if (!function_exists('room_is_busy')) {
     /**
      * @param int $id
-     * @param $start
-     * @param $end
+     * @param Carbon $start
+     * @param Carbon $end
      * @return bool
      */
     function room_is_busy(int $id, $start, $end)
@@ -22,7 +23,7 @@ if (!function_exists('room_is_busy')) {
         return Booking::query()
             ->where('room_id', $id)
             ->where('start_date', '<=', $start)
-            ->where('end_date', '>=', $end)
+            ->where('end_date', '>=', $end->addMinutes(Setting::getValue('booking_time_resolution', 15)))
             ->exists();
     }
 }
@@ -98,7 +99,7 @@ if (!function_exists('similar_free_room')) {
 
         foreach ($sameTypeRooms as $sameTypeRoom) {
             /** @var Room $sameTypeRoom */
-            if (!$sameTypeRoom->bookings()->whereBetween('start_date', [$booked->start_date, $booked->end_date])->exists()) {
+            if (!$sameTypeRoom->bookings()->whereBetween('start_date', [$booked->start_date, $booked->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15))])->exists()) {
                 return $sameTypeRoom;
             }
         }

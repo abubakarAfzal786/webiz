@@ -20,12 +20,16 @@ class SearchRoom
         $facilities = $args['facilities'] ?? [];
         $start = $args['start'] ?? null;
         $end = $args['end'] ?? null;
+        $name = $args['name'] ?? null;
 
         $rooms = Room::query()
             ->with('facilities')
             ->where('seats', '>=', $seats)
             ->when($types, function (Builder $q) use ($types) {
                 return $q->whereIn('type_id', $types);
+            })
+            ->when($name, function (Builder $q) use ($name) {
+                return $q->where('name', 'LIKE', '%' . $name . '%');
             });
 
         foreach ($facilities as $facility) {
@@ -35,29 +39,35 @@ class SearchRoom
         }
 
         if (!$start && $end) {
-            $rooms = $rooms->whereHas('bookings', function (Builder $q) use ($end) {
-                $q->where('start_date', '>=', $end)->orWhere('end_date', '<', $end);
-            })->orWhereDoesntHave('bookings');
+            $rooms = $rooms->where(function ($wq) use ($end) {
+                return $wq->whereHas('bookings', function (Builder $q) use ($end) {
+                    $q->where('start_date', '>=', $end)->orWhere('end_date', '<', $end);
+                })->orWhereDoesntHave('bookings');
+            });
         }
 
         if (!$end && $start) {
-            $rooms = $rooms->whereHas('bookings', function (Builder $q) use ($start) {
-                $q->where('start_date', '>', $start)->orWhere('end_date', '>=', $start);
-            })->orWhereDoesntHave('bookings');
+            $rooms = $rooms->where(function ($wq) use ($start) {
+                return $wq->whereHas('bookings', function (Builder $q) use ($start) {
+                    $q->where('start_date', '>', $start)->orWhere('end_date', '>=', $start);
+                })->orWhereDoesntHave('bookings');
+            });
         }
 
         if ($start && $end) {
-            $rooms = $rooms->whereHas('bookings', function (Builder $q) use ($start, $end) {
-                $q->where(
-                    function (Builder $query) use ($start, $end) {
-                        $query->where('start_date', '>', $start)->where('start_date', '>=', $end);
-                    }
-                )->orWhere(
-                    function (Builder $query) use ($start, $end) {
-                        $query->where('end_date', '<=', $start)->where('end_date', '<', $end);
-                    }
-                );
-            })->orWhereDoesntHave('bookings');
+            $rooms = $rooms->where(function ($wq) use ($start, $end) {
+                return $wq->whereHas('bookings', function (Builder $q) use ($start, $end) {
+                    $q->where(
+                        function (Builder $query) use ($start, $end) {
+                            $query->where('start_date', '>', $start)->where('start_date', '>=', $end);
+                        }
+                    )->orWhere(
+                        function (Builder $query) use ($start, $end) {
+                            $query->where('end_date', '<=', $start)->where('end_date', '<', $end);
+                        }
+                    );
+                })->orWhereDoesntHave('bookings');
+            });
         }
 
         $rooms = $rooms->orderBy('created_at', 'desc')->get();

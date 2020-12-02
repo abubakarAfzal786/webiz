@@ -11,6 +11,7 @@ extend type Query @guard {
         facilities: [ID], @rulesForArray(apply: ["exists:room_facilities,id"])
         start: DateTimeOrDate @rules(apply: ["date"])
         end: DateTimeOrDate @rules(apply: ["date", "after:start_date"])
+        name: String
     ): [Room!]!
 }
 

@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property Carbon start_date
+ * @property Carbon end_date
+ */
 class Booking extends Model
 {
     protected $fillable = [
@@ -21,7 +26,8 @@ class Booking extends Model
     ];
 
     protected $appends = [
-        'status_name'
+        'status_name',
+        'similar_room',
     ];
 
     protected $dates = [
@@ -110,5 +116,22 @@ class Booking extends Model
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'booking_id', 'id');
+    }
+
+    /**
+     * @return Room|null
+     */
+    public function getSimilarRoomAttribute()
+    {
+        $next_booked = next_booked($this);
+        $freeExist = false;
+
+        if ($next_booked) {
+            /** @var Room $freeExist */
+            $freeExist = similar_free_room($next_booked);
+        }
+
+//        TODO check
+        return $freeExist ? $freeExist : null;
     }
 }
