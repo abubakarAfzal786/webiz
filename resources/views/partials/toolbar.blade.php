@@ -10,6 +10,12 @@
                         <div class="open-menu d-lg-none">
                             <button type="button"><i class="icon-dashboard"></i></button>
                         </div>
+                        @if(isset($prev_button) && !empty($prev_button))
+                            <div class="prev-return">
+                                <a href="{{ $prev_button['href'] }}"><span
+                                        class="icon-return"></span>{{ $prev_button['name'] }}</a>
+                            </div>
+                        @endif
                         <div class="touch-scroll">
                             <div class="scroll-wrap">
                                 <ul>

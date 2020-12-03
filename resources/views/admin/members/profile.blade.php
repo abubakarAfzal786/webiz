@@ -1,6 +1,6 @@
-@extends('layouts.app_new', ['toolbar_menu_items' => [
-    ['name' => __('Members'), 'active' => false, 'href' => route('admin.members.index')],
-]])
+@extends('layouts.app_new', ['prev_button' =>
+    ['name' => __('Members'), 'href' => route('admin.members.index')]
+])
 
 @section('content')
     <div class="data tabs-wrap col-12">
@@ -22,7 +22,9 @@
                             <p>Client balance</p>
                         </div>
                         <div class="status-condition">
-                            <p><i class="icon-wallet"></i>{{ $member->balance }} <span>credits</span></p>
+                            <p>
+                                <i class="icon-wallet"></i>{{ $member->balance }} <i class="icon-plus"></i><span>credits</span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -67,7 +69,7 @@
                                 </label>
                             </div>
                             <div class="item col-lg-4 col-md-6 col-sm-12">
-                                <button class="main-btn yellow-blank">send link for rest password
+                                <button class="main-btn yellow-blank">Send link for reset password
                                 </button>
                             </div>
                             <div class="item col-lg-4 col-md-6 col-sm-12">
@@ -83,7 +85,7 @@
                     <div class="member-switcher">
                         <p>Member status:</p>
                         <label class="switcher-wrap">
-                            <input type="checkbox">
+                            <input type="checkbox" {{ $member->status ? 'checked' : '' }}>
                             <span class="switcher-condition">
                                 <span class="option">Block</span>
                                 <span class="active-side"></span>
@@ -210,3 +212,7 @@
         </div>
     </div>
 @endsection
+
+@push('modals')
+    @include('admin.members.modal')
+@endpush

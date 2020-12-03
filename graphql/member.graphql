@@ -86,6 +86,7 @@ extend type Mutation {
     restorePassword(
         email: String, @rules(apply: ["nullable", "email", "required_without:phone", "exists:members,email"]),
         phone: String, @rules(apply: ["nullable", "integer", "required_without:email", "exists:members,phone", "regex:/^\\+[1-9]\\d{1,14}$/"]),
+        test: Boolean
     ): MessageAndSuccessResponse
 
     newPassword(

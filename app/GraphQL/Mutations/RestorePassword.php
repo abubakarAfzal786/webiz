@@ -20,6 +20,7 @@ class RestorePassword
     {
         $email = $args['email'] ?? null;
         $phone = $args['phone'] ?? null;
+        $test = $args['test'] ?? null;
 
         if ($email) {
             /** @var Member $member */
@@ -39,6 +40,12 @@ class RestorePassword
                 ];
             }
         } elseif ($phone) {
+            if ($test) {
+                return [
+                    'message' => 'TEST Verification. Use verify query in TEST mode to confirm.',
+                    'success' => true,
+                ];
+            }
             if ($this->sendVerificationSMS($phone)) {
                 return [
                     'message' => 'Verification code sent via SMS',

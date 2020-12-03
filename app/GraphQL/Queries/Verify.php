@@ -24,11 +24,13 @@ class Verify
      */
     public function __invoke($_, array $args)
     {
+        $test = $args['test'] ?? null;
+        $phone = $args['phone'] ?? null;
         /** @var Member $user */
-        $user = Member::query()->where('phone', $args['phone'])->first();
+        $user = Member::query()->where('phone', $phone)->first();
 
         if ($user) {
-            if (isset($args['test']) && $args['test'] == true) {
+            if ($test) {
                 $token = $this->jwt->fromUser($user);
                 $code = 200;
                 return [
@@ -38,7 +40,7 @@ class Verify
                     'user' => $user
                 ];
             }
-            if ($this->verifyWithOTP($args['code'], $args['phone'])) {
+            if ($this->verifyWithOTP($args['code'], $phone)) {
                 $token = $this->jwt->fromUser($user);
                 $code = 200;
                 return [

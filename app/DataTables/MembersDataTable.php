@@ -29,11 +29,10 @@ class MembersDataTable extends DataTable
                     '<div class="status"><p style="background: #FF5260;">' . __('Block') . '</p></div>';
             })
             ->addColumn('avatar', function ($member) {
-                return $member->avatar_url ? '<div class="member-img"><img src="' . $member->avatar_url . '" alt=""></div>' : '';
+                return '<div class="member-img"><img src="' . ($member->avatar_url ? $member->avatar_url : asset('images/default-user.png')) . '" alt=""></div>';
             })
             ->addColumn('action', function ($member) {
-                return '<div class="action"><a href="' . route('admin.members.edit', $member->id) . '" class="main-btn yellow">' . __('Edit & More') . '</a></div>';
-//                <a class="btn btn-danger delete-swal" data-id="' . $member->id . '">Delete</a>
+                return '<div class="action"><a href="' . route('admin.members.profile', $member->id) . '" class="main-btn yellow">' . __('Edit & More') . '</a></div>';
             })
             ->rawColumns(['status', 'avatar', 'action']);
     }

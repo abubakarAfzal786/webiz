@@ -1,3 +1,17 @@
 .modal-span-error {
     width: 100%; padding: 5px 0; color: #e3342f
 }
+
+.member-status .status-condition p span {
+    text-align: center;
+}
+
+.member-status .status-condition p i.icon-plus {
+    color: #EABD37;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.member-status .status-condition p i.icon-plus:hover {
+    color: #79818C;
+}
