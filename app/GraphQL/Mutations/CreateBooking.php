@@ -41,7 +41,7 @@ class CreateBooking
                 /** @var Booking $booking */
                 $booking = $member->bookings()->create($args);
                 $booking->room_attributes()->attach($attributesToSync);
-                make_transaction($member->id, $args['price'], $args['room_id'], $booking->id, null, Transaction::TYPE_ROOM);
+                make_transaction($member->id, null, $args['room_id'], $booking->id, $args['price'], Transaction::TYPE_ROOM);
             } catch (Exception $exception) {
                 DB::rollBack();
                 return null;

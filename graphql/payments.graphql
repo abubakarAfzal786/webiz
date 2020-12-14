@@ -24,8 +24,8 @@ type Transaction {
     type: Int
     credit: Float
     price: Float
-    created_at: DateTime!
-    updated_at: DateTime!
+    created_at: DateTime
+    updated_at: DateTime
     member: Member! @belongsTo
     room: Room @belongsTo
 }

@@ -20,10 +20,22 @@ if (!function_exists('room_is_busy')) {
      */
     function room_is_busy(int $id, $start, $end)
     {
+        $newStart = clone $start;
+        $newEnd = clone $end;
+        $newStart->subMinutes(Setting::getValue('booking_time_resolution', 15));
+        $newEnd->addMinutes(Setting::getValue('booking_time_resolution', 15));
+
         return Booking::query()
             ->where('room_id', $id)
-            ->where('start_date', '<=', $start)
-            ->where('end_date', '>=', $end->addMinutes(Setting::getValue('booking_time_resolution', 15)))
+            ->where(function ($q) use ($newStart, $newEnd) {
+                return $q
+                    ->where(function ($query) use ($newStart, $newEnd) {
+                        return $query->where('start_date', '>', $newStart)->where('start_date', '<', $newEnd);
+                    })
+                    ->orWhere(function ($query) use ($newStart, $newEnd) {
+                        return $query->where('end_date', '>', $newStart)->where('end_date', '<', $newEnd);
+                    });
+            })
             ->exists();
     }
 }
@@ -195,5 +207,15 @@ if (!function_exists('make_transaction')) {
             'credit' => $credit,
             'price' => $price,
         ]);
+    }
+}
+
+if (!function_exists('generate_pass_reset_token')) {
+    /**
+     * @return string
+     */
+    function generate_pass_reset_token()
+    {
+        return Str::random(60);
     }
 }

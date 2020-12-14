@@ -6,7 +6,6 @@ use App\Http\Helpers\TwilioHelper;
 use App\Models\Member;
 use App\Notifications\MemberResetPassword;
 use Exception;
-use Illuminate\Support\Str;
 
 class RestorePassword
 {
@@ -15,6 +14,7 @@ class RestorePassword
     /**
      * @param null $_
      * @param array<string, mixed> $args
+     * @return array
      */
     public function __invoke($_, array $args)
     {
@@ -25,7 +25,7 @@ class RestorePassword
         if ($email) {
             /** @var Member $member */
             $member = Member::query()->where('email', $email)->first();
-            $token = Str::random(60);
+            $token = generate_pass_reset_token();
             $member->update(['reset_token' => $token]);
             try {
                 $member->notify(new MemberResetPassword($token));
