@@ -32,11 +32,13 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Route::bind('room', function($id) {
+        Route::pattern('id', '[0-9]+');
+
+        Route::bind('room', function ($id) {
             return Room::query()->withoutGlobalScopes()->findOrFail($id);
         });
 
-        Route::bind('member', function($id) {
+        Route::bind('member', function ($id) {
             return Member::query()->withoutGlobalScopes()->findOrFail($id);
         });
 

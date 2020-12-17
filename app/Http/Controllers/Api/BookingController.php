@@ -1,32 +1,32 @@
 <?php
 
-namespace App\GraphQL\Mutations;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Helpers\FCMHelper;
 use App\Models\Booking;
 use App\Models\Member;
 use App\Models\PushNotification;
 use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CompleteBookingNotify
+class BookingController extends Controller
 {
     use FCMHelper;
 
     /**
-     * @param null $_
-     * @param array<string, mixed> $args
-     * @return bool
+     * @param $id
+     * @param Request $request
+     * @return false|JsonResponse
      */
-    public function __invoke($_, array $args)
+    public function complete($id, Request $request)
     {
-        // booking ID
-        $id = $args['id'];
-
         /** @var Member $member */
         $member = auth()->user();
         $booking = $member->bookings()->find($id);
-        if (!$booking) return false;
+        if (!$booking) return response()->json(['success' => false, 'message' => 'Booking not found'], 500);
 
         try {
             DB::beginTransaction();
@@ -54,13 +54,13 @@ class CompleteBookingNotify
                 DB::commit();
             } else {
                 DB::rollBack();
-                return false;
+                return response()->json(['success' => false, 'message' => 'Push not sent'], 500);
             }
         } catch (Exception $exception) {
             DB::rollBack();
-            return false;
+            return response()->json(['success' => false, 'message' => 'Something went wrong'], 500);
         }
 
-        return true;
+        return response()->json(['success' => true, 'message' => 'Booking Completed. Push Sent'], 200);
     }
 }

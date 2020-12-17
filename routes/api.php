@@ -23,3 +23,8 @@ Route::group(['prefix' => 'support'], function () {
     Route::get('messages/{id}', 'SupportController@messages')->name('support.messages.index');
     Route::get('messages-count', 'SupportController@messagesCount')->name('support.messages.count');
 });
+
+Route::group(['middleware' => 'auth:api'], function () {
+    // APP_URL/api-admin/bookings/{id}/complete
+    Route::post('bookings/{id}/complete', 'BookingController@complete')->name('booking.complete');
+});
