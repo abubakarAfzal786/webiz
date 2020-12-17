@@ -9,6 +9,7 @@ Route::group(['as' => 'admin.'], function () {
     Route::resource('faq-category', 'FaqCategoryController')->except('show');
     Route::resource('members', 'MemberController')->except('show');
     Route::get('members/{id}/profile', 'MemberController@profile')->name('members.profile');
+    Route::post('members/{id}/reset-link', 'MemberController@sendResetLink')->name('members.reset-link');
     Route::resource('rooms', 'RoomController')->except('show');
     Route::resource('room-facility', 'RoomFacilityController')->except('show');
     Route::resource('room-type', 'RoomTypeController')->except('show');

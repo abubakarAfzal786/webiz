@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\ImageUploadHelper;
 use App\Http\Requests\StoreMemberRequest;
 use App\Models\Member;
+use App\Notifications\MemberResetPassword;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -138,9 +139,35 @@ class MemberController extends Controller
         }
     }
 
-    public function profile($id, Request $request)
+    /**
+     * @param int $id
+     * @return Application|Factory|View
+     */
+    public function profile($id)
     {
         $member = Member::query()->withoutGlobalScopes()->findOrFail($id);
         return view('admin.members.profile', compact('member'));
+    }
+
+    /**
+     * @param int $id
+     * @param Request $request
+     * @return JsonResponse|void
+     */
+    public function sendResetLink($id, Request $request)
+    {
+        if ($request->ajax()) {
+            /** @var Member $member */
+            $member = Member::query()->withoutGlobalScopes()->findOrFail($id);
+            if ($member) {
+                $token = generate_pass_reset_token();
+                $member->update(['reset_token' => $token]);
+                $member->notify(new MemberResetPassword($token));
+                return response()->json(['success' => true]);
+            } else {
+                return response()->json(['success' => false]);
+            }
+        }
+        return abort(404);
     }
 }

@@ -69,8 +69,7 @@
                                 </label>
                             </div>
                             <div class="item col-lg-4 col-md-6 col-sm-12">
-                                <button class="main-btn yellow-blank">Send link for reset password
-                                </button>
+                                <button class="main-btn yellow-blank" id="send-reset-link">Send link for reset password</button>
                             </div>
                             <div class="item col-lg-4 col-md-6 col-sm-12">
                                 <label class="text-option">
@@ -215,4 +214,20 @@
 
 @push('modals')
     @include('admin.members.modal')
+@endpush
+@push('scripts')
+    <script>
+        $('#send-reset-link').click(function (){
+            $.ajax({
+                url: '{{ route('admin.members.reset-link', $member->id) }}',
+                type: 'POST',
+                success: function () {
+                    alert("{{ __('Sent') }}")
+                },
+                error: function () {
+                    alert("{{ __('Something went wrong.') }}")
+                }
+            });
+        })
+    </script>
 @endpush

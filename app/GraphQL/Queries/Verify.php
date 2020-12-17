@@ -26,6 +26,7 @@ class Verify
     {
         $test = $args['test'] ?? null;
         $phone = $args['phone'] ?? null;
+        $code = isset($args['code']) ? ((strlen((int)$args['code']) < 4) ? (0 . (int)$args['code']) : (int)$args['code']) : null;
         /** @var Member $user */
         $user = Member::query()->where('phone', $phone)->first();
 
@@ -40,7 +41,7 @@ class Verify
                     'user' => $user
                 ];
             }
-            if ($this->verifyWithOTP($args['code'], $phone)) {
+            if ($this->verifyWithOTP($code, $phone)) {
                 $token = $this->jwt->fromUser($user);
                 $code = 200;
                 return [

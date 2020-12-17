@@ -40,6 +40,10 @@ extend type Mutation @guard {
         id: ID! @rules(apply: ["exists:bookings,id"])
     ): Boolean
 
+    completeBookingNotify(
+        id: ID! @rules(apply: ["exists:bookings,id"])
+    ): Boolean
+
     cancelBooking(
         id: ID! @rules(apply: ["exists:bookings,id"])
     ): Boolean
