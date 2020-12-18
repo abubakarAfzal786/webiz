@@ -44,6 +44,8 @@ extend type Mutation @guard {
         id: ID! @rules(apply: ["exists:bookings,id"])
     ): Boolean
 
+    completeAllBookings: [BookingNotifyResponse]
+
     cancelBooking(
         id: ID! @rules(apply: ["exists:bookings,id"])
     ): Boolean
@@ -74,4 +76,10 @@ type RoomAttributePivot {
 input BookingAttribute {
     id: ID! @rules(apply: ["exists:room_attributes,id"]),
     quantity: Int!
+}
+
+type BookingNotifyResponse {
+    booking_id: ID
+    updated: Boolean
+    push: Boolean
 }
