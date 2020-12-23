@@ -55,6 +55,7 @@ class ContinueBooking
                 $extraData = [
                     'id' => $newBooking->id,
                     'type' => 'bookings',
+                    'action' => 'changed',
                 ];
 
                 PushNotification::query()->create([

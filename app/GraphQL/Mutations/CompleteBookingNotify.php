@@ -40,6 +40,7 @@ class CompleteBookingNotify
             $extraData = [
                 'id' => $booking->id,
                 'type' => 'bookings',
+                'action' => 'completed',
             ];
 
             PushNotification::query()->create([

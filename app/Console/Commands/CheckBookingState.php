@@ -65,6 +65,7 @@ class CheckBookingState extends Command
                     $extraData = [
                         'id' => $booking->id,
                         'type' => 'bookings',
+                        'action' => 'expired'
                     ];
 
                     $checkPush = PushNotification::query()
@@ -104,6 +105,7 @@ class CheckBookingState extends Command
                         $extraData = [
                             'id' => $booking->id,
                             'type' => 'bookings',
+                            'action' => 'started',
                         ];
 
                         PushNotification::query()->create([

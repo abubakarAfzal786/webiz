@@ -55,6 +55,7 @@ trait FCMHelper
         $resDecoded = json_decode($result);
         $success = ($resDecoded && $resDecoded->success);
         if (!$success) Log::channel('push')->error($result);
+        if (!$success) Log::channel('push')->info(json_encode($fcmNotification));
 
         return (bool)$success;
     }
