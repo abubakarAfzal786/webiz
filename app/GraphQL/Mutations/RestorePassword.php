@@ -6,6 +6,7 @@ use App\Http\Helpers\TwilioHelper;
 use App\Models\Member;
 use App\Notifications\MemberResetPassword;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class RestorePassword
 {
@@ -34,6 +35,7 @@ class RestorePassword
                     'success' => true,
                 ];
             } catch (Exception $exception) {
+                Log::channel('mail')->error($exception);
                 return [
                     'message' => 'Failed to send verification email',
                     'success' => false,

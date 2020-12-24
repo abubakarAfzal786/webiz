@@ -58,6 +58,10 @@ extend type Mutation @guard {
     extendBooking(
         id: ID! @rules(apply: ["exists:bookings,id"])
     ): Boolean
+
+    locationState(
+        out: Boolean!
+    ): Boolean
 }
 
 type RoomAttribute {

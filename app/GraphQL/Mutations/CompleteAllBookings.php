@@ -25,7 +25,7 @@ class CompleteAllBookings
         $member = auth()->user();
         $bookings = $member->bookings()
             ->where('start_date', '<', Carbon::now())
-            ->whereIn('status', [Booking::STATUS_PENDING, Booking::STATUS_ACTIVE, Booking::STATUS_EXTENDED])
+            ->where('status', Booking::STATUS_EXTENDED)
             ->get();
 
         $responseData = [];

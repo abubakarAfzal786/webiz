@@ -19,7 +19,7 @@ class CompleteBooking
 
         /** @var Member $member */
         $member = auth()->user();
-        $booking = $member->bookings()->find($id);
+        $booking = $member->bookings()->where('status', '<>', Booking::STATUS_COMPLETED)->find($id);
         if (!$booking) return false;
 
         $booking->update(['status' => Booking::STATUS_COMPLETED]);

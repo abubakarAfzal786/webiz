@@ -16,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class MemberController extends Controller
@@ -162,7 +163,12 @@ class MemberController extends Controller
             if ($member) {
                 $token = generate_pass_reset_token();
                 $member->update(['reset_token' => $token]);
-                $member->notify(new MemberResetPassword($token));
+                try {
+                    $member->notify(new MemberResetPassword($token));
+                } catch (Exception $exception) {
+                    Log::channel('mail')->error($exception);
+                    return response()->json(['success' => false]);
+                }
                 return response()->json(['success' => true]);
             } else {
                 return response()->json(['success' => false]);
