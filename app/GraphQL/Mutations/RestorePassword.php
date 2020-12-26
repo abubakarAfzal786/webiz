@@ -22,9 +22,9 @@ class RestorePassword
         $email = $args['email'] ?? null;
         $phone = $args['phone'] ?? null;
         $test = $args['test'] ?? null;
+        /** @var Member $member */
 
         if ($email) {
-            /** @var Member $member */
             $member = Member::query()->where('email', $email)->first();
             $token = generate_pass_reset_token();
             $member->update(['reset_token' => $token]);
@@ -42,9 +42,12 @@ class RestorePassword
                 ];
             }
         } elseif ($phone) {
+            $member = Member::query()->where('phone', $phone)->first();
+            $token = generate_pass_reset_token();
+            $member->update(['reset_token' => $token]);
             if ($test) {
                 return [
-                    'message' => 'TEST Verification. Use verify query in TEST mode to confirm.',
+                    'message' => 'TEST Verification. Use verifyPhone mutation in TEST mode with phone to confirm.',
                     'success' => true,
                 ];
             }

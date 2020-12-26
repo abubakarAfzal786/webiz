@@ -89,9 +89,14 @@ extend type Mutation {
         test: Boolean
     ): MessageAndSuccessResponse
 
+    verifyPhone(
+        code: Int!,
+        phone: String!,
+        test: Boolean
+    ): VerifyPhoneResponse
+
     newPassword(
-        token: String, @rules(apply: ["nullable", "string", "required_without:phone", "exists:members,reset_token"]),
-        phone: String, @rules(apply: ["nullable", "integer", "required_without:token", "exists:members,phone", "regex:/^\\+[1-9]\\d{1,14}$/"]),
+        token: String, @rules(apply: ["required", "string", "exists:members,reset_token"]),
         new_password: String!, @rules(apply: ["string", "min:6", "max:191"]),
         password_confirmation: String!, @rules(apply: ["same:new_password"]),
     ): VerifyResponse
@@ -101,4 +106,10 @@ type UpdateProfileResponse {
     message: String
     success: Boolean
     user: Member
+}
+
+type VerifyPhoneResponse {
+    message: String
+    success: Boolean
+    reset_token: String
 }

@@ -71,9 +71,10 @@ class CheckBookingState extends Command
                         ->where('member_id', '=', $booking->member_id)
 //                        ->where('additional->id', $booking->id)
 //                        ->where('additional->type', 'bookings')
-                        ->where('seen', true)
+//                        ->where('seen', true)
                         ->where('additional', 'like', '%"id":' . $booking->id . '%')
                         ->where('additional', 'like', '%"type":"bookings"%')
+                        ->where('additional', 'like', '%"action":"expired"%')
                         ->exists();
 
                     if (!$checkPush) {

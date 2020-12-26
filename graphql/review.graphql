@@ -25,7 +25,7 @@ extend type Mutation @guard {
     createReview(
         room_id: ID!, @rules(apply: ["exists:rooms,id"]),
         booking_id: ID!, @rules(apply: ["exists:bookings,id"]),
-        description: String!
+        description: String
         rate: Float!, @rules(apply: ["between:0,5"])
     ): Review
 
