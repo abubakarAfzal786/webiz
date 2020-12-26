@@ -28,11 +28,9 @@ class CreateBooking
         $room = Room::query()->find($args['room_id']);
 
         if ($room && !room_is_busy($args['room_id'], $start_date, $end_date)) {
-            $time = $end_date->diffInMinutes($start_date) / 60;
-            $roomPrice = $room->price * $time;
             $attributes = $args['attributes'] ?? null;
             $attributesToSync = get_attributes_to_sync($attributes);
-            $args['price'] = calculate_room_price($attributesToSync, $roomPrice, $time);
+            $args['price'] = calculate_room_price($attributesToSync, $room->price, $start_date, $end_date);
             $args['door_key'] = generate_door_key();
             $args['status'] = Booking::STATUS_PENDING;
 

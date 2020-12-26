@@ -39,6 +39,7 @@ class Member extends Authenticatable implements JWTSubject
         'mobile_token',
         'reset_token',
         'pm_id',
+        'package_id',
     ];
 
     protected $appends = [
@@ -252,6 +253,14 @@ class Member extends Authenticatable implements JWTSubject
     public function getDefaultPaymentMethodAttribute()
     {
         return $this->payment_methods()->where('id', $this->pm_id)->first();
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function package()
+    {
+        return $this->belongsTo(Package::class, 'package_id', 'id');
     }
 
 }

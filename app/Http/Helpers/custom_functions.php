@@ -62,16 +62,22 @@ if (!function_exists('calculate_room_price')) {
     /**
      * @param array $attributesToSync
      * @param float|int $roomPrice
-     * @param $time
+     * @param $start_date
+     * @param $end_date
      * @return float|int
      */
-    function calculate_room_price(array $attributesToSync, $roomPrice, $time)
+    function calculate_room_price(array $attributesToSync, $roomPrice, $start_date, $end_date)
     {
+        $time = $end_date->diffInMinutes($start_date) / 60;
+        $roomPrice = $roomPrice * $time;
+
         $roomAttributes = RoomAttribute::query()->whereIn('id', array_keys($attributesToSync))->get();
 
         foreach ($roomAttributes as $roomAttribute) {
             $roomPrice += $roomAttribute->price * $attributesToSync[$roomAttribute->id]['quantity'] * ($roomAttribute->unit == RoomAttribute::UNIT_HR ? $time : 1);
         }
+
+        if (check_discount($start_date, $end_date)) $roomPrice = $roomPrice / 2;
 
         return $roomPrice;
     }
@@ -222,5 +228,17 @@ if (!function_exists('generate_pass_reset_token')) {
     function generate_pass_reset_token()
     {
         return Str::random(60);
+    }
+}
+
+if (!function_exists('check_discount')) {
+    function check_discount(Carbon $start_date, Carbon $end_date)
+    {
+        // TODO get discount time from settings (20:00 to 08:00, saturday && sunday)
+        $from = Carbon::createFromFormat('H:i', '20:00')->format('H:i');
+        $to = Carbon::createFromFormat('H:i', '08:00')->format('H:i');
+        // TODO implement
+
+        return false;
     }
 }

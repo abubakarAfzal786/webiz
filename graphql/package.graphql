@@ -1,0 +1,16 @@
+extend type Query @guard {
+    packages(orderBy: [SortOption!]! @orderBy): [Package]! @all
+}
+
+type Package {
+    id: ID!,
+    name: String!
+    privileges: String!
+    price: Float
+}
+
+extend type Mutation @guard {
+    choosePackage(
+        id: ID! @rules(apply: ["exists:packages,id"])
+    ): Package
+}

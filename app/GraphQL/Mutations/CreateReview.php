@@ -26,11 +26,9 @@ class CreateReview
         }
 
         if ($booking->status == Booking::STATUS_EXTENDED) {
-            $time = $booking->end_date->diffInMinutes($booking->start_date) / 60;
-            $roomPrice = $booking->room->price * $time;
             $attributes = $booking->room_attributes ?? null;
             $attributesToSync = get_attributes_to_sync($attributes);
-            $newPrice = calculate_room_price($attributesToSync, $roomPrice, $time);
+            $newPrice = calculate_room_price($attributesToSync, $booking->room->price, $booking->start_date, $booking->end_date);
 //            TODO check
         }
 

@@ -25,6 +25,8 @@ type Member {
     payment_methods: [PaymentMethod]! @hasMany
     default_payment_method: PaymentMethod
     support_tickets: [SupportTicket]! @hasMany
+    package_id: Int
+    package: Package @belongsTo
 }
 
 type CarNumber {
