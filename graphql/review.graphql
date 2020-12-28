@@ -13,7 +13,7 @@ type Review {
     member_avatar_url: String!
     date_from: DateTime
     date_to: DateTime
-    description: String!
+    description: String
     rate: Float!
     room: Room! @belongsTo
     booking: Booking @belongsTo
@@ -31,7 +31,7 @@ extend type Mutation @guard {
 
     updateReview(
         id: ID! @rules(apply: ["exists:reviews,id"]),
-        description: String!
+        description: String
         rate: Float! @rules(apply: ["numeric", "between:0,5"])
     ): Review
 
