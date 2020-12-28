@@ -122,33 +122,40 @@ class CheckBookingState extends Command
                     $booking->update(['status' => Booking::STATUS_ACTIVE]);
                 }
             }
+        }
+        
+        $extended = Booking::query()
+            ->with(['member', 'room'])
+            ->where('status', Booking::STATUS_EXTENDED)
+            ->where('out_at', '<=', Carbon::now()->subMinutes(5))
+            ->get();
 
-            if (($booking->status == Booking::STATUS_EXTENDED) && $now->diffInMinutes($booking->out_at, true) >= 5) {
-                if ($token) {
-                    $data = [
-                        'title' => 'Your booking finished',
-                        'body' => 'Open the notification to take action',
-                    ];
+        foreach ($extended as $booking) {
+            $token = $booking->member->mobile_token;
+            if ($token) {
+                $data = [
+                    'title' => 'Your booking finished',
+                    'body' => 'Open the notification to take action',
+                ];
 
-                    $extraData = [
-                        'id' => $booking->id,
-                        'type' => 'bookings',
-                        'action' => 'completed'
-                    ];
+                $extraData = [
+                    'id' => $booking->id,
+                    'type' => 'bookings',
+                    'action' => 'completed'
+                ];
 
-                    PushNotification::query()->create([
-                        'title' => $data['title'],
-                        'body' => $data['body'],
-                        'member_id' => $booking->member_id,
-                        'seen' => false,
-                        'additional' => json_encode($extraData),
-                    ]);
+                PushNotification::query()->create([
+                    'title' => $data['title'],
+                    'body' => $data['body'],
+                    'member_id' => $booking->member_id,
+                    'seen' => false,
+                    'additional' => json_encode($extraData),
+                ]);
 
-                    echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
-                }
-
-                $booking->update(['status' => Booking::STATUS_COMPLETED]);
+                echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
             }
+
+            $booking->update(['status' => Booking::STATUS_COMPLETED]);
         }
 
         return true;
