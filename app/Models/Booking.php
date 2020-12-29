@@ -138,16 +138,16 @@ class Booking extends Model
         return $freeExist ? $freeExist : null;
     }
 
-    /**
-     * @param array $attributes
-     * @param array $options
-     * @return bool
-     */
-    public function update(array $attributes = [], array $options = [])
-    {
-        if (isset($attributes['status']) && ($attributes['status'] == self::STATUS_COMPLETED)) {
-            make_transaction($this->member_id, null, $this->room_id, $this->id, $this->price, Transaction::TYPE_ROOM);
-        }
-        return parent::update($attributes, $options);
-    }
+//    /**
+//     * @param array $attributes
+//     * @param array $options
+//     * @return bool
+//     */
+//    public function update(array $attributes = [], array $options = [])
+//    {
+//        if (isset($attributes['status']) && ($attributes['status'] == self::STATUS_COMPLETED)) {
+//            make_transaction($this->member_id, null, $this->room_id, $this->id, $this->price, Transaction::TYPE_ROOM);
+//        }
+//        return parent::update($attributes, $options);
+//    }
 }

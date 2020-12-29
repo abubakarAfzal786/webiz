@@ -29,7 +29,7 @@ class LocationState
 
         foreach ($ext as $booking) {
             /** @var Booking $booking */
-            if ($member->mobile_token) {
+            if ($out && $member->mobile_token) {
                 $data = [
                     'title' => 'Your booking will be stopped, because of leaving office area.',
                     'body' => 'Open the notification to take action',
