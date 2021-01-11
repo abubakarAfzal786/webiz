@@ -138,16 +138,27 @@ class Booking extends Model
         return $freeExist ? $freeExist : null;
     }
 
-//    /**
-//     * @param array $attributes
-//     * @param array $options
-//     * @return bool
-//     */
-//    public function update(array $attributes = [], array $options = [])
-//    {
-//        if (isset($attributes['status']) && ($attributes['status'] == self::STATUS_COMPLETED)) {
-//            make_transaction($this->member_id, null, $this->room_id, $this->id, $this->price, Transaction::TYPE_ROOM);
-//        }
-//        return parent::update($attributes, $options);
-//    }
+    /**
+     * @param array $attributes
+     * @param array $options
+     * @return bool
+     */
+    public function update(array $attributes = [], array $options = [])
+    {
+        if (isset($attributes['status']) && ($attributes['status'] == self::STATUS_COMPLETED) && ($this->status == self::STATUS_EXTENDED)) {
+            $room_attributes = [];
+            foreach ($this->room_attributes as $room_attribute) {
+                $room_attributes[] = [
+                    'id' => $room_attribute->id,
+                    'quantity' => $room_attribute->pivot_quantity,
+                ];
+            }
+            $attributesToSync = get_attributes_to_sync($room_attributes);
+            $addedPrice = calculate_room_price($attributesToSync, $this->room->price, $this->end_date, Carbon::now());
+            make_transaction($this->member_id, null, $this->room_id, $this->id, $addedPrice, Transaction::TYPE_ROOM);
+        }
+        $attributes['price'] = $this->price + $addedPrice;
+
+        return parent::update($attributes, $options);
+    }
 }
