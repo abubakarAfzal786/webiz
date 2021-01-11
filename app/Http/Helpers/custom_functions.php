@@ -62,24 +62,50 @@ if (!function_exists('calculate_room_price')) {
     /**
      * @param array $attributesToSync
      * @param float|int $roomPrice
-     * @param $start_date
-     * @param $end_date
+     * @param Carbon $start_date
+     * @param Carbon $end_date
      * @return float|int
      */
     function calculate_room_price(array $attributesToSync, $roomPrice, $start_date, $end_date)
     {
-        $time = $end_date->diffInMinutes($start_date) / 60;
-        $roomPrice = $roomPrice * $time;
+        $timeInMinutes = $end_date->diffInMinutes($start_date);
+        $time = $timeInMinutes / 60;
+        $pricePerMin = $roomPrice / 60;
+        $price = 0;
+        $minutesAll = 0;
+
+        for ($i = 0; $i < $time; $i++) {
+            $initial = clone $start_date;
+            $new = ($i == floor($time)) ? clone $end_date : $initial->addHours($i);
+            $weekdayFormatted = $new->format('N');
+
+            if (in_array($weekdayFormatted, [6, 7])) {
+                $cond = true;
+            } else {
+                $hourFormatted = $new->format('H');
+                $cond = ($hourFormatted >= 20) || ($hourFormatted < 8);
+            }
+
+            $minutes = ($i == 0 || $i == floor($time)) ? (int)$new->format('i') : 60;
+            $pricePer = $pricePerMin * $minutes;
+
+            if ($cond) {
+                $pricePer /= 2;
+                $minutesAll += $minutes / 2;
+            } else {
+                $minutesAll += $minutes;
+            }
+
+            $price += $pricePer;
+        }
 
         $roomAttributes = RoomAttribute::query()->whereIn('id', array_keys($attributesToSync))->get();
 
         foreach ($roomAttributes as $roomAttribute) {
-            $roomPrice += $roomAttribute->price * $attributesToSync[$roomAttribute->id]['quantity'] * ($roomAttribute->unit == RoomAttribute::UNIT_HR ? $time : 1);
+            $price += $roomAttribute->price * $attributesToSync[$roomAttribute->id]['quantity'] * ($roomAttribute->unit == RoomAttribute::UNIT_HR ? ($minutesAll / 60) : 1);
         }
 
-        if (check_discount($start_date, $end_date)) $roomPrice = $roomPrice / 2;
-
-        return $roomPrice;
+        return round($price * 100) / 100;
     }
 }
 
@@ -235,10 +261,7 @@ if (!function_exists('check_discount')) {
     function check_discount(Carbon $start_date, Carbon $end_date)
     {
         // TODO get discount time from settings (20:00 to 08:00, saturday && sunday)
-        $from = Carbon::createFromFormat('H:i', '20:00')->format('H:i');
-        $to = Carbon::createFromFormat('H:i', '08:00')->format('H:i');
         // TODO implement
-
         return false;
     }
 }

@@ -4,6 +4,8 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\Booking;
 use App\Models\Member;
+use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,11 +30,11 @@ class CreateReview
         if ($booking->status == Booking::STATUS_EXTENDED) {
             $attributes = $booking->room_attributes ?? null;
             $attributesToSync = get_attributes_to_sync($attributes);
-            $newPrice = calculate_room_price($attributesToSync, $booking->room->price, $booking->start_date, $booking->end_date);
-//            TODO check
+            $addedPrice = calculate_room_price($attributesToSync, $booking->room->price, $booking->end_date, Carbon::now());
+            $booking->update(['status' => Booking::STATUS_COMPLETED, 'price' => ($booking->price + $addedPrice)]);
+            make_transaction($member->id, null, $booking->room_id, $booking->id, $addedPrice, Transaction::TYPE_ROOM);
         }
 
-        $booking->update(['status' => Booking::STATUS_COMPLETED, 'price' => $newPrice ?? $booking->price]);
         $review = $member->reviews()->where('booking_id', $booking_id)->first();
         if ($review) {
             $review->update($args);
