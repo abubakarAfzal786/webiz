@@ -156,8 +156,8 @@ class Booking extends Model
             $attributesToSync = get_attributes_to_sync($room_attributes);
             $addedPrice = calculate_room_price($attributesToSync, $this->room->price, $this->end_date, Carbon::now());
             make_transaction($this->member_id, null, $this->room_id, $this->id, $addedPrice, Transaction::TYPE_ROOM);
+            $attributes['price'] = $this->price + $addedPrice;
         }
-        $attributes['price'] = $this->price + $addedPrice;
 
         return parent::update($attributes, $options);
     }
