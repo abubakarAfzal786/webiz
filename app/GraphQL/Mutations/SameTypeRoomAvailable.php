@@ -17,13 +17,13 @@ class SameTypeRoomAvailable
     {
         $now = Carbon::now();
         $id = $args['id'];
-        $start_date = $args['start_date'] ?? $now;
-        $end_date = $args['end_date'] ?? $now;
+//        $start_date = $args['start_date'] ?? $now;
+//        $end_date = $args['end_date'] ?? $now;
 
         $room = Room::query()->findOrFail($id);
 
-        $freeExist = similar_free_room($room, $start_date, $end_date);
+        $freeExist = similar_free_room($room);
 
-        return $freeExist;
+        return $freeExist ? $freeExist : null;
     }
 }
