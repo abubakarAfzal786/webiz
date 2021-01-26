@@ -88,7 +88,7 @@ class Room extends Authenticatable implements JWTSubject
     protected static function booted()
     {
         static::addGlobalScope('active', function (Builder $builder) {
-            $builder->where('status', true);
+            $builder->where('rooms.status', true);
         });
     }
 

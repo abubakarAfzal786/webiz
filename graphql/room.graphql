@@ -59,4 +59,10 @@ extend type Mutation @guard {
     makeRoomFavorite(
         id: ID!, @rules(apply: ["exists:rooms,id"]),
     ): Room
+
+    sameTypeRoomAvailable (
+        id: ID!, @rules(apply: ["exists:rooms,id"]),
+        start_date: DateTimeOrDate @rules(apply: ["date", "after:now"])
+        end_date: DateTimeOrDate @rules(apply: ["date", "after:start_date"])
+    ): Room
 }

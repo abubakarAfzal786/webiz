@@ -32,7 +32,7 @@ class ContinueBooking
 
         if ($next_booked) {
             /** @var Room $freeExist */
-            $freeExist = similar_free_room($next_booked);
+            $freeExist = similar_free_room($next_booked->room, $next_booked->start_date, $next_booked->end_date);
 
             if (!$freeExist) {
 //                TODO check

@@ -128,25 +128,33 @@ if (!function_exists('next_booked')) {
 
 if (!function_exists('similar_free_room')) {
     /**
-     * @param $booked
+     * @param $room
+     * @param $start_date
+     * @param $end_date
      * @return Room|bool|Builder|mixed
      */
-    function similar_free_room($booked)
+    function similar_free_room($room, $start_date = null, $end_date = null)
     {
-        $room = $booked->room;
-
         $sameTypeRooms = Room::query()
-            ->where('id', '<>', $room->id)
+            ->with('bookings')
+            ->where('rooms.id', '<>', $room->id)
             ->where('type_id', $room->type_id)
+            ->leftJoin('bookings', 'bookings.room_id', '=', 'rooms.id')
+            ->orderBy('bookings.start_date', 'DESC')
+            ->select('rooms.*')
             ->get();
 
         if (!$sameTypeRooms->count()) return false;
 
-        foreach ($sameTypeRooms as $sameTypeRoom) {
-            /** @var Room $sameTypeRoom */
-            if (!$sameTypeRoom->bookings()->whereBetween('start_date', [$booked->start_date, $booked->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15))])->exists()) {
-                return $sameTypeRoom;
+        if ($start_date && $end_date) {
+            foreach ($sameTypeRooms as $sameTypeRoom) {
+                /** @var Room $sameTypeRoom */
+                if (!$sameTypeRoom->bookings()->whereBetween('start_date', [$start_date, $end_date->addMinutes(Setting::getValue('booking_time_resolution', 15))])->exists()) {
+                    return $sameTypeRoom;
+                }
             }
+        } else {
+            return $sameTypeRooms->first();
         }
 
         return false;
