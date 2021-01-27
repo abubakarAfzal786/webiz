@@ -68,32 +68,29 @@ if (!function_exists('calculate_room_price')) {
      */
     function calculate_room_price(array $attributesToSync, $roomPrice, $start_date, $end_date)
     {
-        $timeInMinutes = $end_date->diffInMinutes($start_date);
-        $time = $timeInMinutes / 60;
         $pricePerMin = $roomPrice / 60;
         $price = 0;
         $minutesAll = 0;
+        $endSubMinute = $end_date->subMinute();
+        $period = $start_date->toPeriod($endSubMinute, 1, 'minute');
 
-        for ($i = 0; $i < $time; $i++) {
-            $initial = clone $start_date;
-            $new = ($i == floor($time)) ? clone $end_date : $initial->addHours($i);
-            $weekdayFormatted = $new->format('N');
+        foreach ($period as $key => $newDate) {
+            $weekdayFormatted = $newDate->format('N');
 
             if (in_array($weekdayFormatted, [6, 7])) {
                 $cond = true;
             } else {
-                $hourFormatted = $new->format('H');
+                $hourFormatted = $newDate->format('H');
                 $cond = ($hourFormatted >= 20) || ($hourFormatted < 8);
             }
 
-            $minutes = ($i == 0 || $i == floor($time)) ? (int)$new->format('i') : 60;
-            $pricePer = $pricePerMin * $minutes;
+            $pricePer = $pricePerMin;
 
             if ($cond) {
                 $pricePer /= 2;
-                $minutesAll += $minutes / 2;
+                $minutesAll += 0.5;
             } else {
-                $minutesAll += $minutes;
+                $minutesAll++;
             }
 
             $price += $pricePer;
