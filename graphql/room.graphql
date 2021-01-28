@@ -13,6 +13,13 @@ extend type Query @guard {
         end: DateTimeOrDate @rules(apply: ["date", "after:start_date"])
         name: String
     ): [Room!]!
+
+    getRoomPrice(
+        room_id: ID!, @rules(apply: ["exists:rooms,id"]),
+        start_date: DateTimeOrDate! @rules(apply: ["date", "after:now"])
+        end_date: DateTimeOrDate! @rules(apply: ["date", "after:start_date"])
+        attributes: [BookingAttribute]
+    ): Float
 }
 
 type Room {
