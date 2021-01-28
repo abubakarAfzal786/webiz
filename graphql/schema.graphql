@@ -14,7 +14,9 @@ type Query {
     authenticate(email: String!, password: String!): AuthResponse
     authorize: Boolean
 
-    sendVerification(phone: String!): Boolean
+    sendVerification(
+        phone: String!, @rules(apply: ["exists:members,phone"]),
+    ): Boolean
     verify(code: Int!, phone: String!, test: Boolean): VerifyResponse
 
     me: Member @auth
