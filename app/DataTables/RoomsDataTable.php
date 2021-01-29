@@ -44,7 +44,7 @@ class RoomsDataTable extends DataTable
             ->addColumn('action', function ($room) {
                 return '
                     <div class="action">
-                    <a href="' . route('admin.rooms.edit', $room->id) . '" class="main-btn yellow">' . __('Edit') . '</a>
+                    <button class="main-btn yellow edit-room" data-id="' . $room->id . '">' . __('Edit') . '</button>
                     <a href="' . route('admin.devices.index', $room->id) . '" class="main-btn gray-blank">' . __('Devices') . '</a></div>
                 ';
 //                <a class="btn btn-danger delete-swal" data-id="' . $room->id . '">Delete</a>

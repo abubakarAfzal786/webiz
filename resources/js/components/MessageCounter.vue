@@ -1,29 +1,12 @@
 <template>
-    <span v-if="count">{{ count}}</span>
+    <span v-if="$parent.messages_count">{{ $parent.messages_count }}</span>
 </template>
 <script>
 export default {
     mounted() {
-        this.getCount().then(data => {
-            this.count = data;
+        this.$parent.getCount().then(data => {
+            this.$parent.messages_count = data;
         });
     },
-    data: function () {
-        return {
-            count: 0
-        }
-    },
-    methods: {
-        getCount: function () {
-            let d = $.Deferred();
-
-            axios.get('/api-admin/support/messages-count')
-                .then((response) => {
-                    d.resolve(response.data.count);
-                });
-
-            return d.promise();
-        }
-    }
 }
 </script>

@@ -176,4 +176,46 @@ class MemberController extends Controller
         }
         return abort(404);
     }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse|void
+     */
+    public function addCredits($id, Request $request)
+    {
+        if ($request->ajax()) {
+            /** @var Member $member */
+            $member = Member::query()->withoutGlobalScopes()->findOrFail($id);
+            if ($member) {
+                $credits = (float)$request->get('credits');
+                $member->update(['balance' => $member->balance + $credits]);
+                return response()->json(['success' => true, 'balance' => $member->balance]);
+            } else {
+                return response()->json(['success' => false]);
+            }
+        }
+        return abort(404);
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse|void
+     */
+    public function changeStatus($id, Request $request)
+    {
+        if ($request->ajax()) {
+            /** @var Member $member */
+            $member = Member::query()->withoutGlobalScopes()->findOrFail($id);
+            if ($member) {
+                $status = (bool)$request->get('status');
+                $member->update(['status' => $status]);
+                return response()->json(['success' => true]);
+            } else {
+                return response()->json(['success' => false]);
+            }
+        }
+        return abort(404);
+    }
 }

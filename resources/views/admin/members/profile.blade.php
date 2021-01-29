@@ -23,68 +23,88 @@
                         </div>
                         <div class="status-condition">
                             <p>
-                                <i class="icon-wallet"></i>{{ $member->balance }} <i class="icon-plus"></i><span>credits</span>
+                                <i class="icon-wallet"></i>
+                                <code id="current-balance">{{ $member->balance }}</code>
+                                <i class="icon-plus"></i>
+                                <span>credits</span>
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="member-fields">
                     <div class="add-new">
-                        <div class="row">
-                            <div class="item col-lg-4 col-md-6 col-sm-12">
-                                <label class="text-option">
+                        <form method="POST" action="{{ route('admin.members.update', $member->id) }}">
+                            @csrf
+                            @method('PUT')
+                            <div class="row">
+                                <div class="item col-lg-4 col-md-6 col-sm-12">
+                                    <label class="text-option">
                                     <span class="label-wrap">
-                                        <input type="text" value="{{ $member->name }}"
+                                        <input type="text" name="name" value="{{ old('name', $member->name) }}"
                                                class="placeholder-effect">
                                         <span class="placeholder">Name</span>
                                     </span>
-                                </label>
-                            </div>
-                            <div class="item col-lg-4 col-md-6 col-sm-12">
-                                <label class="text-option">
+                                        @error('name')
+                                        <div class="profile-error-text">{{ $message }}</div>
+                                        @enderror
+                                    </label>
+                                </div>
+                                <div class="item col-lg-4 col-md-6 col-sm-12">
+                                    <label class="text-option">
                                     <span class="label-wrap">
-                                        <input type="email" value="{{ $member->email }}"
+                                        <input type="email" name="email" value="{{ old('email', $member->email) }}"
                                                class="placeholder-effect">
                                         <span class="placeholder">E-mail</span>
                                     </span>
-                                </label>
-                            </div>
-                            <div class="item col-lg-4 col-md-6 col-sm-12">
-                                <label class="text-option">
+                                        @error('email')
+                                        <div class="profile-error-text">{{ $message }}</div>
+                                        @enderror
+                                    </label>
+                                </div>
+                                <div class="item col-lg-4 col-md-6 col-sm-12">
+                                    <label class="text-option">
                                     <span class="label-wrap">
-                                        <input type="tel" value="{{ $member->phone }}"
+                                        <input type="tel" name="phone" value="{{ old('phone', $member->phone) }}"
                                                class="placeholder-effect">
                                         <span class="placeholder">Phone</span>
                                     </span>
-                                </label>
-                            </div>
+                                        @error('phone')
+                                        <div class="profile-error-text">{{ $message }}</div>
+                                        @enderror
+                                    </label>
+                                </div>
 
-                            <div class="item col-lg-4 col-md-6 col-sm-12">
-                                <label class="text-option">
+                                <div class="item col-lg-4 col-md-6 col-sm-12">
+                                    <label class="text-option">
                                     <span class="label-wrap">
-                                        <input type="password" value="******" readonly
-                                               class="placeholder-effect">
+                                        <input type="password" value="******" class="placeholder-effect"
+                                               readonly disabled>
                                         <span class="placeholder">Password</span>
                                     </span>
-                                </label>
-                            </div>
-                            <div class="item col-lg-4 col-md-6 col-sm-12">
-                                <button class="main-btn yellow-blank" id="send-reset-link">Send link for reset password</button>
-                            </div>
-                            <div class="item col-lg-4 col-md-6 col-sm-12">
-                                <label class="text-option">
+                                    </label>
+                                </div>
+                                <div class="item col-lg-4 col-md-6 col-sm-12">
+                                    <button class="main-btn yellow-blank" id="send-reset-link">
+                                        {{ __('Send link for reset password') }}
+                                    </button>
+                                </div>
+                                <div class="item col-lg-4 col-md-6 col-sm-12">
+                                    <label class="text-option">
                                     <span class="label-wrap">
-                                        <input type="text" value="{{ $member->id }}" class="placeholder-effect">
+                                        <input type="text" value="{{ $member->id }}" class="placeholder-effect"
+                                               readonly disabled>
                                         <span class="placeholder">User ID</span>
                                     </span>
-                                </label>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
+                            <button class="main-btn yellow" id="">Save</button>
+                        </form>
                     </div>
                     <div class="member-switcher">
                         <p>Member status:</p>
                         <label class="switcher-wrap">
-                            <input type="checkbox" {{ $member->status ? 'checked' : '' }}>
+                            <input type="checkbox" id="user-status" {{ $member->status ? 'checked' : '' }}>
                             <span class="switcher-condition">
                                 <span class="option">Block</span>
                                 <span class="active-side"></span>
@@ -217,7 +237,7 @@
 @endpush
 @push('scripts')
     <script>
-        $('#send-reset-link').click(function (){
+        $('#send-reset-link').click(function () {
             $.ajax({
                 url: '{{ route('admin.members.reset-link', $member->id) }}',
                 type: 'POST',
@@ -228,6 +248,47 @@
                     alert("{{ __('Something went wrong.') }}")
                 }
             });
-        })
+        });
+
+        $('#user-status').click(function (){
+            let state = $(this).is(':checked') ? 1 : 0;
+
+            $.ajax({
+                url: '{{ route('admin.members.change-status', $member->id) }}',
+                type: 'POST',
+                data: {
+                    status: state
+                },
+                error: function () {
+                    alert("{{ __('Something went wrong.') }}");
+                    $(this).prop('checked', !state);
+                }
+            });
+        });
+
+        $('.status-condition .icon-plus').click(function () {
+            $.fancybox.open({src: '#balance-modal'});
+        });
+
+        $(document).on('click', '.add-credits', function () {
+            let creditsToAdd = $('#balance-modal input[name="credits"]').val();
+
+            $.ajax({
+                url: '{{ route('admin.members.add-credits', $member->id) }}',
+                type: 'POST',
+                data: {
+                    credits: creditsToAdd
+                },
+                success: function (data) {
+                    $('#current-balance').text(data.balance)
+                },
+                error: function () {
+                    alert("{{ __('Something went wrong.') }}")
+                },
+                complete: function () {
+                    $.fancybox.close({src: '#balance-modal'});
+                }
+            });
+        });
     </script>
 @endpush

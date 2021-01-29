@@ -10,7 +10,9 @@ Route::group(['as' => 'admin.'], function () {
     Route::resource('members', 'MemberController')->except('show');
     Route::get('members/{id}/profile', 'MemberController@profile')->name('members.profile');
     Route::post('members/{id}/reset-link', 'MemberController@sendResetLink')->name('members.reset-link');
-    Route::resource('rooms', 'RoomController')->except('show');
+    Route::post('members/{id}/add-credits', 'MemberController@addCredits')->name('members.add-credits');
+    Route::post('members/{id}/change-status', 'MemberController@changeStatus')->name('members.change-status');
+    Route::resource('rooms', 'RoomController');
     Route::resource('room-facility', 'RoomFacilityController')->except('show');
     Route::resource('room-type', 'RoomTypeController')->except('show');
     Route::resource('room-attribute', 'RoomAttributeController')->except('show');

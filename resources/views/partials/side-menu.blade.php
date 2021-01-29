@@ -24,7 +24,7 @@
             <ul>
                 <li class="{{ request()->is(['dashboard/rooms', 'dashboard/rooms/*']) ? 'active' : '' }}"><a href="{{ route('admin.rooms.index') }}">{{ __('Rooms') }}</a></li>
                 <li class="{{ request()->is(['dashboard/reviews', 'dashboard/reviews/*']) ? 'active' : '' }}"><a href="{{ route('admin.reviews.index') }}">{{ __('Reviews') }}</a></li>
-                <li><a href="javascript:void(0)">{{ __('Notifications') }}</a><span>10</span></li>
+                <li><a href="javascript:void(0)">{{ __('Notifications') }}</a></li>
             </ul>
         </div>
         <div class="item">

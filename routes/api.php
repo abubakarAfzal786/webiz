@@ -19,9 +19,11 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::group(['prefix' => 'support'], function () {
-    Route::get('tickets', 'SupportController@tickets')->name('support.tickets.index');
-    Route::get('messages/{id}', 'SupportController@messages')->name('support.messages.index');
-    Route::get('messages-count', 'SupportController@messagesCount')->name('support.messages.count');
+    Route::get('tickets', 'SupportController@tickets')->name('support.tickets.index')->withoutMiddleware('throttle');
+    Route::get('messages/{id}', 'SupportController@messages')->name('support.messages.index')->withoutMiddleware('throttle');
+    Route::get('messages-count', 'SupportController@messagesCount')->name('support.messages.count')->withoutMiddleware('throttle');
+    Route::post('messages-mark-read', 'SupportController@markAsRead')->name('support.messages.read')->withoutMiddleware('throttle');
+    Route::post('message-send', 'SupportController@messageSend')->name('support.messages.send')->withoutMiddleware('throttle');
 });
 
 Route::group(['middleware' => 'auth:api'], function () {

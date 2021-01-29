@@ -34,6 +34,8 @@ class CreateBooking
             $args['door_key'] = generate_door_key();
             $args['status'] = Booking::STATUS_PENDING;
 
+            if ($member->balance < $args['price']) return null;
+
             DB::beginTransaction();
             try {
                 /** @var Booking $booking */

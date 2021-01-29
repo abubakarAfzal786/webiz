@@ -72,6 +72,23 @@
 
 @push('scripts')
     <script>
+        let Room = {
+            data: {},
+            fillData: function () {
+                $.each(Room.data, function (ind, val) {
+                    if (ind === 'facilities') {
+                        $.each(val, function (fac_ind, fac_val) {
+                            $('#facility_' + fac_val.id).prop('checked', true).trigger('change');
+                        });
+                    }
+                    $('#' + ind).val(val).trigger('change');
+                });
+            },
+            cleanData: function () {
+                // TODO implement
+            }
+        }
+
         $(function () {
             let myDataTable = $('#myDataTable').DataTable({
                 processing: true,
@@ -103,6 +120,23 @@
 
             $('#open-test-rooms').on('click', function () {
                 $(document).find('input.pac-target-input').removeAttr('placeholder');
+            });
+
+            $(document).on('click', '.edit-room', function () {
+                let room_id = $(this).data('id');
+
+                $.ajax({
+                    url: '/dashboard/rooms/' + room_id,
+                    type: 'GET',
+                    success: function (data) {
+                        Room.data = data.room;
+                        Room.fillData();
+                        $.fancybox.open({src: '#test-rooms'});
+                    },
+                    error: function () {
+                        alert("{{ __('Something went wrong.') }}")
+                    }
+                });
             });
 
             let autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));

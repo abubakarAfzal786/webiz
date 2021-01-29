@@ -77,6 +77,19 @@ class RoomController extends Controller
         return abort(404);
     }
 
+    public function show(Room $room, Request $request)
+    {
+        if ($request->ajax()) {
+            $room = Room::query()->with('facilities')->findOrFail($room->id);
+            if ($room) {
+                return response()->json(['success' => true, 'room' => $room]);
+            } else {
+                return response()->json(['success' => false]);
+            }
+        }
+        return abort(404);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
