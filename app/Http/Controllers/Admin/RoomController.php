@@ -12,10 +12,10 @@ use App\Models\RoomType;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class RoomController extends Controller
@@ -80,7 +80,11 @@ class RoomController extends Controller
     public function show(Room $room, Request $request)
     {
         if ($request->ajax()) {
-            $room = Room::query()->with('facilities')->findOrFail($room->id);
+            $room = Room::query()->withoutGlobalScopes()
+                ->with(['facilities', 'images' => function ($q) {
+                    return $q->orderByDesc('id');
+                }])
+                ->findOrFail($room->id);
             if ($room) {
                 return response()->json(['success' => true, 'room' => $room]);
             } else {
@@ -110,20 +114,23 @@ class RoomController extends Controller
      *
      * @param StoreRoomRequest $request
      * @param Room $room
-     * @return RedirectResponse
+     * @return JsonResponse|void
      */
     public function update(StoreRoomRequest $request, Room $room)
     {
-        $request['status'] = (bool)$request->status;
-        $room->update($request->except('_token', 'facilities', '_method'));
-        $room->facilities()->sync($request->get('facilities'));
+        if ($request->ajax()) {
+            $request['status'] = (bool)$request->status;
+            $room->update($request->except('_token', 'facilities', '_method'));
+            $room->facilities()->sync($request->get('facilities'));
 
-        $this->saveImages($room, $request->file('images'));
+            $images_to_delete = $request->get('images_to_delete');
+            if ($images_to_delete) $this->deleteImages($room, explode(',', $images_to_delete));
 
-        return redirect()->route('admin.rooms.index')->with([
-            'message' => __('Room successfully updated.'),
-            'class' => 'success'
-        ]);
+            $this->saveImages($room, $request->file('images'));
+            return response()->json(['success' => true]);
+        }
+
+        return abort(404);
     }
 
     /**
@@ -143,22 +150,43 @@ class RoomController extends Controller
     }
 
     /**
-     * @param $room
+     * @param Room $room
      * @param $images
+     * @param int $main_key
      */
-    private function saveImages($room, $images)
+    private function saveImages($room, $images, $main_key = 0)
     {
         if ($images) {
-            foreach ($images as $image) {
+            foreach ($images as $key => $image) {
                 $path = $this->uploadImage($image);
                 if ($path) {
                     $room->images()->create([
                         'path' => $path,
                         'size' => $image->getSize(),
                         'main' => false,
+//                        'main' => ($key == $main_key),
                     ]);
                     // TODO implement main image choose functionality
-                    // TODO implement images delete functionality
+                }
+            }
+        }
+    }
+
+    /**
+     * @param Room $room
+     * @param array $ids
+     */
+    private function deleteImages($room, $ids)
+    {
+        if ($ids) {
+            foreach ($ids as $id) {
+                $img = $room->images()->find($id);
+                if ($img) {
+                    try {
+                        $img->delete();
+                    } catch (Exception $e) {
+                        Log::error($e);
+                    }
                 }
             }
         }

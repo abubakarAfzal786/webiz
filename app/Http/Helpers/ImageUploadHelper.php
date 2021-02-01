@@ -23,7 +23,9 @@ trait ImageUploadHelper
      */
     public function uploadImage($file)
     {
-        return Storage::disk($this->getDisk())->put('images', $file);
+        $prefix = $this->getDisk() == 'local' ? 'public/' : '';
+
+        return Storage::disk($this->getDisk())->put($prefix . 'images', $file);
     }
 
     /**
@@ -52,8 +54,12 @@ trait ImageUploadHelper
             if (!filter_var($$attr, FILTER_VALIDATE_URL)) {
                 if ($this->getDisk() == 'gcs') {
                     return Storage::disk('gcs')->url($$attr);
-                } else {
+                } elseif ($this->getDisk() == 's3') {
                     return urldecode(Storage::disk('s3')->temporaryUrl($$attr, Carbon::now()->addMinutes(10)));
+                } elseif ($this->getDisk() == 'local') {
+                    return Storage::disk('local')->url($$attr);
+                } else {
+                    return $$attr;
                 }
             }
         }

@@ -27,7 +27,7 @@ class DeviceController extends Controller
      */
     public function index($room_id, DeviceDataTable $dataTable)
     {
-        $room = Room::query()->findOrFail($room_id);
+        $room = Room::query()->withoutGlobalScopes()->findOrFail($room_id);
         return $dataTable->with('room_id', $room_id)->render('admin.device.index', compact('room'));
     }
 
@@ -39,7 +39,7 @@ class DeviceController extends Controller
      */
     public function create($room_id)
     {
-        $room = Room::query()->findOrFail($room_id);
+        $room = Room::query()->withoutGlobalScopes()->findOrFail($room_id);
         $types = DeviceType::query()->pluck('name', 'id');
         return view('admin.device.form', compact('room', 'types'));
     }
@@ -54,7 +54,7 @@ class DeviceController extends Controller
     public function store($room_id, StoreDeviceRequest $request)
     {
         /** @var Room $room */
-        $room = Room::query()->findOrFail($room_id);
+        $room = Room::query()->withoutGlobalScopes()->findOrFail($room_id);
         $room->devices()->create($request->except('_token'));
 
         return redirect()->route('admin.devices.index', [$room_id])->with([
@@ -73,7 +73,7 @@ class DeviceController extends Controller
     public function edit($room_id, Device $device)
     {
         /** @var Room $room */
-        $room = Room::query()->findOrFail($room_id);
+        $room = Room::query()->withoutGlobalScopes()->findOrFail($room_id);
         $device = $room->devices()->findOrFail($device->id);
         $types = DeviceType::query()->pluck('name', 'id');
 
@@ -91,7 +91,7 @@ class DeviceController extends Controller
     public function update($room_id, StoreDeviceRequest $request, Device $device)
     {
         /** @var Room $room */
-        $room = Room::query()->findOrFail($room_id);
+        $room = Room::query()->withoutGlobalScopes()->findOrFail($room_id);
         $room->devices()->findOrFail($device->id)->update($request->except('_token', '_method'));
 
         return redirect()->route('admin.devices.index', [$room_id])->with([
@@ -111,7 +111,7 @@ class DeviceController extends Controller
     {
         try {
             /** @var Room $room */
-            $room = Room::query()->findOrFail($room_id);
+            $room = Room::query()->withoutGlobalScopes()->findOrFail($room_id);
             $room->devices()->findOrFail($device->id)->delete();
             return response()->json(['message' => 'success'], 200);
         } catch (Exception $exception) {

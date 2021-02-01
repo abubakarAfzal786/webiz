@@ -44,3 +44,12 @@
 .switcher-wrap {
     cursor: pointer;
 }
+
+#balance-modal {
+    max-width: 500px;
+    min-height: unset;
+}
+
+#balance-modal .add-new {
+    width: 250px;
+}

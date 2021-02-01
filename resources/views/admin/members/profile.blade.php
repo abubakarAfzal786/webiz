@@ -267,7 +267,12 @@
         });
 
         $('.status-condition .icon-plus').click(function () {
-            $.fancybox.open({src: '#balance-modal'});
+            $.fancybox.open({
+                src: '#balance-modal',
+                afterClose: function () {
+                    $('#balance-modal input[name="credits"]').val('')
+                }
+            });
         });
 
         $(document).on('click', '.add-credits', function () {

@@ -6,7 +6,8 @@
         <div class="data">
             <div class="scroll-wrap">
                 <div class="modal-title with-border">
-                    <p>{{ __('Add room') }}</p>
+                    <p class="for-add">{{ __('Add room') }}</p>
+                    <p class="for-edit d-none">{{ __('Edit room') }}</p>
                 </div>
                 <div class="data-content room-options">
                     <div class="add-new">
@@ -118,6 +119,7 @@
 
                                 <input type="hidden" name="lat" id="lat">
                                 <input type="hidden" name="lon" id="lon">
+
                                 <div class="item col-12">
                                     <span class="name">{{ __('Upload photos') }}</span>
                                     <div class="photo-upload">
@@ -125,7 +127,8 @@
                                             <div class="upload-wrap">
                                                 <div class="upload">
                                                     <label class="file">
-                                                        <input type="file" accept="image/*" multiple name="images[]">
+                                                        <input type="file" accept="image/*" multiple
+                                                               name="images_input[]">
                                                     </label>
                                                     <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do
                                                         amet sint. Velit officia consequat duis enim velit mollit.</p>
@@ -148,14 +151,28 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="item col-12 for-edit">
+                                    <span class="name">{{ __('Status') }}</span>
+                                    <label class="switcher-wrap">
+                                        <input type="checkbox" id="room-status" name="status">
+                                        <span class="switcher-condition">
+                                            <span class="option">Block</span>
+                                            <span class="active-side"></span>
+                                            <span class="option">Active</span>
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
                         </form>
                     </div>
                 </div>
                 <div class="bottom-btn">
                     <button type="button" class="main-btn gray-blank" data-fancybox-close>{{ __('Cancel') }}</button>
-                    <button type="button" class="main-btn yellow-blank"
-                            id="submit-rooms-form">{{ __('Create') }}</button>
+                    <button type="button" class="for-add main-btn yellow-blank submit-rooms-form"
+                            data-type="add">{{ __('Create') }}</button>
+                    <button type="button" class="for-edit main-btn yellow-blank submit-rooms-form"
+                            data-type="edit">{{ __('Update') }}</button>
                 </div>
             </div>
         </div>
@@ -165,22 +182,32 @@
 @push('scripts')
     <script>
         $(function () {
-            $('#submit-rooms-form').click(function () {
+            $(document).on('click', '.submit-rooms-form', function () {
                 let dataForm = new FormData($('#rooms-form')[0]);
+                let isEdit = $(this).data('type') === 'edit' && Room.id;
+                let images64 = $(document).find('.photo-wrap img');
+
+                if (isEdit) dataForm.append('_method', 'put');
+
+                for (let i = 0; i < images64.length; i++) {
+                    if (!$(images64[i]).attr('data-id')) {
+                        dataForm.append('images[]', dataURLtoFile($(images64[i]).attr('src'), 'tmp' + Math.random().toString(36).substring(5) + '.png'))
+                    }
+                }
+
+                dataForm.append('images_to_delete', Room.imgToDelete);
+
                 $.ajax({
-                    url: "{{ route('admin.rooms.store')}}",
+                    url: isEdit ? ("/dashboard/rooms/" + Room.id) : "{{ route('admin.rooms.store')}}",
                     method: 'post',
                     processData: false,
                     contentType: false,
                     data: dataForm,
                     success: function (response) {
                         if (response.success) {
-                            $.fancybox.open({
-                                src: '#test-notification',
-                                afterClose: function () {
-                                    location.reload();
-                                }
-                            });
+                            Room.myDataTable.draw();
+                            $.fancybox.close({src: '#test-rooms'});
+                            $.fancybox.open({src: '#test-notification'});
                         }
                     },
                     error: function (data) {

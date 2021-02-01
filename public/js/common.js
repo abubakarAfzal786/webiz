@@ -1,12 +1,12 @@
 function hold_all_scroll_page(fix = false) {
     if (fix) {
-        window.addEventListener('wheel', holdScroll, { passive: false });
-        window.addEventListener('DOMMouseScroll', holdScroll, { passive: false });
-        document.addEventListener('touchmove', holdScroll, { passive: false });
+        window.addEventListener('wheel', holdScroll, {passive: false});
+        window.addEventListener('DOMMouseScroll', holdScroll, {passive: false});
+        document.addEventListener('touchmove', holdScroll, {passive: false});
     } else {
-        window.removeEventListener('wheel', holdScroll, { passive: false });
-        window.removeEventListener('DOMMouseScroll', holdScroll, { passive: false });
-        document.removeEventListener('touchmove', holdScroll, { passive: false });
+        window.removeEventListener('wheel', holdScroll, {passive: false});
+        window.removeEventListener('DOMMouseScroll', holdScroll, {passive: false});
+        document.removeEventListener('touchmove', holdScroll, {passive: false});
     }
 }
 
@@ -21,16 +21,17 @@ function holdScroll(e) {
 
 function hold_scroll_page(fix = false) {
     if (fix) {
-        window.addEventListener('wheel', preventDefault, { passive: false });
-        window.addEventListener('DOMMouseScroll', preventDefault, { passive: false });
-        document.addEventListener('touchmove', preventDefault, { passive: false });
+        window.addEventListener('wheel', preventDefault, {passive: false});
+        window.addEventListener('DOMMouseScroll', preventDefault, {passive: false});
+        document.addEventListener('touchmove', preventDefault, {passive: false});
         // $(document).on("touchmove", preventDefault)
     } else {
-        window.removeEventListener('wheel', preventDefault, { passive: false });
-        window.removeEventListener('DOMMouseScroll', preventDefault, { passive: false });
-        document.removeEventListener('touchmove', preventDefault, { passive: false });
+        window.removeEventListener('wheel', preventDefault, {passive: false});
+        window.removeEventListener('DOMMouseScroll', preventDefault, {passive: false});
+        document.removeEventListener('touchmove', preventDefault, {passive: false});
     }
 }
+
 var ts;
 $(document).on('touchstart', function (e) {
     ts = e.originalEvent.touches[0].clientY;
@@ -60,7 +61,7 @@ function preventDefault(e) {
     var delta = e.deltaY || e.detail || e.wheelDelta;
     if (e.type == "touchmove") {
         var tob = e.changedTouches[0], // reference first touch point for this event
-         offset = parseInt(tob.clientY);
+            offset = parseInt(tob.clientY);
         if (ts < offset - 5) {
             delta = -100;
         } else if (ts > offset + 5) {
@@ -74,6 +75,7 @@ function preventDefault(e) {
         e.preventDefault();
     }
 }
+
 const reviewsMass = [];
 
 let reviewsSlider;
@@ -107,6 +109,7 @@ $(document).ready(function () {
     });
 
 });
+
 function hasLodash(str) {
     str = str || '';
     return !!str.match(/\_/);
@@ -364,6 +367,20 @@ function uploadInit() {
     });
 }
 
+function dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, {type: mime});
+}
+
 $(document).ready(function () {
     uploadInit();
 
@@ -380,9 +397,10 @@ $(document).ready(function () {
             parent.find('.upload-wrap').show();
             parent.find('.preview-wrap').hide();
         }
+        let dataId = currentItem.find('img').attr('data-id');
+        if (dataId) Room.imgToDelete.push(dataId);
         $(this).closest('.upload-item').find('.photo-wrap .ready-photo').eq(currentItem.index()).remove();
         // input.val(null);
-
     });
 
     $(document).on('click', '.preview-wrap .add-extra button', function () {

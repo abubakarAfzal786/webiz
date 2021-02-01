@@ -18,8 +18,7 @@
 
     <div class="item left-border">
         {{--    <a href="{{ route('admin.rooms.create') }}" class="main-btn yellow-blank">{{ __('Add new room') }}</a>--}}
-        <button type="button" class="main-btn yellow-blank" data-fancybox id="open-test-rooms"
-                data-src='#test-rooms'>{{ __('Add new room') }}</button>
+        <button type="button" class="main-btn yellow-blank" id="open-test-rooms">{{ __('Add new room') }}</button>
     </div>
 @endpush
 
@@ -73,7 +72,10 @@
 @push('scripts')
     <script>
         let Room = {
+            id: 0,
             data: {},
+            imgToDelete: [],
+            myDataTable: null,
             fillData: function () {
                 $.each(Room.data, function (ind, val) {
                     if (ind === 'facilities') {
@@ -81,16 +83,35 @@
                             $('#facility_' + fac_val.id).prop('checked', true).trigger('change');
                         });
                     }
+
+                    if (ind === 'images' && !$.isEmptyObject(val)) {
+                        $('.upload-wrap').hide();
+                        $('.preview-wrap').show();
+
+                        $.each(val, function (img_ind, img_val) {
+                            $('.photo-wrap').prepend(
+                                '<div class="ready-photo">' +
+                                '<span class="icon-close"></span>' +
+                                '<img src="' + img_val.url + '" alt="" data-id="' + img_val.id + '">' +
+                                '</div>'
+                            )
+                        });
+                    }
+
+                    if (ind === 'status' && val) $('#room-status').attr('checked', 'checked');
+
                     $('#' + ind).val(val).trigger('change');
                 });
             },
             cleanData: function () {
-                // TODO implement
+                Room.data = {};
+                $('#test-rooms span.modal-span-error').remove()
+                $('#rooms-form')[0].reset();
             }
         }
 
         $(function () {
-            let myDataTable = $('#myDataTable').DataTable({
+            Room.myDataTable = $('#myDataTable').DataTable({
                 processing: true,
                 serverSide: true,
                 bPaginate: false,
@@ -115,23 +136,49 @@
             });
 
             $('#search-box').doneTyping(function () {
-                myDataTable.search($(this).val()).draw();
+                Room.myDataTable.search($(this).val()).draw();
             });
 
             $('#open-test-rooms').on('click', function () {
+                Room.id = 0;
+                Room.data = {};
+                Room.imgToDelete = [];
+                $('.for-add').removeClass('d-none');
+                $('.for-edit').addClass('d-none');
+                $.fancybox.open({
+                    src: '#test-rooms',
+                    afterClose: function () {
+                        $(document).find('.ready-photo').remove();
+                        $('.preview-wrap').hide();
+                        $('.upload-wrap').show();
+                    }
+                });
                 $(document).find('input.pac-target-input').removeAttr('placeholder');
             });
 
             $(document).on('click', '.edit-room', function () {
-                let room_id = $(this).data('id');
+                Room.id = $(this).data('id');
+                $('.for-add').addClass('d-none');
+                $('.for-edit').removeClass('d-none');
 
                 $.ajax({
-                    url: '/dashboard/rooms/' + room_id,
+                    url: '/dashboard/rooms/' + Room.id,
                     type: 'GET',
                     success: function (data) {
                         Room.data = data.room;
                         Room.fillData();
-                        $.fancybox.open({src: '#test-rooms'});
+                        $.fancybox.open({
+                            src: '#test-rooms',
+                            afterClose: function () {
+                                Room.cleanData();
+                                Room.imgToDelete = [];
+                                $(document).find('.ready-photo').remove();
+                                $('#room-status').removeAttr('checked')
+                                $('.preview-wrap').hide();
+                                $('.upload-wrap').show();
+                            }
+                        });
+                        $(document).find('input.pac-target-input').removeAttr('placeholder');
                     },
                     error: function () {
                         alert("{{ __('Something went wrong.') }}")
