@@ -28,6 +28,7 @@ if (!function_exists('room_is_busy')) {
 
         return Booking::query()
             ->where('room_id', $id)
+            ->where('status', '<>', Booking::STATUS_CANCELED)
             ->where(function ($q) use ($newStart, $newEnd) {
                 return $q
                     ->where(function ($query) use ($newStart, $newEnd) {
@@ -36,6 +37,11 @@ if (!function_exists('room_is_busy')) {
                     ->orWhere(function ($query) use ($newStart, $newEnd) {
                         return $query->where('end_date', '>', $newStart)->where('end_date', '<', $newEnd);
                     });
+            })
+            ->orWhere(function ($q) use ($newStart) {
+                return $q
+                    ->where('status', Booking::STATUS_EXTENDED)
+                    ->where('end_date', '<', $newStart);
             })
             ->exists();
     }
@@ -71,7 +77,8 @@ if (!function_exists('calculate_room_price')) {
         $pricePerMin = $roomPrice / 60;
         $price = 0;
         $minutesAll = 0;
-        $endSubMinute = $end_date->subMinute();
+        $endClone = clone $end_date;
+        $endSubMinute = $endClone->subMinute();
         $period = $start_date->toPeriod($endSubMinute, 1, 'minute');
 
         foreach ($period as $key => $newDate) {
