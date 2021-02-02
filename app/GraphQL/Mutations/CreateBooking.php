@@ -14,7 +14,7 @@ class CreateBooking
     /**
      * @param null $_
      * @param array<string, mixed> $args
-     * @return Booking|null
+     * @return array
      */
     public function __invoke($_, array $args)
     {
@@ -27,15 +27,21 @@ class CreateBooking
         /** @var Room $room */
         $room = Room::query()->find($args['room_id']);
 
-        if ($room && !room_is_busy($args['room_id'], $start_date, $end_date)) {
+        if (!room_is_busy($args['room_id'], $start_date, $end_date)) {
             $attributes = $args['attributes'] ?? null;
             $attributesToSync = get_attributes_to_sync($attributes);
             $args['price'] = calculate_room_price($attributesToSync, $room->price, $start_date, $end_date);
+
+            if ($member->balance < $args['price']) {
+                return [
+                    'booking' => null,
+                    'message' => 'You don\'t have enough credits',
+                    'success' => false,
+                ];
+            }
+
             $args['door_key'] = generate_door_key();
             $args['status'] = Booking::STATUS_PENDING;
-
-            if ($member->balance < $args['price']) return null;
-
             DB::beginTransaction();
             try {
                 /** @var Booking $booking */
@@ -44,12 +50,26 @@ class CreateBooking
                 make_transaction($member->id, null, $args['room_id'], $booking->id, $args['price'], Transaction::TYPE_ROOM);
             } catch (Exception $exception) {
                 DB::rollBack();
-                return null;
+                return [
+                    'booking' => null,
+                    'message' => 'Something went wrong',
+                    'success' => false,
+                ];
             }
 
             DB::commit();
-            return $booking;
+
+            return [
+                'booking' => $booking,
+                'message' => 'Room successfully booked',
+                'success' => true,
+            ];
         }
-        return null;
+
+        return [
+            'booking' => null,
+            'message' => 'Room is busy',
+            'success' => false,
+        ];
     }
 }

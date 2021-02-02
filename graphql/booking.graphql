@@ -23,6 +23,12 @@ type Booking {
     similar_room: Room
 }
 
+type BookingAndMessageResponse {
+    booking: Booking
+    message: String
+    success: Boolean
+}
+
 extend type Mutation @guard {
     createBooking(
         room_id: ID!, @rules(apply: ["exists:rooms,id"]),
@@ -30,7 +36,7 @@ extend type Mutation @guard {
         start_date: DateTimeOrDate! @rules(apply: ["date", "after:now"])
         end_date: DateTimeOrDate! @rules(apply: ["date", "after:start_date"])
         attributes: [BookingAttribute]
-    ): Booking
+    ): BookingAndMessageResponse
 
     continueBooking(
         id: ID! @rules(apply: ["exists:bookings,id"])
