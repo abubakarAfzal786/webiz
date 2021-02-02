@@ -246,7 +246,7 @@ if (!function_exists('make_transaction')) {
     {
         if ($booking_id) {
             $member = Member::query()->find($member_id);
-            $member->update(['balance' => ($credit > 0 ? ($member->balance - $credit) : ($member->balance + $credit))]);
+            $member->update(['balance' => ($member->balance - $credit)]);
         }
         return Transaction::query()->create([
             'member_id' => $member_id,

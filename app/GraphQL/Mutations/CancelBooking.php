@@ -20,6 +20,7 @@ class CancelBooking
         $member = auth()->user();
         /** @var Booking $booking */
         $booking = $member->bookings()->find($args['id']);
+
         if (!$booking) {
             return [
                 'message' => 'Booking not found',
@@ -27,7 +28,12 @@ class CancelBooking
             ];
         }
 
-        if ($booking && $booking->end_date->diffInHours(Carbon::now()) < 25) {
+        $canceledLastMonth = $member->bookings()
+            ->where('start_date', '>=', Carbon::now()->subMonth())
+            ->where('status', Booking::STATUS_CANCELED)
+            ->count();
+
+        if ($canceledLastMonth && $booking->start_date->diffInHours(Carbon::now()) < 25) {
             return [
                 'message' => '24 hours left to your booking. Sorry, you can\'t cancel booking',
                 'success' => false,
