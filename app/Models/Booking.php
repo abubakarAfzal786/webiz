@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property Carbon start_date
  * @property Carbon end_date
+ * @property Carbon out_at
  * @property Member member
  */
 class Booking extends Model

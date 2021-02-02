@@ -109,7 +109,7 @@ if (!function_exists('calculate_room_price')) {
             $price += $roomAttribute->price * $attributesToSync[$roomAttribute->id]['quantity'] * ($roomAttribute->unit == RoomAttribute::UNIT_HR ? ($minutesAll / 60) : 1);
         }
 
-        return round($price * 100) / 100;
+        return round($price, 0, PHP_ROUND_HALF_ODD);
     }
 }
 
@@ -269,11 +269,14 @@ if (!function_exists('generate_pass_reset_token')) {
     }
 }
 
-if (!function_exists('check_discount')) {
-    function check_discount(Carbon $start_date, Carbon $end_date)
+
+if (!function_exists('ceil_date_for_booking')) {
+    /**
+     * @param Carbon $date
+     * @return false|string
+     */
+    function ceil_date_for_booking($date)
     {
-        // TODO get discount time from settings (20:00 to 08:00, saturday && sunday)
-        // TODO implement
-        return false;
+        return date('Y-m-d H:i:s', ceil(strtotime($date->format('Y-m-d H:i:s')) / 1800) * 1800);
     }
 }

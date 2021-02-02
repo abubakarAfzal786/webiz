@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Helpers\BookingHelper;
 use App\Http\Helpers\FCMHelper;
 use App\Models\Booking;
 use App\Models\PushNotification;
@@ -36,6 +37,93 @@ class CheckBookingState extends Command
     }
 
     /**
+     * @param $booking
+     */
+    private function bookingCompletedPush($booking)
+    {
+        if ($booking->member->mobile_token) {
+            $data = [
+                'title' => 'Your booking finished',
+                'body' => 'Open the notification to take action',
+            ];
+
+            $extraData = [
+                'id' => $booking->id,
+                'type' => 'bookings',
+                'action' => 'completed'
+            ];
+
+            PushNotification::query()->create([
+                'title' => $data['title'],
+                'body' => $data['body'],
+                'member_id' => $booking->member_id,
+                'seen' => false,
+                'additional' => json_encode($extraData),
+            ]);
+
+            echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
+        }
+    }
+
+    /**
+     * @param $booking
+     */
+    private function bookingExpiredPush($booking)
+    {
+        if ($booking->member->mobile_token) {
+            $data = [
+                'title' => 'Your book time has expired',
+                'body' => 'Open the notification to take action',
+            ];
+
+            $extraData = [
+                'id' => $booking->id,
+                'type' => 'bookings',
+                'action' => 'expired'
+            ];
+
+            PushNotification::query()->create([
+                'title' => $data['title'],
+                'body' => $data['body'],
+                'member_id' => $booking->member_id,
+                'seen' => false,
+                'additional' => json_encode($extraData),
+            ]);
+
+            echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
+        }
+    }
+
+    /**
+     * @param $booking
+     */
+    private function bookingStartedPush($booking)
+    {
+        if ($booking->member->mobile_token) {
+            $data = [
+                'title' => 'Booking started.',
+                'body' => 'Booking for "' . $booking->room->name . '" started.',
+            ];
+
+            $extraData = [
+                'id' => $booking->id,
+                'type' => 'bookings',
+                'action' => 'started',
+            ];
+
+            PushNotification::query()->create([
+                'title' => $data['title'],
+                'body' => $data['body'],
+                'member_id' => $booking->member_id,
+                'seen' => false,
+                'additional' => json_encode($extraData),
+            ]);
+
+            echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
+        }
+    }
+
+    /**
      * Execute the console command.
      *
      * @return int
@@ -44,6 +132,7 @@ class CheckBookingState extends Command
     {
         $today = Carbon::today()->format('Y-m-d');
         $now = Carbon::now();
+        $nowSub5 = Carbon::now()->subMinutes(5);
 
         $bookings = Booking::query()
             ->with(['member', 'room'])
@@ -52,109 +141,45 @@ class CheckBookingState extends Command
             ->get();
 
         foreach ($bookings as $booking) {
-            $token = $booking->member->mobile_token;
-
-            if (($booking->status != Booking::STATUS_EXTENDED) && ($booking->end_date <= $now)) {
-                if ($token) {
-                    $data = [
-                        'title' => 'Your book time has expired',
-                        'body' => 'Open the notification to take action',
-                    ];
-
-                    $extraData = [
-                        'id' => $booking->id,
-                        'type' => 'bookings',
-                        'action' => 'expired'
-                    ];
-
-                    $checkPush = PushNotification::query()
-                        ->where('member_id', '=', $booking->member_id)
-//                        ->where('additional->id', $booking->id)
-//                        ->where('additional->type', 'bookings')
-//                        ->where('seen', true)
-                        ->where('additional', 'like', '%"id":' . $booking->id . '%')
-                        ->where('additional', 'like', '%"type":"bookings"%')
-                        ->where('additional', 'like', '%"action":"expired"%')
-                        ->exists();
-
-                    if (!$checkPush) {
-                        PushNotification::query()->create([
-                            'title' => $data['title'],
-                            'body' => $data['body'],
-                            'member_id' => $booking->member_id,
-                            'seen' => false,
-                            'additional' => json_encode($extraData),
-                        ]);
-
-                        echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
+            if ($booking->status != Booking::STATUS_EXTENDED) {
+                if (($booking->end_date >= $nowSub5) && ($booking->end_date <= $now)) {
+                    // EXPIRED BOOKING
+                    $this->bookingExpiredPush($booking);
+                } elseif ($booking->end_date <= $now) {
+                    if ($booking->out_at) {
+                        // COMPLETE BOOKING
+                        $this->bookingCompletedPush($booking);
+                        $booking->update(['status' => Booking::STATUS_COMPLETED]);
+                    } else {
+                        // EXTEND BOOKING
+                        $extendBooking = (new BookingHelper())->extendBooking($booking);
+                        if (!$extendBooking) {
+                            // COMPLETE BOOKING
+                            $this->bookingCompletedPush($booking);
+                            $booking->update(['status' => Booking::STATUS_COMPLETED]);
+                        }
                     }
                 }
-
-                // TODO check
-                // $booking->update(['status' => Booking::STATUS_COMPLETED]);
             }
 
             if ($booking->status == Booking::STATUS_PENDING) {
                 if (($booking->start_date <= $now) && ($booking->end_date > $now)) {
-                    if ($token) {
-                        $data = [
-                            'title' => 'Booking started.',
-                            'body' => 'Booking for "' . $booking->room->name . '" started.',
-                        ];
-
-                        $extraData = [
-                            'id' => $booking->id,
-                            'type' => 'bookings',
-                            'action' => 'started',
-                        ];
-
-                        PushNotification::query()->create([
-                            'title' => $data['title'],
-                            'body' => $data['body'],
-                            'member_id' => $booking->member_id,
-                            'seen' => false,
-                            'additional' => json_encode($extraData),
-                        ]);
-
-                        echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
-                    }
-
+                    // STARTED BOOKING
+                    $this->bookingStartedPush($booking);
                     $booking->update(['status' => Booking::STATUS_ACTIVE]);
                 }
             }
         }
-        
+
         $extended = Booking::query()
             ->with(['member', 'room'])
             ->where('status', Booking::STATUS_EXTENDED)
-            ->where('out_at', '<=', Carbon::now()->subMinutes(5))
+            ->where('out_at', '<=', $nowSub5)
             ->get();
 
         foreach ($extended as $booking) {
-            $token = $booking->member->mobile_token;
-            if ($token) {
-                $data = [
-                    'title' => 'Your booking finished',
-                    'body' => 'Open the notification to take action',
-                ];
-
-                $extraData = [
-                    'id' => $booking->id,
-                    'type' => 'bookings',
-                    'action' => 'completed'
-                ];
-
-                PushNotification::query()->create([
-                    'title' => $data['title'],
-                    'body' => $data['body'],
-                    'member_id' => $booking->member_id,
-                    'seen' => false,
-                    'additional' => json_encode($extraData),
-                ]);
-
-                echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
-            }
-
+            // COMPLETE BOOKING
+            $this->bookingCompletedPush($booking);
             $booking->update(['status' => Booking::STATUS_COMPLETED]);
         }
 
