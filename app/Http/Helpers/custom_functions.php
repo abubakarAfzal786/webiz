@@ -25,8 +25,9 @@ if (!function_exists('room_is_busy')) {
         $newEnd = clone $end;
         $newStart->subMinutes(Setting::getValue('booking_time_resolution', 15));
         $newEnd->addMinutes(Setting::getValue('booking_time_resolution', 15));
+        $nowSub45 = Carbon::now()->subMinutes(45);
 
-        return Booking::query()
+        $busy = Booking::query()
             ->where('room_id', $id)
             ->where('status', '<>', Booking::STATUS_CANCELED)
             ->where(function ($q) use ($newStart, $newEnd) {
@@ -37,13 +38,21 @@ if (!function_exists('room_is_busy')) {
                     ->orWhere(function ($query) use ($newStart, $newEnd) {
                         return $query->where('end_date', '>', $newStart)->where('end_date', '<', $newEnd);
                     });
-            })
-            ->orWhere(function ($q) use ($newStart) {
-                return $q
-                    ->where('status', Booking::STATUS_EXTENDED)
-                    ->where('end_date', '<', $newStart);
-            })
+            })->exists();
+
+        if ($busy) return true;
+
+        $extended = Booking::query()
+            ->where('room_id', $id)
+            ->where('status', Booking::STATUS_EXTENDED)
+            ->where('end_date', '<', $newStart)
             ->exists();
+
+        if($extended) {
+            return $nowSub45->diffInMinutes($newStart) <= 75;
+        }
+
+        return false;
     }
 }
 
