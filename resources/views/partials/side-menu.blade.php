@@ -5,7 +5,7 @@
     <div class="item-wrap">
         <div class="item">
             <ul>
-                <li class="{{ request()->is(['dashboard']) ? 'active' : '' }}"><a href="{{ url('/') }}">{{ __('Dashboard') }}</a></li>
+                <li class="{{ request()->is(['dashboard']) ? 'active' : '' }}"><a href="{{ route('home') }}">{{ __('Dashboard') }}</a></li>
                 <li class="{{ request()->is(['dashboard/bookings', 'dashboard/bookings/*']) ? 'active' : '' }}"><a href="{{ route('admin.bookings.index') }}">{{ __('Bookings') }}</a></li>
                 <li class="{{ request()->is(['dashboard/members', 'dashboard/members/*']) ? 'active' : '' }}"><a href="{{ route('admin.members.index') }}">{{ __('Members') }}</a></li>
             </ul>

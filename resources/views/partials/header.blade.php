@@ -3,7 +3,7 @@
         <div class="flex wrap aCenter jBetween">
             <div class="main-links">
                 <ul>
-                    <li><a href="javascript:void(0)">{{ __('WeBiz website') }}</a></li>
+                    <li><a href="{{ url('/') }}">{{ __('WeBiz website') }}</a></li>
                     <li><a href="javascript:void(0)">{{ __('How to use the dashboard') }}</a></li>
                 </ul>
             </div>
