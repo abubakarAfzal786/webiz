@@ -45,6 +45,9 @@
                             <a class="nav-link" href="{{ route('admin.members.index') }}">{{ __('Members') }}</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.support-chat.index') }}">{{ __('Support Chat') }}</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.faq.index') }}">{{ __('FAQ Base') }}</a>
                         </li>
                         <li class="nav-item">
@@ -52,6 +55,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.reviews.index') }}">{{ __('Reviews') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.packages.index') }}">{{ __('Packages') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.settings.index') }}">{{ __('Settings') }}</a>

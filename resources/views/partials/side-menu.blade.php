@@ -29,6 +29,7 @@
         </div>
         <div class="item">
             <ul>
+                <li class="{{ request()->is(['dashboard/packages', 'dashboard/packages/*']) ? 'active' : '' }}"><a href="{{ route('admin.packages.index') }}">{{ __('Packages') }}</a></li>
                 <li class="{{ request()->is(['dashboard/settings', 'dashboard/settings/*']) ? 'active' : '' }}"><a href="{{ route('admin.settings.index') }}">{{ __('Settings') }}</a></li>
             </ul>
         </div>

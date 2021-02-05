@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Booking;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBookingRequest extends FormRequest
+class StorePackageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,12 +24,9 @@ class StoreBookingRequest extends FormRequest
     public function rules()
     {
         return [
-            'room_id' => 'required|exists:rooms,id',
-            'member_id' => 'required|exists:members,id',
-            'start_date' => 'required|date_format:' . Booking::DATE_TIME_LOCAL . '|after:now',
-            'end_date' => 'required|date_format:' . Booking::DATE_TIME_LOCAL . '|after:start_date',
+            'name' => 'required|string|max:191',
+            'privileges' => 'required|string',
             'price' => 'nullable|numeric',
-            'status' => 'nullable|in:' . implode(',', array_keys(Booking::listStatuses())),
         ];
     }
 }

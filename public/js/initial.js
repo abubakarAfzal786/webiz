@@ -18,7 +18,7 @@ $.fn.doneTyping = function (callback, $wait_time = 350) {
     }
 };
 
-$(document).on('click', '.delete-swal', function () {
+$(document).on('click', '.delete-swal[data-url]', function () {
     let url = $(this).data('url');
 
     if (confirm("Are you sure?")) {
