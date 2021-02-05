@@ -68,11 +68,11 @@ class CheckBookingState extends Command
     /**
      * @param $booking
      */
-    private function bookingExpiredPush($booking)
+    private function bookingExpiredPush($booking, $minutes)
     {
         if ($booking->member->mobile_token) {
             $data = [
-                'title' => 'שים לב! הזמנתך תסתיים בעוד 5 דקות', // Your book time has expired
+                'title' => $minutes . ' שיב לב! הזמנתך תסתיים בעוד דקות ', // Your book time has expired
                 'body' => 'צריך עוד זמן? לחץ כאן בשביל להאריך את ההזמנה לפני שתסתיים.',
             ];
 
@@ -144,7 +144,7 @@ class CheckBookingState extends Command
             if ($booking->status != Booking::STATUS_EXTENDED) {
                 if (($booking->end_date >= $nowSub5) && ($booking->end_date <= $now)) {
                     // EXPIRED BOOKING
-                    $this->bookingExpiredPush($booking);
+                    $this->bookingExpiredPush($booking, (int)$now->diffInMinutes($booking->end_date));
                 } elseif ($booking->end_date <= $now) {
                     if ($booking->out_at) {
                         // COMPLETE BOOKING
