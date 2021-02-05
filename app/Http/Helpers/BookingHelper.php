@@ -42,8 +42,8 @@ final class BookingHelper
                     DB::commit();
 
                     $data = [
-                        'title' => 'Your booked room has been changed',
-                        'body' => 'Open the notification to take action',
+                        'title' => 'שים לב! המשרד שהזמת הוחלף', // Your booked room has been changed
+                        'body' => 'לחץ כאן לפרטי ההזמנה המעודכנת', // Click here for updated order details
                     ];
 
                     $extraData = [

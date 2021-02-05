@@ -43,8 +43,8 @@ class CheckBookingState extends Command
     {
         if ($booking->member->mobile_token) {
             $data = [
-                'title' => 'Your booking finished',
-                'body' => 'Open the notification to take action',
+                'title' => 'שים לב! הזמנתך הסתיימה', // Your booking finished
+                'body' => 'אנא פנה את המשרד או לחץ כאן כדי להאריך את ההזמנה.', // Please contact the office or click here to extend your booking.
             ];
 
             $extraData = [
@@ -72,8 +72,8 @@ class CheckBookingState extends Command
     {
         if ($booking->member->mobile_token) {
             $data = [
-                'title' => 'Your book time has expired',
-                'body' => 'Open the notification to take action',
+                'title' => 'שים לב! הזמנתך תסתיים בעוד 5 דקות', // Your book time has expired
+                'body' => 'צריך עוד זמן? לחץ כאן בשביל להאריך את ההזמנה לפני שתסתיים.',
             ];
 
             $extraData = [
@@ -101,8 +101,8 @@ class CheckBookingState extends Command
     {
         if ($booking->member->mobile_token) {
             $data = [
-                'title' => 'Booking started.',
-                'body' => 'Booking for "' . $booking->room->name . '" started.',
+                'title' => $booking->room->name .' משרד ״״ מוכן לרשותך ', // Booking started
+                'body' => 'הזמנתך החלה, עבודה נעימה', // Your order has begun, pleasant work
             ];
 
             $extraData = [

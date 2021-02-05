@@ -33,8 +33,8 @@ class CompleteBookingNotify
             $booking->update(['status' => Booking::STATUS_COMPLETED]);
 
             $data = [
-                'title' => 'Booking completed.',
-                'body' => 'Booking for "' . $booking->room->name . '" completed.',
+                'title' => 'הזמנתך הסתיימה בהצלחה', // Booking completed
+                'body' => 'איך היה לך? לחץ כאן בשביל לספר לנו.', // How was it? Click here to tell us.
             ];
 
             $extraData = [

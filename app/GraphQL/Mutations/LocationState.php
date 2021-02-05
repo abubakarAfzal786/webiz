@@ -31,8 +31,8 @@ class LocationState
             /** @var Booking $booking */
             if ($out && $member->mobile_token) {
                 $data = [
-                    'title' => 'Your booking will be stopped, because of leaving office area.',
-                    'body' => 'Open the notification to take action',
+                    'title' => 'שים לב! עקב יציאה מהמתחם ההזמתך הסתיימה', // Your booking will be stopped, because of leaving office area
+                    'body' => 'איך היה לך? לחץ כאן בשביל לספר לנו.', // How was it? Click here to tell us.
                 ];
 
                 $extraData = [
