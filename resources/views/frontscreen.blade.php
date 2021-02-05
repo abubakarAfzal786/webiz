@@ -59,7 +59,7 @@
     <div class="container">
         <div class="intro">
             <div class="logo">
-                <img src="{{ asset('frontscreen/images/logo.png') }}" alt="">
+                <img src="{{ asset('frontscreen/images/logo_high.png') }}" alt="">
             </div>
             <div class="info">
                 <div class="item">
@@ -246,7 +246,7 @@
         }
 
         $.ajax(settings).done(function (response) {
-            if (response.main.temp) $('#temp').html(response.main.temp);
+            if (response.main.temp) $('#temp').html(parseInt(response.main.temp));
         });
     });
 </script>
