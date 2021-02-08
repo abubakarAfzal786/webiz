@@ -84,7 +84,7 @@
                                     </label>
                                 </div>
                                 <div class="item col-lg-4 col-md-6 col-sm-12">
-                                    <button class="main-btn yellow-blank" id="send-reset-link">
+                                    <button type="button" class="main-btn yellow-blank" id="send-reset-link">
                                         {{ __('Send link for reset password') }}
                                     </button>
                                 </div>
@@ -238,19 +238,24 @@
 @push('scripts')
     <script>
         $('#send-reset-link').click(function () {
+            let _this = $(this);
+            _this.attr('disabled', true);
             $.ajax({
                 url: '{{ route('admin.members.reset-link', $member->id) }}',
                 type: 'POST',
-                success: function () {
-                    alert("{{ __('Sent') }}")
+                success: function (res) {
+                    alert(res.sucess ? "{{ __('Sent') }}" : "{{ __('Not Sent') }}")
                 },
                 error: function () {
                     alert("{{ __('Something went wrong.') }}")
+                },
+                complete: function () {
+                    _this.removeAttr('disabled');
                 }
             });
         });
 
-        $('#user-status').click(function (){
+        $('#user-status').click(function () {
             let state = $(this).is(':checked') ? 1 : 0;
 
             $.ajax({

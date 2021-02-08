@@ -217,7 +217,6 @@ class Room extends Authenticatable implements JWTSubject
             }
 
             $end_date = $current->end_date;
-            $inter = null;
 
             foreach ($next_bookings as $next_booking) {
                 if ($next_booking->start_date->diffInMinutes($end_date) < Setting::getValue('booking_minimum_time', 30) + Setting::getValue('booking_time_resolution', 15)) {

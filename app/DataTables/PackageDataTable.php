@@ -24,7 +24,7 @@ class PackageDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->editColumn('privileges', function ($package) {
-                return (strlen(strip_tags($package->privileges)) > 50) ? substr(strip_tags($package->privileges), 0, 50) . '...' : $package->privileges;
+                return (mb_strlen(strip_tags($package->privileges)) > 50) ? mb_substr(strip_tags($package->privileges), 0, 50) . '...' : $package->privileges;
             })
             ->editColumn('created_at', function ($package) {
                 return $package->created_at ? $package->created_at->diffForHumans() : '';

@@ -223,7 +223,13 @@ if (!function_exists('get_current_booking')) {
         $room = Room::query()->find($room_id);
         if ($room) {
             $now = Carbon::now();
-            return $room->bookings()->where('start_date', '<=', $now)->where('end_date', '>=', $now)->first();
+            return $room->bookings()
+                ->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_COMPLETED])
+                ->where('start_date', '<=', $now)
+                ->where(function ($q) use ($now) {
+                    return $q->where('end_date', '>=', $now)->orWhere('status', Booking::STATUS_EXTENDED);
+                })
+                ->first();
         }
         return null;
     }
