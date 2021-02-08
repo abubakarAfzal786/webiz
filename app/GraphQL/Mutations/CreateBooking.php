@@ -30,7 +30,7 @@ class CreateBooking
         if (!room_is_busy($args['room_id'], $start_date, $end_date)) {
             $attributes = $args['attributes'] ?? null;
             $attributesToSync = get_attributes_to_sync($attributes);
-            $args['price'] = calculate_room_price($attributesToSync, $room->price, $start_date, $end_date);
+            $args['price'] = calculate_room_price($attributesToSync, $room->price, $start_date, $end_date)['price'];
 
             if ($member->balance < $args['price']) {
                 return [

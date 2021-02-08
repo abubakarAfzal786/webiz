@@ -19,7 +19,7 @@ extend type Query @guard {
         start_date: DateTimeOrDate! @rules(apply: ["date", "after:now"])
         end_date: DateTimeOrDate! @rules(apply: ["date", "after:start_date"])
         attributes: [BookingAttribute]
-    ): Float
+    ): RoomPriceResponse
 }
 
 type Room {
@@ -60,6 +60,12 @@ type RoomType {
 
 type SearchRoomResponse {
     success: Boolean!
+}
+
+type RoomPriceResponse {
+    roomPrice: Float,
+    hourlyPrice: Float,
+    discounted: Boolean
 }
 
 extend type Mutation @guard {

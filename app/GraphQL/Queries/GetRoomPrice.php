@@ -9,7 +9,7 @@ class GetRoomPrice
     /**
      * @param null $_
      * @param array<string, mixed> $args
-     * @return float|int
+     * @return string[]
      */
     public function __invoke($_, array $args)
     {
@@ -18,7 +18,12 @@ class GetRoomPrice
         $end_date = $args['end_date'];
         $attributes = $args['attributes'] ?? null;
         $attributesToSync = get_attributes_to_sync($attributes);
+        $roomPrice = calculate_room_price($attributesToSync, $room->price, $start_date, $end_date);
 
-        return calculate_room_price($attributesToSync, $room->price, $start_date, $end_date);
+        return [
+            'roomPrice' => $roomPrice['price'],
+            'hourlyPrice' => $roomPrice['startPrice'],
+            'discounted' => $roomPrice['discounted']
+        ];
     }
 }

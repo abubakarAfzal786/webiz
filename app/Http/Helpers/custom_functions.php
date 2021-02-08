@@ -48,7 +48,7 @@ if (!function_exists('room_is_busy')) {
             ->where('end_date', '<', $newStart)
             ->exists();
 
-        if($extended) {
+        if ($extended) {
             return $nowSub45->diffInMinutes($newStart) <= 75;
         }
 
@@ -79,7 +79,7 @@ if (!function_exists('calculate_room_price')) {
      * @param float|int $roomPrice
      * @param Carbon $start_date
      * @param Carbon $end_date
-     * @return float|int
+     * @return array
      */
     function calculate_room_price(array $attributesToSync, $roomPrice, $start_date, $end_date)
     {
@@ -89,11 +89,13 @@ if (!function_exists('calculate_room_price')) {
         $endClone = clone $end_date;
         $endSubMinute = $endClone->subMinute();
         $period = $start_date->toPeriod($endSubMinute, 1, 'minute');
+        $discounted = false;
+        $startPrice = $roomPrice;
 
         foreach ($period as $key => $newDate) {
             $weekdayFormatted = $newDate->format('N');
 
-            if (in_array($weekdayFormatted, [6, 7])) {
+            if ($weekdayFormatted == '6') {
                 $cond = true;
             } else {
                 $hourFormatted = $newDate->format('H');
@@ -103,6 +105,8 @@ if (!function_exists('calculate_room_price')) {
             $pricePer = $pricePerMin;
 
             if ($cond) {
+                if ($key == 0) $startPrice /= 2;
+                $discounted = true;
                 $pricePer /= 2;
                 $minutesAll += 0.5;
             } else {
@@ -118,7 +122,11 @@ if (!function_exists('calculate_room_price')) {
             $price += $roomAttribute->price * $attributesToSync[$roomAttribute->id]['quantity'] * ($roomAttribute->unit == RoomAttribute::UNIT_HR ? ($minutesAll / 60) : 1);
         }
 
-        return round($price, 0, PHP_ROUND_HALF_ODD);
+        return [
+            'price' => round($price, 0, PHP_ROUND_HALF_ODD),
+            'startPrice' => $startPrice,
+            'discounted' => $discounted,
+        ];
     }
 }
 
