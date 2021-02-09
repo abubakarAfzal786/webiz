@@ -8,6 +8,7 @@
     <meta name="format-detection" content="address=no">
 
     <link rel="stylesheet" href="{{ asset('frontscreen/css/bundle.css') }}" type="text/css"/>
+    <link rel="stylesheet" href="{{ asset('frontscreen/css/custom.css') }}" type="text/css"/>
 
     <link rel="apple-touch-icon-precomposed" sizes="57x57"
           href="{{ asset('frontscreen/images/favicon/apple-touch-icon-57x57.png') }}"/>
@@ -89,117 +90,20 @@
             </div>
             <div class="list-wrap">
                 <ul>
-                    <li>
-                        <div class="data">
-                            <div class="counter"></div>
-                            <div class="name">
-                                <p>CYBERFUZE</p>
+                    @foreach($bookings as $booking)
+                        <li>
+                            <div class="data">
+                                <div class="counter"></div>
+                                <div class="name">
+                                    <p>{{ $booking->member->name }}</p>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="logo">
-                            <img src="{{ asset('frontscreen/images/company-list/01.png') }}" alt="">
-                        </div>
-                    </li>
-                    <li>
-                        <div class="data">
-                            <div class="counter"></div>
-                            <div class="name">
-                                <p>Microsoft</p>
+                            <div class="logo">
+                                <img src="{{ $booking->logo ? $booking->logo->url : '' }}" alt="">
                             </div>
-                        </div>
-                        <div class="logo">
-                            <img src="{{ asset('frontscreen/images/company-list/02.png') }}" alt="">
-                        </div>
-                    </li>
-                    <li>
-                        <div class="data">
-                            <div class="counter"></div>
-                            <div class="name">
-                                <p>Apple inc.</p>
-                            </div>
-                        </div>
-                        <div class="logo">
-                            <img src="{{ asset('frontscreen/images/company-list/03.png') }}" alt="">
-                        </div>
-                    </li>
-                    <li>
-                        <div class="data">
-                            <div class="counter"></div>
-                            <div class="name">
-                                <p>Amazon Inc.</p>
-                            </div>
-                        </div>
-                        <div class="logo">
-                            <img src="{{ asset('frontscreen/images/company-list/04.png') }}" alt="">
-                        </div>
-                    </li>
-                    <li>
-                        <div class="data">
-                            <div class="counter"></div>
-                            <div class="name">
-                                <p>Alphabet Inc.</p>
-                            </div>
-                        </div>
-                        <div class="logo">
-                            <img src="{{ asset('frontscreen/images/company-list/05.png') }}" alt="">
-                        </div>
-                    </li>
-                    <li>
-                        <div class="data">
-                            <div class="counter"></div>
-                            <div class="name">
-                                <p>Facebook</p>
-                            </div>
-                        </div>
-                        <div class="logo">
-                            <img src="{{ asset('frontscreen/images/company-list/06.png') }}" alt="">
-                        </div>
-                    </li>
-                    <li>
-                        <div class="data">
-                            <div class="counter"></div>
-                            <div class="name">
-                                <p>Alibaba Group</p>
-                            </div>
-                        </div>
-                        <div class="logo">
-                            <img src="{{ asset('frontscreen/images/company-list/07.png') }}" alt="">
-                        </div>
-                    </li>
-                    <li>
-                        <div class="data">
-                            <div class="counter"></div>
-                            <div class="name">
-                                <p>Tencent</p>
-                            </div>
-                        </div>
-                        <div class="logo">
-                            <img src="{{ asset('frontscreen/images/company-list/08.png') }}" alt="">
-                        </div>
-                    </li>
-                    <li>
-                        <div class="data">
-                            <div class="counter"></div>
-                            <div class="name">
-                                <p>Berkshire<br> Hathaway Inc.</p>
-                            </div>
-                        </div>
-                        <div class="logo">
-                            <img src="{{ asset('frontscreen/images/company-list/09.png') }}" alt="">
-                        </div>
-                    </li>
-                    <li>
-                        <div class="data">
-                            <div class="counter"></div>
-                            <div class="name">
-                                <p>Johnson & Johnson</p>
-                            </div>
-                        </div>
-                        <div class="logo">
-                            <img src="{{ asset('frontscreen/images/company-list/10.png') }}" alt="">
-                        </div>
-                    </li>
+                        </li>
+                    @endforeach
                 </ul>
             </div>
 
