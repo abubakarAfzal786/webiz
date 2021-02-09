@@ -18,6 +18,11 @@ final class BookingHelper
      */
     public function extendBooking($booking)
     {
+        if ($booking->out_at) {
+            $booking->update(['status' => Booking::STATUS_COMPLETED]);
+            return false;
+        }
+
         /** @var Booking $next_booked */
         $next_booked = next_booked($booking);
 

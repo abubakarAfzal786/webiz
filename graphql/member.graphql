@@ -82,6 +82,10 @@ extend type Mutation @guard {
     uploadLogos(
         logos: [Upload!], @rules(apply: ["image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"]),
     ): [Image]
+
+    removeLogo(
+        id: ID! @rules(apply: ["exists:images,id"])
+    ): Boolean
 }
 
 extend type Mutation {
