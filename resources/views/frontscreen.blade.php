@@ -88,24 +88,26 @@
             <div class="title">
                 <h1>Company list</h1>
             </div>
-            <div class="list-wrap">
-                <ul>
-                    @foreach($bookings as $key => $booking)
-                        <li>
-                            <div class="data">
-                                <div class="counter">{{ $booking->room->number }}</div>
-                                <div class="name">
-                                    <p>{{ $booking->member->name }}</p>
+            @if($bookings->count())
+                <div class="list-wrap">
+                    <ul>
+                        @foreach($bookings as $key => $booking)
+                            <li>
+                                <div class="data">
+                                    <div class="counter">{{ $booking->room->number }}</div>
+                                    <div class="name">
+                                        <p>{{ $booking->member->name }}</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="logo">
-                                <img src="{{ $booking->logo ? $booking->logo->url : '' }}" alt="">
-                            </div>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
+                                <div class="logo">
+                                    <img src="{{ $booking->logo ? $booking->logo->url : '' }}" alt="">
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
         </div>
 

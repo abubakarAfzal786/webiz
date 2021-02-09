@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * @property mixed value
@@ -42,6 +44,8 @@ class Setting extends Model
      */
     public static function getValue(string $key, $default = null)
     {
+        $fromCache = Cache::get('setting_' . $key);
+        if ($fromCache) return $fromCache;
         $item = self::getByKey($key);
         return ($item ? $item->value : $default);
     }
@@ -54,5 +58,28 @@ class Setting extends Model
     {
         $item = self::getByKey($key);
         return ($item ? $item->additional : null);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setValueAttribute($value)
+    {
+        $key = $this->attributes['key'] ?? null;
+        if ($key && $value) Cache::forever('setting_' . $key, $value);
+
+        $this->attributes['value'] = $value;
+    }
+
+    /**
+     * @return bool|null
+     * @throws Exception
+     */
+    public function delete()
+    {
+        $key = $this->attributes['key'] ?? null;
+        if ($key) Cache::forget('setting_' . $key);
+
+        return parent::delete();
     }
 }

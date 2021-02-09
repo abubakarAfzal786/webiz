@@ -238,4 +238,17 @@ class Room extends Authenticatable implements JWTSubject
     {
         $this->attributes['number'] = ($value !== null) ? intval($value) : null;
     }
+
+    /**
+     * @return HigherOrderBuilderProxy|mixed|null
+     */
+    public function getDoorIdAttribute()
+    {
+        $doorTypeId = DeviceType::query()->where('name', 'door')->first();
+        if ($doorTypeId) {
+            $door = $this->devices()->where('type_id', $doorTypeId)->first();
+            return $door->device_id ?? null;
+        }
+        return null;
+    }
 }

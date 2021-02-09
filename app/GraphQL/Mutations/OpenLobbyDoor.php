@@ -4,8 +4,9 @@ namespace App\GraphQL\Mutations;
 
 use App\Http\Helpers\IotHelper;
 use App\Models\Room;
+use App\Models\Setting;
 
-class OpenDoor
+class OpenLobbyDoor
 {
     use IotHelper;
 
@@ -17,13 +18,11 @@ class OpenDoor
     public function __invoke($_, array $args)
     {
         /** @var Room $room */
-        $room = auth()->user();
-        $booking = get_current_booking($room->id);
+        $room = Room::query()->find($args['room_id']);
+        // TODO get lobby related to this room
 
-        if ($booking && ($args['door_key'] == $booking->door_key) && $room->door_id) {
-            return $this->openIotDoor($room->door_id);
-        } else {
-            return false;
-        }
+        $lobby_door_id = Setting::getValue('lobby_door_id', config('other.lobby_door_id'));
+
+        return $this->openIotDoor($lobby_door_id);
     }
 }
