@@ -90,10 +90,10 @@
             </div>
             <div class="list-wrap">
                 <ul>
-                    @foreach($bookings as $booking)
+                    @foreach($bookings as $key => $booking)
                         <li>
                             <div class="data">
-                                <div class="counter"></div>
+                                <div class="counter">{{ $booking->room->number }}</div>
                                 <div class="name">
                                     <p>{{ $booking->member->name }}</p>
                                 </div>

@@ -42,6 +42,7 @@ class StoreRoomRequest extends FormRequest
             'type_id' => 'required|exists:room_types,id',
             'wifi_ssid' => 'nullable|string|min:2|max:191',
             'wifi_pass' => 'nullable|string|min:2|max:191',
+            'number' => 'nullable|integer|min:0',
         ];
 
         return $rules;

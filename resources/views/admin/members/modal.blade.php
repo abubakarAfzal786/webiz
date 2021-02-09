@@ -10,7 +10,7 @@
                     <label class="text-option">
                         <span class="label-wrap">
                             <input type="number" name="credits" step="0.01" required
-                                   class="placeholder-effect has-content">
+                                   class="placeholder-effect has-content" min="0" pattern="[0-9]+">
                             <span class="placeholder">Credits</span>
                         </span>
                     </label>

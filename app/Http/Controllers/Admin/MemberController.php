@@ -187,7 +187,8 @@ class MemberController extends Controller
         if ($request->ajax()) {
             /** @var Member $member */
             $member = Member::query()->withoutGlobalScopes()->findOrFail($id);
-            if ($member) {
+            $credits = $request->get('credits');
+            if ($member && ($credits > 0)) {
                 $credits = (float)$request->get('credits');
                 $member->update(['balance' => $member->balance + $credits]);
                 return response()->json(['success' => true, 'balance' => $member->balance]);

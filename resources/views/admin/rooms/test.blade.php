@@ -48,11 +48,12 @@
                 <table id="myDataTable">
                     <thead>
                     <tr>
-                        <td>{{ __('Room name') }}</td>
+                        <td>{{ __('Name') }}</td>
                         <td>{{ __('Credit/hr') }}</td>
                         <td>{{ __('Photos') }}</td>
                         <td>{{ __('Number of seats') }}</td>
                         <td>{{ __('PIN') }}</td>
+                        <td>{{ __('Room №') }}</td>
                         <td>{{ __('Status') }}</td>
                         <td>{{ __('Action') }}</td>
                     </tr>
@@ -125,6 +126,7 @@
                     {data: 'images', name: 'images'},
                     {data: 'seats', name: 'seats'},
                     {data: 'pin', name: 'pin'},
+                    {data: 'number', name: 'number'},
                     {data: 'status', name: 'status'},
                     {
                         data: 'action',
@@ -137,6 +139,13 @@
 
             $('#search-box').doneTyping(function () {
                 Room.myDataTable.search($(this).val()).draw();
+            });
+
+            $(document).on('input', '#number', function () {
+                if ($(this).val()) {
+                    if ($(this).val() < 0) $(this).val(0)
+                    $(this).val(+$(this).val())
+                }
             });
 
             $('#open-test-rooms').on('click', function () {

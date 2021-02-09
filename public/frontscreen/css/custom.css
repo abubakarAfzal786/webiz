@@ -1,3 +1,8 @@
 .company-list ul li .logo img {
     max-height: 77px;
 }
+
+.company-list ul li .counter:before {
+    counter-increment: unset;
+    content: unset;
+}

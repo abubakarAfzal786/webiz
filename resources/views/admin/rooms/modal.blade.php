@@ -152,6 +152,17 @@
                                     </div>
                                 </div>
 
+                                <div class="item col-12">
+                                    <span class="name">{{ __('Room №') }}</span>
+                                    <label class="text-option">
+                                <span class="label-wrap">
+                                <input class="placeholder-effect" id="number" type="number" min="0" step="1"
+                                       name="number" pattern="[0-9]+">
+                                <span class="placeholder">{{ __('Room №') }}</span>
+                                </span>
+                                    </label>
+                                </div>
+
                                 <div class="item col-12 for-edit">
                                     <span class="name">{{ __('Status') }}</span>
                                     <label class="switcher-wrap">
@@ -216,9 +227,13 @@
                             $('[name="' + key + '"]').closest('.item ').append('<span class="modal-span-error">' + value[0] + '</span>');
                         });
 
-                        $('.scroll-wrap').animate({
-                            scrollTop: $(document).find('.modal-span-error').first().offset().top
-                        }, 1000);
+                        if ($(document).find('.modal-span-error').length) {
+                            $('.scroll-wrap').animate({
+                                scrollTop: $(document).find('.modal-span-error').first().offset().top
+                            }, 1000);
+                        } else {
+                            alert("{{ __('Something went wrong.') }}")
+                        }
                     },
                     beforeSend: function () {
                         $('span.modal-span-error').remove()

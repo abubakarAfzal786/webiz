@@ -39,6 +39,7 @@ class Room extends Authenticatable implements JWTSubject
         'wifi_ssid',
         'wifi_pass',
         'pin',
+        'number',
     ];
 
     protected $appends = [
@@ -228,5 +229,13 @@ class Room extends Authenticatable implements JWTSubject
 
             return ceil_date_for_booking($end_date->addMinutes(Setting::getValue('booking_time_resolution', 15)));
         }
+    }
+
+    /**
+     * @param $value
+     */
+    public function setNumberAttribute($value)
+    {
+        $this->attributes['number'] = ($value !== null) ? intval($value) : null;
     }
 }

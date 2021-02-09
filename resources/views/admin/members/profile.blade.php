@@ -280,6 +280,13 @@
             });
         });
 
+        $(document).on('input', 'input[name="credits"]', function () {
+            if ($(this).val()) {
+                if ($(this).val() < 0) $(this).val(0)
+                $(this).val(+$(this).val())
+            }
+        });
+
         $(document).on('click', '.add-credits', function () {
             let creditsToAdd = $('#balance-modal input[name="credits"]').val();
 
