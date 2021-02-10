@@ -8,7 +8,6 @@ use App\Models\Booking;
 use App\Models\PushNotification;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class CheckBookingState extends Command
 {
@@ -101,7 +100,7 @@ class CheckBookingState extends Command
     {
         if ($booking->member->mobile_token) {
             $data = [
-                'title' => $booking->room->name .' משרד ״״ מוכן לרשותך ', // Booking started
+                'title' => $booking->room->name . ' משרד ״״ מוכן לרשותך ', // Booking started
                 'body' => 'הזמנתך החלה, עבודה נעימה', // Your order has begun, pleasant work
             ];
 
@@ -130,22 +129,32 @@ class CheckBookingState extends Command
      */
     public function handle()
     {
-        $today = Carbon::today()->format('Y-m-d');
         $now = Carbon::now();
         $nowSub5 = Carbon::now()->subMinutes(5);
 
         $bookings = Booking::query()
             ->with(['member', 'room'])
-            ->where(DB::raw('DATE(start_date)'), '=', $today)
-            ->where('status', '<>', Booking::STATUS_COMPLETED)
+            ->whereNotIn('status', [Booking::STATUS_COMPLETED, Booking::STATUS_CANCELED])
             ->get();
 
         foreach ($bookings as $booking) {
-            if ($booking->status != Booking::STATUS_EXTENDED) {
-                if (($booking->end_date >= $nowSub5) && ($booking->end_date <= $now)) {
+            if ($booking->status == Booking::STATUS_PENDING) {
+                if (($booking->start_date <= $now) && ($booking->end_date > $now)) {
+                    // STARTED BOOKING
+                    $this->bookingStartedPush($booking);
+                    $booking->update(['status' => Booking::STATUS_ACTIVE]);
+                }
+            } elseif ($booking->status == Booking::STATUS_EXTENDED) {
+                if ($booking->out_at <= $nowSub5) {
+                    // COMPLETE BOOKING
+                    $this->bookingCompletedPush($booking);
+                    $booking->update(['status' => Booking::STATUS_COMPLETED]);
+                }
+            } else {
+                if (($booking->end_date >= $nowSub5) && ($booking->end_date < $now)) {
                     // EXPIRED BOOKING
                     $this->bookingExpiredPush($booking, (int)$now->diffInMinutes($booking->end_date));
-                } elseif ($booking->end_date <= $now) {
+                } elseif ($booking->end_date >= $now) {
                     if ($booking->out_at) {
                         // COMPLETE BOOKING
                         $this->bookingCompletedPush($booking);
@@ -161,26 +170,6 @@ class CheckBookingState extends Command
                     }
                 }
             }
-
-            if ($booking->status == Booking::STATUS_PENDING) {
-                if (($booking->start_date <= $now) && ($booking->end_date > $now)) {
-                    // STARTED BOOKING
-                    $this->bookingStartedPush($booking);
-                    $booking->update(['status' => Booking::STATUS_ACTIVE]);
-                }
-            }
-        }
-
-        $extended = Booking::query()
-            ->with(['member', 'room'])
-            ->where('status', Booking::STATUS_EXTENDED)
-            ->where('out_at', '<=', $nowSub5)
-            ->get();
-
-        foreach ($extended as $booking) {
-            // COMPLETE BOOKING
-            $this->bookingCompletedPush($booking);
-            $booking->update(['status' => Booking::STATUS_COMPLETED]);
         }
 
         return true;
