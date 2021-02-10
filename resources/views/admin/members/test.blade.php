@@ -65,7 +65,12 @@
             bLengthChange: false,
             bInfo: false,
             sDom: 'lrtip',
-            ajax: "{{ route('admin.members.index') }}",
+            ajax: {
+                "url": "{{ route('admin.members.index') }}",
+                "data": function (d) {
+                    d.company_id = "{{ request('company_id') }}";
+                }
+            },
             columns: [
                 {data: 'avatar', name: 'avatar'},
                 {data: 'name', name: 'name'},

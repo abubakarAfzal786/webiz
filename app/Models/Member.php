@@ -40,12 +40,14 @@ class Member extends Authenticatable implements JWTSubject
         'reset_token',
         'pm_id',
         'package_id',
+        'company_id',
     ];
 
     protected $appends = [
         'favorites_count',
         'avatar_url',
         'car_number',
+        'company_balance',
     ];
 
     protected $hidden = [
@@ -238,7 +240,6 @@ class Member extends Authenticatable implements JWTSubject
         return $this->hasMany(Transaction::class, 'member_id', 'id');
     }
 
-
     /**
      * @return Collection
      */
@@ -261,6 +262,22 @@ class Member extends Authenticatable implements JWTSubject
     public function package()
     {
         return $this->belongsTo(Package::class, 'package_id', 'id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+
+    /**
+     * @return int
+     */
+    public function getCompanyBalanceAttribute()
+    {
+        return $this->company ? $this->company->balance : 0;
     }
 
 }

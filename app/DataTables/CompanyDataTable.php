@@ -2,9 +2,8 @@
 
 namespace App\DataTables;
 
-use App\Models\Member;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Yajra\DataTables\DataTableAbstract;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -12,7 +11,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class MembersDataTable extends DataTable
+class CompanyDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -24,34 +23,35 @@ class MembersDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->editColumn('status', function ($member) {
-                return $member->status ?
-                    '<div class="status"><p style="background: #0A8FEF;">' . __('Active') . '</p></div>' :
-                    '<div class="status"><p style="background: #FF5260;">' . __('Block') . '</p></div>';
+            ->addColumn('logo', function ($company) {
+                return '<div class="text-center"><img class="img img-fluid" src="' . ($company->logo_url ?? asset('images/default-user.png')) . '" alt=""></div>';
             })
-            ->addColumn('avatar', function ($member) {
-                return '<div class="member-img"><img src="' . ($member->avatar_url ? $member->avatar_url : asset('images/default-user.png')) . '" alt=""></div>';
+            ->editColumn('created_at', function ($company) {
+                return $company->created_at ? $company->created_at->diffForHumans() : '';
             })
-            ->addColumn('action', function ($member) {
-                return '<div class="action"><a href="' . route('admin.members.profile', $member->id) . '" class="main-btn yellow">' . __('Edit & More') . '</a></div>';
+            ->editColumn('updated_at', function ($company) {
+                return $company->updated_at ? $company->updated_at->diffForHumans() : '';
             })
-            ->rawColumns(['status', 'avatar', 'action']);
+            ->addColumn('action', function ($company) {
+                return '
+                <div class="btn-group btn-group-sm">
+                <a class="btn btn-light" href="' . route('admin.members.index', ['company_id' => $company->id]) . '">Members</a>
+                <a class="btn btn-success" href="' . route('admin.companies.edit', $company->id) . '">Edit</a>
+                <a class="btn btn-danger delete-swal" data-id="' . $company->id . '">Delete</a>
+                </div>';
+            })
+            ->rawColumns(['logo', 'action']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param Member $model
+     * @param Company $model
      * @return Builder
      */
-    public function query(Member $model)
+    public function query(Company $model)
     {
-        $company_id = request()->get('company_id');
-        $newQuery = $model->newQuery()->withoutGlobalScopes();
-        if ($company_id) $newQuery = $newQuery->where('company_id', $company_id);
-        $newQuery = $newQuery->with('avatar')->orderBy('id', 'desc');
-
-        return $newQuery;
+        return $model->newQuery();
     }
 
     /**
@@ -62,7 +62,7 @@ class MembersDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('members-table')
+            ->setTableId('company-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('Bfrtip')
@@ -84,14 +84,12 @@ class MembersDataTable extends DataTable
     protected function getColumns()
     {
         return [
-//            Column::make('id'),
+            Column::make('id'),
+            Column::make('logo'),
             Column::make('name'),
-            Column::make('phone'),
-            Column::make('email'),
-            Column::make('status'),
-//            Column::make('balance'),
-//            Column::make('created_at'),
-//            Column::make('updated_at'),
+            Column::make('balance'),
+            Column::make('created_at'),
+            Column::make('updated_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
@@ -107,6 +105,6 @@ class MembersDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Members_' . date('YmdHis');
+        return 'Company_' . date('YmdHis');
     }
 }

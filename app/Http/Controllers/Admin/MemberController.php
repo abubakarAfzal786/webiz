@@ -6,6 +6,7 @@ use App\DataTables\MembersDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ImageUploadHelper;
 use App\Http\Requests\StoreMemberRequest;
+use App\Models\Company;
 use App\Models\Member;
 use App\Notifications\MemberResetPassword;
 use Exception;
@@ -146,8 +147,9 @@ class MemberController extends Controller
      */
     public function profile($id)
     {
+        $companies = Company::query()->pluck('name', 'id');
         $member = Member::query()->withoutGlobalScopes()->findOrFail($id);
-        return view('admin.members.profile', compact('member'));
+        return view('admin.members.profile', compact('member', 'companies'));
     }
 
     /**

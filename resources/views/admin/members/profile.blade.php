@@ -97,6 +97,21 @@
                                     </span>
                                     </label>
                                 </div>
+                                <div class="item col-lg-4 col-md-6 col-sm-12">
+                                    <label class="text-option">
+                                <span class="label-wrap">
+                                <span class="select">
+                                    <select class="placeholder-effect" name="company_id" id="company_id">
+                                        <option {{ old('company_id', $member->company_id) ? '' : 'selected' }}> </option>
+                                        @foreach($companies as $key => $value)
+                                            <option value="{{ $key }}" {{ old('company_id', $member->company_id) == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="placeholder">{{ __('Company') }}</span>
+                                </span>
+                                </span>
+                                    </label>
+                                </div>
                             </div>
                             <button class="main-btn yellow" id="">Save</button>
                         </form>
