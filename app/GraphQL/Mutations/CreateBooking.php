@@ -27,7 +27,7 @@ class CreateBooking
         /** @var Room $room */
         $room = Room::query()->find($args['room_id']);
 
-        if (!room_is_busy($args['room_id'], $start_date, $end_date)) {
+        if ($room && !room_is_busy($args['room_id'], $start_date, $end_date)) {
             $attributes = $args['attributes'] ?? null;
             $attributesToSync = get_attributes_to_sync($attributes);
             $args['price'] = calculate_room_price($attributesToSync, $room->price, $start_date, $end_date)['price'];

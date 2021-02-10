@@ -138,6 +138,9 @@ class CheckBookingState extends Command
             ->get();
 
         foreach ($bookings as $booking) {
+            $endClone = clone $booking->end_date;
+            $endSub5 = $endClone->subMinutes(5);
+
             if ($booking->status == Booking::STATUS_PENDING) {
                 if (($booking->start_date <= $now) && ($booking->end_date > $now)) {
                     // STARTED BOOKING
@@ -145,16 +148,16 @@ class CheckBookingState extends Command
                     $booking->update(['status' => Booking::STATUS_ACTIVE]);
                 }
             } elseif ($booking->status == Booking::STATUS_EXTENDED) {
-                if ($booking->out_at <= $nowSub5) {
+                if ($booking->out_at && ($booking->out_at <= $nowSub5)) {
                     // COMPLETE BOOKING
                     $this->bookingCompletedPush($booking);
                     $booking->update(['status' => Booking::STATUS_COMPLETED]);
                 }
             } else {
-                if (($booking->end_date >= $nowSub5) && ($booking->end_date < $now)) {
+                if (($endSub5 < $now) && ($endSub5 >= $nowSub5)) {
                     // EXPIRED BOOKING
-                    $this->bookingExpiredPush($booking, (int)$now->diffInMinutes($booking->end_date));
-                } elseif ($booking->end_date >= $now) {
+                    $this->bookingExpiredPush($booking, (int)$now->diffInMinutes($booking->end_date) + 1);
+                } elseif ($booking->end_date <= $now) {
                     if ($booking->out_at) {
                         // COMPLETE BOOKING
                         $this->bookingCompletedPush($booking);
