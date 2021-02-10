@@ -71,7 +71,7 @@ class CheckBookingState extends Command
     {
         if ($booking->member->mobile_token) {
             $data = [
-                'title' => $minutes . ' שיב לב! הזמנתך תסתיים בעוד דקות ', // Your book time has expired
+                'title' => ' דקות ' . $minutes . ' שים לב! הזמנתך תסתיים בעוד ', // Your book time has expired
                 'body' => 'צריך עוד זמן? לחץ כאן בשביל להאריך את ההזמנה לפני שתסתיים.',
             ];
 
@@ -100,7 +100,7 @@ class CheckBookingState extends Command
     {
         if ($booking->member->mobile_token) {
             $data = [
-                'title' => $booking->room->name . ' משרד ״״ מוכן לרשותך ', // Booking started
+                'title' => $booking->room->name . ' מוכן לרשותך ', // Booking started
                 'body' => 'הזמנתך החלה, עבודה נעימה', // Your order has begun, pleasant work
             ];
 
