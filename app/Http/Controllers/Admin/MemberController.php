@@ -193,7 +193,8 @@ class MemberController extends Controller
             if ($member && ($credits > 0)) {
                 $credits = (float)$request->get('credits');
                 $member->update(['balance' => $member->balance + $credits]);
-                return response()->json(['success' => true, 'balance' => $member->balance]);
+                $memberUpdated = Member::query()->select('id', 'company_id')->find($id);
+                return response()->json(['success' => true, 'balance' => $memberUpdated->balance]);
             } else {
                 return response()->json(['success' => false]);
             }

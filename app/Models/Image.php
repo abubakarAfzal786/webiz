@@ -7,6 +7,9 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+/**
+ * @property string url
+ */
 class Image extends Model
 {
     use ImageUploadHelper;

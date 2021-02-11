@@ -99,7 +99,7 @@ if (!function_exists('calculate_room_price')) {
                 $cond = true;
             } else {
                 $hourFormatted = $newDate->format('H');
-                $cond = ($hourFormatted >= 20) || ($hourFormatted < 8);
+                $cond = ($hourFormatted >= 18) || ($hourFormatted < 6);
             }
 
             $pricePer = $pricePerMin;
@@ -268,9 +268,11 @@ if (!function_exists('make_transaction')) {
     function make_transaction($member_id, $price, $room_id = null, $booking_id = null, $credit = null, $type = Transaction::TYPE_CREDIT)
     {
         if ($booking_id) {
+            /** @var Member $member */
             $member = Member::query()->find($member_id);
             $member->update(['balance' => ($member->balance - $credit)]);
         }
+
         return Transaction::query()->create([
             'member_id' => $member_id,
             'room_id' => $room_id,

@@ -23,6 +23,12 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property float balance
  * @property int id
  * @property Collection payment_methods
+ * @property bool has_balance
+ * @property Company company
+ * @property Collection images
+ * @property Image avatar
+ * @property CarNumber car_number_default
+ * @property int pm_id
  */
 class Member extends Authenticatable implements JWTSubject
 {
@@ -47,7 +53,7 @@ class Member extends Authenticatable implements JWTSubject
         'favorites_count',
         'avatar_url',
         'car_number',
-        'company_balance',
+        'has_balance',
     ];
 
     protected $hidden = [
@@ -273,11 +279,29 @@ class Member extends Authenticatable implements JWTSubject
     }
 
     /**
+     * @return bool
+     */
+    public function getHasBalanceAttribute()
+    {
+        return (bool)$this->company;
+    }
+
+    /**
      * @return int
      */
-    public function getCompanyBalanceAttribute()
+    public function getBalanceAttribute()
     {
-        return $this->company ? $this->company->balance : 0;
+        return $this->has_balance ? $this->company->balance : 0;
+    }
+
+    /**
+     * @param $value
+     */
+    public function setBalanceAttribute($value)
+    {
+        if ($this->has_balance) {
+            $this->company()->update(['balance' => $value]);
+        }
     }
 
 }
