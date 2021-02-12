@@ -95,7 +95,7 @@ if (!function_exists('calculate_room_price')) {
         foreach ($period as $key => $newDate) {
             $weekdayFormatted = $newDate->format('N');
 
-            if ($weekdayFormatted == '6') {
+            if (in_array($weekdayFormatted, ['5', '6'])) {
                 $cond = true;
             } else {
                 $hourFormatted = $newDate->format('H');
