@@ -46,7 +46,7 @@ class Company extends Model
      */
     public function delete()
     {
-        $this->logo->delete();
+        if ($this->logo) $this->logo->delete();
         parent::delete();
     }
 
