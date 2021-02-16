@@ -71,7 +71,7 @@ class CheckBookingState extends Command
     {
         if ($booking->member->mobile_token) {
             $data = [
-                'title' => ' דקות ' . $minutes . ' שים לב! הזמנתך תסתיים בעוד ', // Your book time has expired
+                'title' => ' שים לב! הזמנתך תסתיים בעוד ' . $minutes . ' דקות ', // Your book time has expired
                 'body' => 'צריך עוד זמן? לחץ כאן בשביל להאריך את ההזמנה לפני שתסתיים.',
             ];
 
