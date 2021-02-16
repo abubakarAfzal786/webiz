@@ -47,6 +47,7 @@ class Member extends Authenticatable implements JWTSubject
         'pm_id',
         'package_id',
         'company_id',
+        'temp_pass',
     ];
 
     protected $appends = [

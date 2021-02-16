@@ -14,8 +14,10 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 class Company extends Model
 {
     protected $fillable = [
+        'id',
         'name',
         'balance',
+        'added_every_month',
     ];
 
     protected $appends = [
