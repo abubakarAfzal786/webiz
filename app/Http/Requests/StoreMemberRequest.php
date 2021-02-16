@@ -25,7 +25,7 @@ class StoreMemberRequest extends FormRequest
     {
         $rules = [
             'name' => 'required|string|min:2|max:191',
-            'email' => 'required|email|unique:members',
+            'email' => 'nullable|email|unique:members',
             'phone' => 'nullable|integer|regex:/^\+[1-9]\d{1,14}$/|unique:members',
             'balance' => 'nullable|numeric|min:0',
             'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',

@@ -9,7 +9,7 @@
                 <div class="member-info">
                     <div class="member-data">
                         <div class="member-img">
-                            <img src="{{ $member->avatar ?? asset('images/default-user.png') }}" alt="">
+                            <img src="{{ $member->avatar ? $member->avatar_url : asset('images/default-user.png') }}" alt="">
                         </div>
                         <div class="text">
                             <div class="name">
