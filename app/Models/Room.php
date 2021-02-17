@@ -22,6 +22,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property Collection facilities
  * @property mixed price
  * @property int id
+ * @property boolean monthly
  */
 class Room extends Authenticatable implements JWTSubject
 {
@@ -40,6 +41,8 @@ class Room extends Authenticatable implements JWTSubject
         'wifi_pass',
         'pin',
         'number',
+        'company_id',
+        'monthly',
     ];
 
     protected $appends = [
@@ -89,7 +92,7 @@ class Room extends Authenticatable implements JWTSubject
     protected static function booted()
     {
         static::addGlobalScope('active', function (Builder $builder) {
-            $builder->where('rooms.status', true);
+            $builder->where('status', true)->where('monthly', false);
         });
     }
 
@@ -250,5 +253,13 @@ class Room extends Authenticatable implements JWTSubject
             return $door->device_id ?? null;
         }
         return null;
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 }

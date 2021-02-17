@@ -6,6 +6,7 @@ use App\DataTables\RoomsDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ImageUploadHelper;
 use App\Http\Requests\StoreRoomRequest;
+use App\Models\Company;
 use App\Models\Room;
 use App\Models\RoomFacility;
 use App\Models\RoomType;
@@ -34,12 +35,11 @@ class RoomController extends Controller
         $rooms_count = Room::query()->withoutGlobalScopes()->count();
         $facilities = RoomFacility::query()->get();
         $types = RoomType::query()->get()->pluck('name', 'id');
+        $companies = Company::query()->get()->pluck('name', 'id');
 
-        if ($request->ajax()) {
-            return $dataTable->ajax();
-        }
+        if ($request->ajax()) return $dataTable->ajax();
 
-        return view('admin.rooms.test', compact('rooms_count', 'facilities', 'types'));
+        return view('admin.rooms.test', compact('rooms_count', 'facilities', 'types', 'companies'));
     }
 
     /**
@@ -65,8 +65,9 @@ class RoomController extends Controller
     {
         if ($request->ajax()) {
             /** @var Room $room */
-            $request->merge(['user_id' => Auth::id()]);
-            $request->merge(['pin' => generate_door_pin()]);
+            $request->merge(['user_id' => Auth::id(), 'pin' => generate_door_pin()]);
+            $request['monthly'] = (bool)$request->get('monthly');
+            if (!$request['monthly']) $request['company_id'] = null;
 
             $room = Room::query()->create($request->except('_token', 'facilities'));
             $room->facilities()->sync($request->get('facilities'));
@@ -119,7 +120,10 @@ class RoomController extends Controller
     public function update(StoreRoomRequest $request, Room $room)
     {
         if ($request->ajax()) {
-            $request['status'] = (bool)$request->status;
+            $request['status'] = (bool)$request->get('status');
+            $request['monthly'] = (bool)$request->get('monthly');
+            if (!$request['monthly']) $request['company_id'] = null;
+
             $room->update($request->except('_token', 'facilities', '_method'));
             $room->facilities()->sync($request->get('facilities'));
 

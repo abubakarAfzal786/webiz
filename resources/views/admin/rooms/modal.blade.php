@@ -163,7 +163,37 @@
                                     </label>
                                 </div>
 
-                                <div class="item col-12 for-edit">
+                                <div class="item col-12">
+                                    <span class="name">{{ __('Monthly') }}</span>
+                                    <label class="switcher-wrap">
+                                        <input type="checkbox" id="room-monthly" name="monthly">
+                                        <span class="switcher-condition">
+                                            <span class="option">No</span>
+                                            <span class="active-side"></span>
+                                            <span class="option">Yes</span>
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <div class="item col-12 for-monthly d-none">
+                                    <span class="name">{{ __('Company') }}</span>
+                                    <label class="text-option">
+                                <span class="label-wrap">
+                                <span class="select">
+                                    <select class="placeholder-effect" name="company_id" id="company_id">
+                                        <option disabled selected hidden> </option>
+
+                                        @foreach($companies as $key => $value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="placeholder">{{ __('Company') }}</span>
+                                </span>
+                                </span>
+                                    </label>
+                                </div>
+
+                                <div class="item col-12 for-edit d-none">
                                     <span class="name">{{ __('Status') }}</span>
                                     <label class="switcher-wrap">
                                         <input type="checkbox" id="room-status" name="status">
@@ -182,7 +212,7 @@
                     <button type="button" class="main-btn gray-blank" data-fancybox-close>{{ __('Cancel') }}</button>
                     <button type="button" class="for-add main-btn yellow-blank submit-rooms-form"
                             data-type="add">{{ __('Create') }}</button>
-                    <button type="button" class="for-edit main-btn yellow-blank submit-rooms-form"
+                    <button type="button" class="for-edit d-none main-btn yellow-blank submit-rooms-form"
                             data-type="edit">{{ __('Update') }}</button>
                 </div>
             </div>

@@ -96,12 +96,26 @@
                                 <div class="data">
                                     <div class="counter">{{ $booking->room->number }}</div>
                                     <div class="name">
-                                        <p>{{ $booking->member->name }}</p>
+                                        <p>{{ $booking->member->company ? $booking->member->company->name : $booking->member->name }}</p>
                                     </div>
                                 </div>
 
                                 <div class="logo">
                                     <img src="{{ $booking->logo ? $booking->logo->url : '' }}" alt="">
+                                </div>
+                            </li>
+                        @endforeach
+                        @foreach($rooms as $room)
+                            <li>
+                                <div class="data">
+                                    <div class="counter">{{ $room->number }}</div>
+                                    <div class="name">
+                                        <p>{{ $room->company ? $room->company->name : $room->name }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="logo">
+                                    <img src="{{ $room->company->logo ? $room->company->logo_url : '' }}" alt="">
                                 </div>
                             </li>
                         @endforeach

@@ -100,6 +100,7 @@
                     }
 
                     if (ind === 'status' && val) $('#room-status').attr('checked', 'checked');
+                    if (ind === 'monthly' && val) $('#room-monthly').attr('checked', 'checked');
 
                     $('#' + ind).val(val).trigger('change');
                 });
@@ -108,6 +109,14 @@
                 Room.data = {};
                 $('#test-rooms span.modal-span-error').remove()
                 $('#rooms-form')[0].reset();
+            }
+        }
+
+        function triggerMonthly() {
+            if ($('#room-monthly').is(':checked')) {
+                $('.for-monthly').removeClass('d-none');
+            } else {
+                $('.for-monthly').addClass('d-none');
             }
         }
 
@@ -156,6 +165,9 @@
                 $('.for-edit').addClass('d-none');
                 $.fancybox.open({
                     src: '#test-rooms',
+                    afterShow: function () {
+                        triggerMonthly();
+                    },
                     afterClose: function () {
                         $(document).find('.ready-photo').remove();
                         $('.preview-wrap').hide();
@@ -178,11 +190,15 @@
                         Room.fillData();
                         $.fancybox.open({
                             src: '#test-rooms',
+                            afterShow: function () {
+                                triggerMonthly();
+                            },
                             afterClose: function () {
                                 Room.cleanData();
                                 Room.imgToDelete = [];
                                 $(document).find('.ready-photo').remove();
                                 $('#room-status').removeAttr('checked')
+                                $('#room-monthly').removeAttr('checked')
                                 $('.preview-wrap').hide();
                                 $('.upload-wrap').show();
                             }
@@ -193,6 +209,10 @@
                         alert("{{ __('Something went wrong.') }}")
                     }
                 });
+            });
+
+            $(document).on('change', '#room-monthly', function () {
+                triggerMonthly();
             });
 
             let autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));

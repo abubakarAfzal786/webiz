@@ -88,7 +88,31 @@ trait TwilioHelper
             $twilio = $this->setCredentials();
             $options = [
                 "body" => "Test registration sms",
-                "from" => config('twilio.from_number'),
+                "from" => "WeBiz", // config('twilio.from_number')
+            ];
+            $twilio->messages->create($number, $options);
+            return true;
+        } catch (TwilioException $e) {
+            Log::channel('twilio')->error($e);
+        } catch (Exception $exception) {
+            Log::channel('twilio')->error($exception);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $number
+     * @param $text
+     * @return bool
+     */
+    public function sendSMS($number, $text)
+    {
+        try {
+            $twilio = $this->setCredentials();
+            $options = [
+                "body" => $text,
+                "from" => 'WeBiz', // config('twilio.from_number')
             ];
             $twilio->messages->create($number, $options);
             return true;

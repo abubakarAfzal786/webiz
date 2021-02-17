@@ -19,3 +19,4 @@ Auth::routes(['register' => false]);
 Route::redirect('/', '/dashboard');
 
 Route::get('/frontscreen/{id}', 'PublicController@frontscreen');
+Route::get('/book/{id}', 'PublicController@book');

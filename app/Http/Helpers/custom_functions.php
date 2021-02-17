@@ -157,8 +157,11 @@ if (!function_exists('similar_free_room')) {
     function similar_free_room($room, $start_date = null, $end_date = null)
     {
         $sameTypeRooms = Room::query()
+            ->withoutGlobalScopes()
             ->with('bookings')
             ->where('rooms.id', '<>', $room->id)
+            ->where('rooms.status', true)
+            ->where('rooms.monthly', false)
             ->where('type_id', $room->type_id)
             ->leftJoin('bookings', 'bookings.room_id', '=', 'rooms.id')
             ->orderBy('bookings.start_date', 'DESC')

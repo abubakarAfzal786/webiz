@@ -43,6 +43,8 @@ class StoreRoomRequest extends FormRequest
             'wifi_ssid' => 'nullable|string|min:2|max:191',
             'wifi_pass' => 'nullable|string|min:2|max:191',
             'number' => 'nullable|integer|min:0',
+            'monthly' => 'nullable',
+            'company_id' => 'required_with:monthly|exists:companies,id',
         ];
 
         return $rules;
