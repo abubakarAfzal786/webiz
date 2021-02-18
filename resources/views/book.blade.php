@@ -72,7 +72,9 @@
         </div>
     </div>
     <div class="add-btn">
-        <button class="main-btn" type="button">+ Add to Calendar</button>
+        <a class="main-btn"
+           href="https://calendar.google.com/calendar/r/eventedit?text={{ urlencode('Booking in: '.$booking->room->name) }}&dates={{ $booking->start_date->format('Ymd\THi00\Z') }}/{{ $booking->end_date->format('Ymd\THi00\Z') }}&details=&location={{ urlencode($booking->room->location) }}"
+           target="_blank" rel="nofollow">+ Add to Calendar</a>
     </div>
 </div>
 </body>
