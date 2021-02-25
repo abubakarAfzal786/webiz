@@ -33,34 +33,30 @@ class Verify
         if ($user) {
             if ($test) {
                 $token = $this->jwt->fromUser($user);
-                $code = 200;
                 return [
                     'token' => $token,
-                    'message' => 'success',
+                    'message' => 'Success',
                     'success' => true,
                     'user' => $user
                 ];
             }
             if ($this->verifyWithOTP($code, $phone)) {
                 $token = $this->jwt->fromUser($user);
-                $code = 200;
                 return [
                     'token' => $token,
-                    'message' => 'success',
+                    'message' => 'Success',
                     'success' => true,
                     'user' => $user
                 ];
             } else {
-                $code = 500;
                 return [
                     'token' => '',
-                    'message' => 'invalid_code',
+                    'message' => 'Invalid code',
                     'success' => false,
                     'user' => null
                 ];
             }
         } else {
-            $code = 401;
             return [
                 'token' => '',
                 'message' => 'Invalid credentials',

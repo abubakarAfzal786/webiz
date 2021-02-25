@@ -6,7 +6,7 @@
 type Member {
     id: ID!
     name: String!
-    email: String!
+    email: String
     phone: String
     status: Boolean
     balance: Float

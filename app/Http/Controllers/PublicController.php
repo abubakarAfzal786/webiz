@@ -40,7 +40,7 @@ class PublicController extends Controller
      */
     public function book($id)
     {
-        $booking = Booking::query()->findOrFail($id);
+        $booking = Booking::query()->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_COMPLETED])->findOrFail($id);
         $geo_href = ($booking->room->lat && $booking->room->lon) ? ('geo:' . $booking->room->lat . ',' . $booking->room->lon) : ('http://maps.google.com/?q=' . $booking->room->location);
 
         return view('book', compact('booking', 'geo_href'));
