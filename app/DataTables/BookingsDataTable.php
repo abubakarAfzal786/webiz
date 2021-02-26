@@ -49,6 +49,7 @@ class BookingsDataTable extends DataTable
                 <div class="btn-group btn-group-sm">
                 <a class="btn btn-success" href="' . route('admin.bookings.edit', $booking->id) . '">Edit</a>
                 <a class="btn btn-danger delete-swal" data-id="' . $booking->id . '">Delete</a>
+                <a class="btn btn-warning end-booking" data-id="' . $booking->id . '">END</a>
                 </div>';
             });
     }

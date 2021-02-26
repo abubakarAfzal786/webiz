@@ -16,6 +16,7 @@ Route::group(['as' => 'admin.'], function () {
     Route::resource('room-facility', 'RoomFacilityController')->except('show');
     Route::resource('room-type', 'RoomTypeController')->except('show');
     Route::resource('room-attribute', 'RoomAttributeController')->except('show');
+    Route::post('bookings/end/{id}', 'BookingController@end')->name('bookings.end');
     Route::resource('bookings', 'BookingController')->except('show');
     Route::resource('reviews', 'ReviewController')->except('show');
     Route::resource('rooms/{room_id}/devices', 'DeviceController')->except('show');

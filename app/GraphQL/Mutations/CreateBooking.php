@@ -45,6 +45,7 @@ class CreateBooking
             DB::beginTransaction();
             try {
                 /** @var Booking $booking */
+                $args['out_at'] = $end_date;
                 $booking = $member->bookings()->create($args);
                 $booking->room_attributes()->attach($attributesToSync);
                 make_transaction($member->id, null, $args['room_id'], $booking->id, $args['price'], Transaction::TYPE_ROOM);

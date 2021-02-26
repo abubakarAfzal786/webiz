@@ -13,9 +13,10 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+//        Commands\WebSocketServer::class,
+//        Commands\WebSocketSecureServer::class,
         Commands\CheckBookingState::class,
-        Commands\WebSocketServer::class,
-        Commands\WebSocketSecureServer::class,
+        Commands\SendMembersPasswords::class,
     ];
 
     /**

@@ -37,6 +37,24 @@
                     });
                 }
             });
+
+            $(document).on('click', '.end-booking', function () {
+                let item_id = $(this).data('id');
+
+                if (confirm("Booking will be completed. Are you sure?")) {
+                    $.ajax({
+                        url: '/dashboard/bookings/end/' + item_id,
+                        type: 'POST',
+                        success: function (res) {
+                            alert(res.message);
+                            $('#bookings-table').DataTable().draw();
+                        },
+                        error: function () {
+                            alert("{{ __('Something went wrong.') }}")
+                        }
+                    });
+                }
+            });
         });
     </script>
 @endpush

@@ -23,6 +23,10 @@ class LocationState
         $member = auth()->user();
         $out = $args['out'];
 
+        $member->bookings()
+            ->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_COMPLETED])
+            ->update(['out_at' => ($out ? Carbon::now() : null)]);
+
         $ext = $member->bookings()->where('status', Booking::STATUS_EXTENDED);
         if (!$out) $ext = $ext->whereNotNull('out_at');
         $ext = $ext->get();
@@ -51,8 +55,6 @@ class LocationState
 
                 $this->sendPush($booking->member->mobile_token, $data, $extraData);
             }
-
-            $booking->update(['out_at' => ($out ? Carbon::now() : null)]);
         }
 
         return true;

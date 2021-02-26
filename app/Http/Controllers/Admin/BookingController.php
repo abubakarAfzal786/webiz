@@ -4,19 +4,25 @@ namespace App\Http\Controllers\Admin;
 
 use App\DataTables\BookingsDataTable;
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\FCMHelper;
 use App\Http\Requests\StoreBookingRequest;
 use App\Models\Booking;
 use App\Models\Member;
+use App\Models\PushNotification;
 use App\Models\Room;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class BookingController extends Controller
 {
+    use FCMHelper;
+
     /**
      * Display a listing of the resource.
      *
@@ -105,5 +111,55 @@ class BookingController extends Controller
         } catch (Exception $exception) {
             return response()->json(['message' => 'fail'], 422);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse|void
+     */
+    public function end(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $booking = Booking::query()->find($id);
+            if (!$booking) return response()->json(['success' => false, 'message' => 'Booking not found'], 500);
+
+            $booking->update(['status' => Booking::STATUS_COMPLETED]);
+            try {
+                DB::beginTransaction();
+
+                $data = [
+                    'title' => 'הזמנתך הסתיימה בהצלחה', // Booking completed
+                    'body' => 'איך היה לך? לחץ כאן בשביל לספר לנו.', // How was it? Click here to tell us.
+                ];
+
+                $extraData = [
+                    'id' => $booking->id,
+                    'type' => 'bookings',
+                    'action' => 'completed',
+                ];
+
+                PushNotification::query()->create([
+                    'title' => $data['title'],
+                    'body' => $data['body'],
+                    'member_id' => $booking->member_id,
+                    'seen' => false,
+                    'additional' => json_encode($extraData),
+                ]);
+
+                if ($this->sendPush($booking->member->mobile_token, $data, $extraData)) {
+                    DB::commit();
+                } else {
+                    DB::rollBack();
+                    return response()->json(['success' => true, 'message' => 'Booking completed, but push NOT sent'], 200);
+                }
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'message' => 'Something went wrong'], 500);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Booking completed. Push sent'], 200);
+        }
+        return abort(404);
     }
 }

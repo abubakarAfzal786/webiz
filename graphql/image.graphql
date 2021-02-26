@@ -1,6 +1,6 @@
 type Image {
     id: ID!
-    title: String!
+    title: String
     path: String!
     url: String!
     size: Float!
