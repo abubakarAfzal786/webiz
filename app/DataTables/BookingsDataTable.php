@@ -23,20 +23,20 @@ class BookingsDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('room', function ($booking) {
-                return $booking->room ? $booking->room->name : '';
+            ->filterColumn('company', function ($booking) {
+                $search = $this->request()->input('search.value');
+                return $booking->orWhereHas('member.company', function ($qu) use ($search) {
+                    return $qu->where('name', 'LIKE', '%' . $search . '%');
+                });
             })
-            ->addColumn('member', function ($booking) {
-                return $booking->member ? $booking->member->name : '';
+            ->addColumn('company', function ($booking) {
+                return ($booking->member && $booking->member->company) ? $booking->member->company->name : null;
             })
             ->editColumn('start_date', function ($booking) {
                 return $booking->start_date ? $booking->start_date->format('Y-m-d h:i A') : '';
             })
             ->editColumn('end_date', function ($booking) {
                 return $booking->end_date ? $booking->end_date->format('Y-m-d h:i A') : '';
-            })
-            ->editColumn('status', function ($booking) {
-                return $booking->status_name;
             })
             ->editColumn('created_at', function ($booking) {
                 return $booking->created_at ? $booking->created_at->diffForHumans() : '';
@@ -62,7 +62,7 @@ class BookingsDataTable extends DataTable
      */
     public function query(Booking $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with(['room', 'member.company']);
     }
 
     /**
@@ -97,12 +97,13 @@ class BookingsDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('room'),
-            Column::make('member'),
+            Column::make('room.name')->title('Room'),
+            Column::make('member.name')->title('Member'),
+            Column::make('company', 'company'),
             Column::make('start_date'),
             Column::make('end_date'),
             Column::make('price'),
-            Column::make('status'),
+            Column::make('status_name', 'status')->title('Status'),
             Column::make('created_at'),
             Column::make('updated_at'),
             Column::computed('action')

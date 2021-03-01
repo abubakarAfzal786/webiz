@@ -16,6 +16,7 @@
     <!-- Styles -->
     @stack('header-pre-scripts')
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.5.0/css/all.css">
     <link rel="stylesheet" href="//cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.css"/>
     <link rel="stylesheet" href="//cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
@@ -119,6 +120,7 @@
 
 </div>
 <script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/select2.full.min.js') }}"></script>
 <script src="{{ asset('js/initial.js') }}"></script>
 <script src="//cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.js"></script>
 <script src="//cdn.datatables.net/buttons/1.6.3/js/dataTables.buttons.min.js"></script>

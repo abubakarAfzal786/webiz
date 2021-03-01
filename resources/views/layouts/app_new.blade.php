@@ -14,6 +14,7 @@
     @stack('header-pre-scripts')
     <link rel="stylesheet" href="{{ asset('css/bundle.css') }}" type="text/css"/>
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.5.0/css/all.css">
+    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}" type="text/css"/>
     {{--<link rel="stylesheet" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"/>--}}
     {{--<link rel="stylesheet" href="//cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.css"/>--}}
@@ -91,6 +92,7 @@
 
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+<script src="{{ asset('js/select2.full.min.js') }}"></script>
 <script src="{{ asset('js/libs.js') }}"></script>
 <script src="{{ asset('js/common.js') }}"></script>
 <script src="{{ asset('js/initial.js') }}"></script>

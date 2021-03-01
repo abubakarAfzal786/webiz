@@ -16,7 +16,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label" for="room_id">{{ __('Room') }}</label>
                             <div class="col-sm-10">
-                                <select name="room_id" id="room_id" class="form-control" required>
+                                <select name="room_id" id="room_id" class="form-control select2" required>
                                     <option></option>
                                     @foreach($rooms as $key => $value)
                                         <option
@@ -32,7 +32,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label" for="member_id">{{ __('Member') }}</label>
                             <div class="col-sm-10">
-                                <select name="member_id" id="member_id" class="form-control" required>
+                                <select name="member_id" id="member_id" class="form-control select2" required>
                                     <option></option>
                                     @foreach($members as $key => $value)
                                         <option
@@ -81,3 +81,14 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function () {
+            $('.form-control.select2').select2({
+                placeholder: "Select an option",
+                allowClear: true,
+            });
+        });
+    </script>
+@endpush

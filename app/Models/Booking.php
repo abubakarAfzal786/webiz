@@ -30,7 +30,7 @@ class Booking extends Model
 
     protected $appends = [
         'status_name',
-        'similar_room',
+//        'similar_room',
     ];
 
     protected $dates = [

@@ -30,9 +30,9 @@ type Room {
     overview: String!
     location: String!
     status: Boolean!
-    average_rate: Float!
-    rates_count: Int!
-    is_favorite: Boolean!
+    average_rate: Float
+    rates_count: Int
+    is_favorite: Boolean
     type: RoomType! @belongsTo
     facilities: [RoomFacility]! @hasMany
     reviews: [Review]! @hasMany
