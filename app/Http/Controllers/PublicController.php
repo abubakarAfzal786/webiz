@@ -5,18 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\Room;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class PublicController extends Controller
 {
     /**
-     * @param $id
      * @return Application|Factory|View
      */
-    public function frontscreen($id)
+    public function frontscreen()
     {
         $now = Carbon::now();
 
@@ -29,9 +29,26 @@ class PublicController extends Controller
             })
             ->get();
 
-        $rooms = Room::query()->where('monthly', true)->get();
+        $rooms = Room::query()->withoutGlobalScopes()->where('monthly', true)->get();
+        $time = strtoupper(Carbon::now()->format('H:i'));
+        $date = strtoupper(Carbon::now()->format('D, d M Y'));
+        $temp = null;
 
-        return view('frontscreen', compact('bookings', 'rooms'));
+        try {
+            $url = "https://api.openweathermap.org/data/2.5/weather?units=metric&id=293397&appid=" . config("other.openweather_api");
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            $res = curl_exec($ch);
+            curl_close($ch);
+
+            $temp = json_decode($res)->main->temp ?? null;
+            $temp = $temp ? (int)$temp : null;
+        } catch (Exception $exception) {
+            Log::error($exception);
+        }
+
+        return view('frontscreen', compact('bookings', 'rooms', 'time', 'date', 'temp'));
     }
 
     /**
@@ -40,6 +57,7 @@ class PublicController extends Controller
      */
     public function book($id)
     {
+        /** @var Booking $booking */
         $booking = Booking::query()->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_COMPLETED])->findOrFail($id);
         $geo_href = ($booking->room->lat && $booking->room->lon) ? ('geo:' . $booking->room->lat . ',' . $booking->room->lon) : ('http://maps.google.com/?q=' . $booking->room->location);
 

@@ -35,9 +35,8 @@ class MemberController extends Controller
     {
         $members_count = Member::query()->withoutGlobalScopes()->count();
 
-        if ($request->ajax()) {
-            return $dataTable->ajax();
-        }
+        if ($request->ajax()) return $dataTable->ajax();
+        if ($request->get('action') == 'excel') return $dataTable->render('admin.members.test');
 
         return view('admin.members.test', compact('members_count'));
     }

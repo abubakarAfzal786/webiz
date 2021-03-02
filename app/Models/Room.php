@@ -23,6 +23,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property mixed price
  * @property int id
  * @property boolean monthly
+ * @property mixed lat
+ * @property mixed lon
+ * @property mixed location
  */
 class Room extends Authenticatable implements JWTSubject
 {

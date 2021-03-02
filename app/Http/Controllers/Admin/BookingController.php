@@ -10,6 +10,8 @@ use App\Models\Booking;
 use App\Models\Member;
 use App\Models\PushNotification;
 use App\Models\Room;
+use App\Models\Transaction;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
@@ -57,8 +59,46 @@ class BookingController extends Controller
     {
         /** @var Room $room */
         $room = Room::query()->findOrFail($request->get('room_id'));
-        $request->merge(['price' => $room->price]);
-        Booking::query()->create($request->except('_token'));
+        $start_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'));
+        $end_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'));
+
+        if (room_is_busy($room->id, $start_date, $end_date)) {
+            return redirect()->back()->withInput()->with([
+                'message' => __('Room is busy'),
+                'class' => 'danger'
+            ]);
+        }
+
+        $attributes = null;
+        $attributesToSync = get_attributes_to_sync($attributes);
+        $price = calculate_room_price($attributesToSync, $room->price, $start_date, $end_date)['price'];
+
+        /** @var Member $member */
+        $member = Member::query()->findOrFail($request->get('member_id'));
+        if ($member->balance < $price) {
+            return redirect()->back()->withInput()->with([
+                'message' => __('Member has no enough balance to book this room'),
+                'class' => 'danger'
+            ]);
+        }
+
+        $request->merge([
+            'price' => $price,
+            'door_key' => generate_door_key(),
+            'status' => Booking::STATUS_PENDING,
+        ]);
+
+        try {
+            /** @var Booking $booking */
+            $booking = Booking::query()->create($request->except('_token'));
+            make_transaction($member->id, null, $room->id, $booking->id, $price, Transaction::TYPE_ROOM);
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with([
+                'message' => __('Something went wrong'),
+                'class' => 'danger'
+            ]);
+        }
 
         return redirect()->route('admin.bookings.index')->with([
             'message' => __('Booking successfully created.'),
@@ -121,6 +161,7 @@ class BookingController extends Controller
     public function end(Request $request, $id)
     {
         if ($request->ajax()) {
+            /** @var Booking $booking */
             $booking = Booking::query()->find($id);
             if (!$booking) return response()->json(['success' => false, 'message' => 'Booking not found'], 500);
 

@@ -5,22 +5,21 @@
 ]])
 
 @push('toolbar-options')
-<div class="item">
-    <label class="select-field">
-        <span class="name">{{ __('Filters') }}:</span>
-        <select>
-            <option>{{ __('All') }}</option>
-            {{--TODO add filters--}}
-        </select>
-    </label>
-</div>
-<div class="item">
-    <button type="button" class="main-btn gray-blank export-excel-button">{{ __('EXPORT (EXCEL)') }}</button>
-    {{--TODO implement functionality--}}
-</div>
-<div class="item left-border">
-    <a href="{{ route('admin.members.create') }}" class="main-btn yellow-blank">{{ __('Add new member') }}</a>
-</div>
+    <div class="item">
+        <label class="select-field">
+            <span class="name">{{ __('Filters') }}:</span>
+            <select>
+                <option>{{ __('All') }}</option>
+                {{--TODO add filters--}}
+            </select>
+        </label>
+    </div>
+    <div class="item">
+        <button type="button" class="main-btn gray-blank export-excel-button">{{ __('EXPORT (EXCEL)') }}</button>
+    </div>
+    <div class="item left-border">
+        <a href="{{ route('admin.members.create') }}" class="main-btn yellow-blank">{{ __('Add new member') }}</a>
+    </div>
 @endpush
 
 @section('content')
@@ -55,47 +54,41 @@
     </div>
 @endsection
 @push('scripts')
-
-<script type="text/javascript">
-    $(function () {
-        let myDataTable = $('#myDataTable').DataTable({
-            processing: true,
-            serverSide: true,
-            bPaginate: false,
-            bLengthChange: false,
-            bInfo: false,
-            sDom: 'lrtip',
-            ajax: {
-                "url": "{{ route('admin.members.index') }}",
-                "data": function (d) {
-                    d.company_id = "{{ request('company_id') }}";
-                }
-            },
-            columns: [
-                {data: 'avatar', name: 'avatar'},
-                {data: 'name', name: 'name'},
-                {data: 'phone', name: 'phone'},
-                {data: 'email', name: 'email'},
-                {data: 'status', name: 'status'},
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
+    <script type="text/javascript">
+        $(function () {
+            let myDataTable = $('#myDataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                bPaginate: false,
+                bLengthChange: false,
+                bInfo: false,
+                sDom: 'lrtip',
+                ajax: {
+                    "url": "{{ route('admin.members.index') }}",
+                    "data": function (d) {
+                        d.company_id = "{{ request('company_id') }}";
+                    }
                 },
-            ],
-//            buttons: [
-//                'copy', 'csv', 'excel', 'pdf', 'print'
-//            ]
-        });
+                columns: [
+                    {data: 'avatar', name: 'avatar'},
+                    {data: 'name', name: 'name'},
+                    {data: 'phone', name: 'phone'},
+                    {data: 'email', name: 'email'},
+                    {data: 'status', name: 'status'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ],
+                buttons: [
+                    'excel',
+                ]
+            });
 
-        $('#search-box').doneTyping(function () {
-            myDataTable.search($(this).val()).draw();
-        });
+            $('#search-box').doneTyping(function () {
+                myDataTable.search($(this).val()).draw();
+            });
 
-//        $(".export-excel-button").on("click", function () {
-//            myDataTable.buttons('.excel').trigger();
-//        });
-    });
-</script>
+            $(".export-excel-button").on('click', function () {
+                $('#myDataTable').DataTable().buttons(0, 0).trigger();
+            });
+        });
+    </script>
 @endpush

@@ -29,6 +29,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property Image avatar
  * @property CarNumber car_number_default
  * @property int pm_id
+ * @property mixed mobile_token
  */
 class Member extends Authenticatable implements JWTSubject
 {

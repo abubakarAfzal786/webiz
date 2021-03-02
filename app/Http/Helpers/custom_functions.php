@@ -37,6 +37,9 @@ if (!function_exists('room_is_busy')) {
                     })
                     ->orWhere(function ($query) use ($newStart, $newEnd) {
                         return $query->where('end_date', '>', $newStart)->where('end_date', '<', $newEnd);
+                    })
+                    ->orWhere(function ($query) use ($newStart, $newEnd) {
+                        return $query->where('start_date', '<', $newStart)->where('end_date', '>', $newEnd);
                     });
             })->exists();
 

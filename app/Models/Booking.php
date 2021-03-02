@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon end_date
  * @property Carbon out_at
  * @property Member member
+ * @property Room room
+ * @property int id
+ * @property int member_id
  */
 class Booking extends Model
 {
@@ -67,6 +70,9 @@ class Booking extends Model
         return $this->$date->format(self::DATE_TIME_LOCAL);
     }
 
+    /**
+     * @return string
+     */
     public function getStatusNameAttribute()
     {
         return $this->listStatuses()[$this->getAttribute('status')] ?? '';

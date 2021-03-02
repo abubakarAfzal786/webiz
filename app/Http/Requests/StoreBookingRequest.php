@@ -27,7 +27,7 @@ class StoreBookingRequest extends FormRequest
         return [
             'room_id' => 'required|exists:rooms,id',
             'member_id' => 'required|exists:members,id',
-            'start_date' => 'required|date_format:' . Booking::DATE_TIME_LOCAL . '|after:now',
+            'start_date' => 'required|date_format:' . Booking::DATE_TIME_LOCAL,
             'end_date' => 'required|date_format:' . Booking::DATE_TIME_LOCAL . '|after:start_date',
             'price' => 'nullable|numeric',
             'status' => 'nullable|in:' . implode(',', array_keys(Booking::listStatuses())),

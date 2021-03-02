@@ -68,8 +68,8 @@
                         <span class="icon-calendar"></span>
                     </div>
                     <div class="text">
-                        <h3 id="time"></h3>
-                        <p id="date"></p>
+                        <h3 id="time">{{ $time }}</h3>
+                        <p id="date">{{ $date }}</p>
                     </div>
                 </div>
                 <div class="item">
@@ -77,7 +77,7 @@
                         <span class="icon-sun"></span>
                     </div>
                     <div class="text">
-                        <h3><span id="temp"></span>°</h3>
+                        <h3><span id="temp">{{ $temp }}</span>°</h3>
                         <p>Tel Aviv, Tel Aviv District, Israel</p>
                     </div>
                 </div>
@@ -152,23 +152,23 @@
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $('#time').html(moment().format('HH:mm'));
-        $('#date').html(moment().format('ddd, DD MMM YYYY').toUpperCase());
+{{--<script>--}}
+{{--    $(document).ready(function () {--}}
+{{--        $('#time').html(moment().format('HH:mm'));--}}
+{{--        $('#date').html(moment().format('ddd, DD MMM YYYY').toUpperCase());--}}
 
-        let api_key = '{{ config("other.openweather_api") }}';
-        let settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": "https://api.openweathermap.org/data/2.5/weather?units=metric&id=293397&appid=" + api_key,
-            "method": "GET",
-        }
+{{--        let api_key = '{{ config("other.openweather_api") }}';--}}
+{{--        let settings = {--}}
+{{--            "async": true,--}}
+{{--            "crossDomain": true,--}}
+{{--            "url": "https://api.openweathermap.org/data/2.5/weather?units=metric&id=293397&appid=" + api_key,--}}
+{{--            "method": "GET",--}}
+{{--        }--}}
 
-        $.ajax(settings).done(function (response) {
-            if (response.main.temp) $('#temp').html(parseInt(response.main.temp));
-        });
-    });
-</script>
+{{--        $.ajax(settings).done(function (response) {--}}
+{{--            if (response.main.temp) $('#temp').html(parseInt(response.main.temp));--}}
+{{--        });--}}
+{{--    });--}}
+{{--</script>--}}
 </body>
 </html>
