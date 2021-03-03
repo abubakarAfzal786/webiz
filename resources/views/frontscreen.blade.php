@@ -101,7 +101,7 @@
                                 </div>
 
                                 <div class="logo">
-                                    <img src="{{ $booking->logo ? $booking->logo->url : '' }}" alt="">
+                                    <img src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}" alt="">
                                 </div>
                             </li>
                         @endforeach
@@ -113,16 +113,14 @@
                                         <p>{{ $room->company ? $room->company->name : $room->name }}</p>
                                     </div>
                                 </div>
-
                                 <div class="logo">
-                                    <img src="{{ $room->company->logo ? $room->company->logo_url : '' }}" alt="">
+                                    <img src="{{ $room->company->logo ? $room->company->logo_url : $room->company->first_logo_url }}" alt="">
                                 </div>
                             </li>
                         @endforeach
                     </ul>
                 </div>
             @endif
-
         </div>
 
         <div class="contacts">
@@ -141,8 +139,8 @@
                 </div>
                 <div class="text">
                     <p><span>Download our app:</span>
-                        <a href="javascript:void(0)"><i class="icon-apple"></i></a>
-                        <a href="javascript:void(0)"><i class="icon-android"></i></a>
+                        <a href="https://apps.apple.com/us/app/webiz/id1491648662" target="_blank"><i class="icon-apple"></i></a>
+                        <a href="https://play.google.com/store/apps/details?id=com.cyberfuze.webiz" target="_blank"><i class="icon-android"></i></a>
                     </p>
                 </div>
                 <div class="qr">

@@ -69,6 +69,23 @@
                             </div>
                         </div>
 
+                        <br>
+                        <h5 class="text-center">Room Attributes</h5>
+                        @foreach($roomAttributes as $roomAttribute)
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label"
+                                       for="quantity[{{ $roomAttribute->id }}]">{{ $roomAttribute->name . ' (' . $roomAttribute->price . '/'. $roomAttribute->unit_name . ')' }}</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="quantity[{{ $roomAttribute->id }}]" type="number"
+                                           name="quantity[{{ $roomAttribute->id }}]" min="0"
+                                           value="{{ old('quantity.' . $roomAttribute->id, ($bookingAttributes[$roomAttribute->id] ?? 0)) }}">
+                                    @error('quantity['.$roomAttribute->id.']')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        @endforeach
+
                         <div class="form-group row">
                             <div class="col-sm-10">
                                 <button class="btn btn-{{ isset($booking) ? 'warning' : 'primary' }}"

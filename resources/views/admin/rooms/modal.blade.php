@@ -253,9 +253,11 @@
                     },
                     error: function (data) {
                         let errors = data.responseJSON;
-                        $.each(errors.errors, function (key, value) {
-                            $('[name="' + key + '"]').closest('.item ').append('<span class="modal-span-error">' + value[0] + '</span>');
-                        });
+                        if (errors !== undefined) {
+                            $.each(errors.errors, function (key, value) {
+                                $('[name="' + key + '"]').closest('.item ').append('<span class="modal-span-error">' + value[0] + '</span>');
+                            });
+                        }
 
                         if ($(document).find('.modal-span-error').length) {
                             $('.scroll-wrap').animate({

@@ -10,6 +10,7 @@ use App\Models\Booking;
 use App\Models\Member;
 use App\Models\PushNotification;
 use App\Models\Room;
+use App\Models\RoomAttribute;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Exception;
@@ -45,8 +46,9 @@ class BookingController extends Controller
     {
         $rooms = Room::query()->pluck('name', 'id');
         $members = Member::query()->pluck('name', 'id');
+        $roomAttributes = RoomAttribute::query()->get();
 
-        return view('admin.bookings.form', compact('rooms', 'members'));
+        return view('admin.bookings.form', compact('rooms', 'members', 'roomAttributes'));
     }
 
     /**
@@ -69,7 +71,10 @@ class BookingController extends Controller
             ]);
         }
 
-        $attributes = null;
+        $attributes = [];
+        foreach ($request->get('quantity') as $id => $quantity) {
+            $attributes[] = ['id' => $id, 'quantity' => $quantity];
+        }
         $attributesToSync = get_attributes_to_sync($attributes);
         $price = calculate_room_price($attributesToSync, $room->price, $start_date, $end_date)['price'];
 
@@ -91,6 +96,7 @@ class BookingController extends Controller
         try {
             /** @var Booking $booking */
             $booking = Booking::query()->create($request->except('_token'));
+            $booking->room_attributes()->attach($attributesToSync);
             make_transaction($member->id, null, $room->id, $booking->id, $price, Transaction::TYPE_ROOM);
         } catch (Exception $exception) {
             DB::rollBack();
@@ -116,8 +122,10 @@ class BookingController extends Controller
     {
         $rooms = Room::query()->pluck('name', 'id');
         $members = Member::query()->pluck('name', 'id');
+        $roomAttributes = RoomAttribute::query()->get();
+        $bookingAttributes = $booking->room_attributes()->pluck('quantity', 'room_attributes.id');
 
-        return view('admin.bookings.form', compact('rooms', 'members', 'booking'));
+        return view('admin.bookings.form', compact('rooms', 'members', 'booking', 'roomAttributes', 'bookingAttributes'));
     }
 
     /**
@@ -129,7 +137,49 @@ class BookingController extends Controller
      */
     public function update(StoreBookingRequest $request, Booking $booking)
     {
-        $booking->update($request->except('_token', '_method'));
+        /** @var Room $room */
+        $room = Room::query()->findOrFail($request->get('room_id'));
+        $start_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'));
+        $end_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'));
+
+        if (room_is_busy($room->id, $start_date, $end_date, $booking->id)) {
+            return redirect()->back()->withInput()->with([
+                'message' => __('Room is busy'),
+                'class' => 'danger'
+            ]);
+        }
+
+        $attributes = [];
+        foreach ($request->get('quantity') as $id => $quantity) {
+            $attributes[] = ['id' => $id, 'quantity' => $quantity];
+        }
+        $attributesToSync = get_attributes_to_sync($attributes);
+        $newPrice = calculate_room_price($attributesToSync, $room->price, $start_date, $end_date)['price'];
+        $priceDiff = $newPrice - $booking->price;
+
+        /** @var Member $member */
+        $member = Member::query()->findOrFail($request->get('member_id'));
+
+        if ($member->balance < $priceDiff) {
+            return redirect()->back()->withInput()->with([
+                'message' => __('Member has no enough balance to book this room'),
+                'class' => 'danger'
+            ]);
+        }
+
+        $request->merge(['price' => $newPrice]);
+
+        try {
+            $booking->update($request->except('_token', '_method'));
+            $booking->room_attributes()->sync($attributesToSync);
+            make_transaction($member->id, null, $room->id, $booking->id, $priceDiff, Transaction::TYPE_ROOM);
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with([
+                'message' => __('Something went wrong'),
+                'class' => 'danger'
+            ]);
+        }
 
         return redirect()->route('admin.bookings.index')->with([
             'message' => __('Booking successfully updated.'),

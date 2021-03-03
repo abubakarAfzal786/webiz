@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Collection;
 
 /**
  * @property float balance
@@ -56,5 +57,28 @@ class Company extends Model
     public function getLogoUrlAttribute()
     {
         return $this->logo ? $this->logo->url : null;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function logos()
+    {
+        $logos = collect([]);
+        foreach ($this->members as $member) {
+            /** @var Member $member */
+            foreach ($member->logos as $logo) {
+                $logos->push($logo);
+            }
+        }
+        return $logos;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFirstLogoUrlAttribute()
+    {
+        return $this->logos()->first() ? $this->logos()->first()->url : null;
     }
 }

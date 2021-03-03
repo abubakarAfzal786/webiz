@@ -17,9 +17,10 @@ if (!function_exists('room_is_busy')) {
      * @param int $id
      * @param Carbon $start
      * @param Carbon $end
+     * @param null|int $booking_id
      * @return bool
      */
-    function room_is_busy(int $id, $start, $end)
+    function room_is_busy(int $id, $start, $end, $booking_id = null)
     {
         $newStart = clone $start;
         $newEnd = clone $end;
@@ -28,6 +29,7 @@ if (!function_exists('room_is_busy')) {
         $nowSub45 = Carbon::now()->subMinutes(45);
 
         $busy = Booking::query()
+            ->where('id', '<>', $booking_id)
             ->where('room_id', $id)
             ->where('status', '<>', Booking::STATUS_CANCELED)
             ->where(function ($q) use ($newStart, $newEnd) {
@@ -46,14 +48,13 @@ if (!function_exists('room_is_busy')) {
         if ($busy) return true;
 
         $extended = Booking::query()
+            ->where('id', '<>', $booking_id)
             ->where('room_id', $id)
             ->where('status', Booking::STATUS_EXTENDED)
             ->where('end_date', '<', $newStart)
             ->exists();
 
-        if ($extended) {
-            return $nowSub45->diffInMinutes($newStart) <= 75;
-        }
+        if ($extended) return $nowSub45->diffInMinutes($newStart) <= 75;
 
         return false;
     }
@@ -148,7 +149,6 @@ if (!function_exists('next_booked')) {
             ->first();
     }
 }
-
 
 if (!function_exists('similar_free_room')) {
     /**
@@ -299,7 +299,6 @@ if (!function_exists('generate_pass_reset_token')) {
         return Str::random(60);
     }
 }
-
 
 if (!function_exists('ceil_date_for_booking')) {
     /**
