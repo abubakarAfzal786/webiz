@@ -40,6 +40,8 @@ class Booking extends Model
         'start_date',
         'end_date',
         'out_at',
+        'created_at',
+        'updated_at',
     ];
 
     const STATUS_PENDING = 10;
@@ -168,5 +170,20 @@ class Booking extends Model
         }
 
         return parent::update($attributes, $options);
+    }
+
+    /**
+     * Get an attribute from the model.
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function getAttribute($key)
+    {
+        if (in_array($key, $this->dates) && (request()->segment(1) == 'dashboard') && isset($this->attributes[$key]) && $this->attributes[$key]) {
+            return (Carbon::createFromFormat('Y-m-d H:i:s', $this->attributes[$key])->timezone('Asia/Jerusalem') ?? null);
+        }
+
+        return parent::getAttribute($key);
     }
 }
