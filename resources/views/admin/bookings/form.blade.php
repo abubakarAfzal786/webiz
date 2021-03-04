@@ -50,7 +50,7 @@
                             <div class="col-sm-10">
                                 <input class="form-control" id="start_date" type="datetime-local" name="start_date"
                                        required
-                                       value="{{ old('start_date', isset($booking) ? $booking->toDateTimeLocal('start_date') : null) }}">
+                                       value="{{ old('start_date', isset($booking) ? $booking->toDateTimeLocal('start_date', true) : null) }}">
                                 @error('start_date')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
@@ -62,7 +62,7 @@
                             <div class="col-sm-10">
                                 <input class="form-control" id="end_date" type="datetime-local" name="end_date"
                                        required
-                                       value="{{ old('end_date', isset($booking) ? $booking->toDateTimeLocal('end_date') : null) }}">
+                                       value="{{ old('end_date', isset($booking) ? $booking->toDateTimeLocal('end_date', true) : null) }}">
                                 @error('end_date')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror

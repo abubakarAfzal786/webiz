@@ -65,11 +65,13 @@ class Booking extends Model
 
     /**
      * @param $date
+     * @param bool $changeTz
      * @return mixed
      */
-    public function toDateTimeLocal($date)
+    public function toDateTimeLocal($date, $changeTz = false)
     {
-        return $this->$date->format(self::DATE_TIME_LOCAL);
+        $notFormatted = $changeTz ? $this->$date->timezone('Asia/Jerusalem') : $this->$date;
+        return $notFormatted->format(self::DATE_TIME_LOCAL);
     }
 
     /**
@@ -170,20 +172,5 @@ class Booking extends Model
         }
 
         return parent::update($attributes, $options);
-    }
-
-    /**
-     * Get an attribute from the model.
-     *
-     * @param string $key
-     * @return mixed
-     */
-    public function getAttribute($key)
-    {
-        if (in_array($key, $this->dates) && (request()->segment(1) == 'dashboard') && isset($this->attributes[$key]) && $this->attributes[$key]) {
-            return (Carbon::createFromFormat('Y-m-d H:i:s', $this->attributes[$key])->timezone('Asia/Jerusalem') ?? null);
-        }
-
-        return parent::getAttribute($key);
     }
 }

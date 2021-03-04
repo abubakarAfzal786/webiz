@@ -61,8 +61,8 @@ class BookingController extends Controller
     {
         /** @var Room $room */
         $room = Room::query()->findOrFail($request->get('room_id'));
-        $start_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'));
-        $end_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'));
+        $start_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'))->subHours(2);
+        $end_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'))->subHours(2);
 
         if (room_is_busy($room->id, $start_date, $end_date)) {
             return redirect()->back()->withInput()->with([
@@ -91,6 +91,8 @@ class BookingController extends Controller
             'price' => $price,
             'door_key' => generate_door_key(),
             'status' => Booking::STATUS_PENDING,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
         ]);
 
         try {
@@ -139,8 +141,8 @@ class BookingController extends Controller
     {
         /** @var Room $room */
         $room = Room::query()->findOrFail($request->get('room_id'));
-        $start_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'));
-        $end_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'));
+        $start_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'))->subHours(2);
+        $end_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'))->subHours(2);
 
         if (room_is_busy($room->id, $start_date, $end_date, $booking->id)) {
             return redirect()->back()->withInput()->with([
@@ -167,7 +169,11 @@ class BookingController extends Controller
             ]);
         }
 
-        $request->merge(['price' => $newPrice]);
+        $request->merge([
+            'price' => $newPrice,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ]);
 
         try {
             $booking->update($request->except('_token', '_method'));

@@ -33,16 +33,16 @@ class BookingsDataTable extends DataTable
                 return ($booking->member && $booking->member->company) ? $booking->member->company->name : null;
             })
             ->editColumn('start_date', function ($booking) {
-                return $booking->start_date ? $booking->start_date->format('Y-m-d H:i') : '';
+                return $booking->start_date ? $booking->start_date->timezone('Asia/Jerusalem')->format('Y-m-d H:i') : '';
             })
             ->editColumn('end_date', function ($booking) {
-                return $booking->end_date ? $booking->end_date->format('Y-m-d H:i') : '';
+                return $booking->end_date ? $booking->end_date->timezone('Asia/Jerusalem')->format('Y-m-d H:i') : '';
             })
             ->editColumn('created_at', function ($booking) {
-                return $booking->created_at ? $booking->created_at->diffForHumans() : '';
+                return $booking->created_at ? $booking->created_at->timezone('Asia/Jerusalem')->diffForHumans() : '';
             })
             ->editColumn('updated_at', function ($booking) {
-                return $booking->updated_at ? $booking->updated_at->diffForHumans() : '';
+                return $booking->updated_at ? $booking->updated_at->timezone('Asia/Jerusalem')->diffForHumans() : '';
             })
             ->addColumn('action', function ($booking) {
                 return '
