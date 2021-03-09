@@ -34,6 +34,14 @@ class Company extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'company_id', 'id');
+    }
+
+    /**
      * @return MorphOne
      */
     public function logo()
@@ -47,7 +55,10 @@ class Company extends Model
      */
     public function delete()
     {
-        if ($this->logo) $this->logo->delete();
+        if ($this->logo) {
+            $used = Image::query()->where('id', '<>', $this->id)->where('path', $this->logo->path)->exists();
+            if (!$used) $this->logo->delete();
+        }
         parent::delete();
     }
 

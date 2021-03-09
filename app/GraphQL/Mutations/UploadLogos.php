@@ -25,11 +25,15 @@ class UploadLogos
             foreach ($logos as $logo) {
                 $path = $this->uploadImage($logo);
                 if ($path) {
-                    $newLogo = $member->logos()->create([
+                    $data = [
                         'path' => $path,
                         'size' => $logo->getSize(),
                         'is_logo' => true,
-                    ]);
+                    ];
+                    $newLogo = $member->logos()->create($data);
+                    if ($member->company->logo) $member->company->logo()->delete();
+                    $data['main'] = true;
+                    $member->company->logo()->create($data);
                     $ids[] = $newLogo->id;
                 }
             }

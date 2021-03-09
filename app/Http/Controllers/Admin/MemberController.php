@@ -118,6 +118,8 @@ class MemberController extends Controller
             }
         }
 
+        $member->bookings()->update(['company_id' => $member->company_id]);
+
         return redirect()->route('admin.members.index')->with([
             'message' => __('Member successfully updated.'),
             'class' => 'success'

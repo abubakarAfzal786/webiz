@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
@@ -62,5 +64,24 @@ class PublicController extends Controller
         $geo_href = ($booking->room->lat && $booking->room->lon) ? ('geo:' . $booking->room->lat . ',' . $booking->room->lon) : ('http://maps.google.com/?q=' . $booking->room->location);
 
         return view('book', compact('booking', 'geo_href'));
+    }
+
+    /**
+     * @return Application|RedirectResponse|Redirector
+     */
+    public function qrRedirect()
+    {
+        $ipod = stripos($_SERVER['HTTP_USER_AGENT'], "iPod");
+        $iphone = stripos($_SERVER['HTTP_USER_AGENT'], "iPhone");
+        $ipad = stripos($_SERVER['HTTP_USER_AGENT'], "iPad");
+        $android = stripos($_SERVER['HTTP_USER_AGENT'], "Android");
+
+        if ($ipod || $iphone || $ipad) {
+            return redirect('https://apps.apple.com/us/app/webiz/id1491648662');
+        } else if ($android) {
+            return redirect('https://play.google.com/store/apps/details?id=com.cyberfuze.webiz');
+        } else {
+            return redirect('https://www.webiztlv.co.il');
+        }
     }
 }

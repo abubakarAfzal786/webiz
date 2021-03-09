@@ -144,7 +144,7 @@
                     </p>
                 </div>
                 <div class="qr">
-                    <img src="{{ asset('frontscreen/images/qr.png') }}" alt="">
+                    <img src="{{ asset('frontscreen/images/webiz-qr.svg') }}" alt="">
                 </div>
             </div>
         </div>

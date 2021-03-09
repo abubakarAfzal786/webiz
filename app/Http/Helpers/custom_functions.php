@@ -307,6 +307,7 @@ if (!function_exists('ceil_date_for_booking')) {
      */
     function ceil_date_for_booking($date)
     {
-        return date('Y-m-d H:i:s', ceil(strtotime($date->format('Y-m-d H:i:s')) / 1800) * 1800);
+        return $date;
+//        return date('Y-m-d H:i:s', ceil(strtotime($date->format('Y-m-d H:i:s')) / 1800) * 1800);
     }
 }

@@ -18,5 +18,6 @@ Auth::routes(['register' => false]);
 
 Route::redirect('/', '/dashboard');
 
-Route::get('/frontscreen/{id}', 'PublicController@frontscreen');
+Route::get('/frontscreen/{id}', 'PublicController@frontscreen')->name('frontscreen');
 Route::get('/book/{id}', 'PublicController@book');
+Route::get('/qr', 'PublicController@qrRedirect');

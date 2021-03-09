@@ -30,6 +30,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property CarNumber car_number_default
  * @property int pm_id
  * @property mixed mobile_token
+ * @property int company_id
+ * @property Collection|Image logos
  */
 class Member extends Authenticatable implements JWTSubject
 {
@@ -90,7 +92,8 @@ class Member extends Authenticatable implements JWTSubject
     {
         foreach ($this->images as $image) {
             /** @var Image $image */
-            $image->delete();
+            $used = Image::query()->where('id', '<>', $this->id)->where('path', $image->path)->exists();
+            if (!$used) $image->delete();
         }
         parent::delete();
     }

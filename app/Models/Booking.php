@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -171,6 +172,24 @@ class Booking extends Model
             $attributes['end_date'] = Carbon::now();
         }
 
+        $attributes['company_id'] = $this->member->company_id;
+
         return parent::update($attributes, $options);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+
+    /**
+     * @return Image|Collection
+     */
+    public function getLogosAttribute()
+    {
+        return $this->member->logos;
     }
 }

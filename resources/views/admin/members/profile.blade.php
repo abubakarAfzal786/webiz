@@ -9,7 +9,8 @@
                 <div class="member-info">
                     <div class="member-data">
                         <div class="member-img">
-                            <img src="{{ $member->avatar ? $member->avatar_url : asset('images/default-user.png') }}" alt="">
+                            <img src="{{ $member->avatar ? $member->avatar_url : asset('images/default-user.png') }}"
+                                 alt="">
                         </div>
                         <div class="text">
                             <div class="name">
@@ -104,16 +105,20 @@
                                     <select class="placeholder-effect" name="company_id" id="company_id">
                                         <option {{ old('company_id', $member->company_id) ? '' : 'selected' }}> </option>
                                         @foreach($companies as $key => $value)
-                                            <option value="{{ $key }}" {{ old('company_id', $member->company_id) == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                            <option
+                                                value="{{ $key }}" {{ old('company_id', $member->company_id) == $key ? 'selected' : '' }}>{{ $value }}</option>
                                         @endforeach
                                     </select>
                                     <span class="placeholder">{{ __('Company') }}</span>
                                 </span>
                                 </span>
+                                        @error('company_id')
+                                        <div class="profile-error-text">{{ $message }}</div>
+                                        @enderror
                                     </label>
                                 </div>
                             </div>
-                            <button class="main-btn yellow" id="">Save</button>
+                            <button class="main-btn yellow">Save</button>
                         </form>
                     </div>
                     <div class="member-switcher">

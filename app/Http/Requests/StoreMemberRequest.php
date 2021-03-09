@@ -30,7 +30,7 @@ class StoreMemberRequest extends FormRequest
 //            'balance' => 'nullable|numeric|min:0',
             'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'password' => 'nullable|string|min:6',
-            'company_id' => 'nullable|exists:companies,id',
+            'company_id' => 'required|exists:companies,id',
         ];
 
         if ($this->route('member')) {

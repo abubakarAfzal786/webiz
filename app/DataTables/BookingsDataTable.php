@@ -23,15 +23,6 @@ class BookingsDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->filterColumn('company', function ($booking) {
-                $search = $this->request()->input('search.value');
-                return $booking->orWhereHas('member.company', function ($qu) use ($search) {
-                    return $qu->where('name', 'LIKE', '%' . $search . '%');
-                });
-            })
-            ->addColumn('company', function ($booking) {
-                return ($booking->member && $booking->member->company) ? $booking->member->company->name : null;
-            })
             ->editColumn('start_date', function ($booking) {
                 return $booking->start_date ? $booking->start_date->timezone('Asia/Jerusalem')->format('Y-m-d H:i') : '';
             })
@@ -62,7 +53,7 @@ class BookingsDataTable extends DataTable
      */
     public function query(Booking $model)
     {
-        return $model->newQuery()->with(['room', 'member.company']);
+        return $model->newQuery()->with(['room', 'member', 'company']);
     }
 
     /**
@@ -99,7 +90,7 @@ class BookingsDataTable extends DataTable
             Column::make('id'),
             Column::make('room.name')->title('Room'),
             Column::make('member.name')->title('Member'),
-            Column::make('company', 'company'),
+            Column::make('company.name')->title('Company'),
             Column::make('start_date'),
             Column::make('end_date'),
             Column::make('price'),

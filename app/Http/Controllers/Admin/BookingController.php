@@ -80,7 +80,7 @@ class BookingController extends Controller
 
         /** @var Member $member */
         $member = Member::query()->findOrFail($request->get('member_id'));
-        if ($member->balance < $price) {
+        if (($member->balance < $price) || !$member->company_id) {
             return redirect()->back()->withInput()->with([
                 'message' => __('Member has no enough balance to book this room'),
                 'class' => 'danger'
@@ -93,6 +93,7 @@ class BookingController extends Controller
             'status' => Booking::STATUS_PENDING,
             'start_date' => $start_date,
             'end_date' => $end_date,
+            'company_id' => $member->company_id
         ]);
 
         try {
@@ -202,6 +203,7 @@ class BookingController extends Controller
     public function destroy(Booking $booking)
     {
         try {
+            make_transaction($booking->member_id, null, $booking->room_id, $booking->id, -$booking->price, Transaction::TYPE_ROOM);
             $booking->delete();
             return response()->json(['message' => 'success'], 200);
         } catch (Exception $exception) {

@@ -32,7 +32,7 @@ class CreateBooking
             $attributesToSync = get_attributes_to_sync($attributes);
             $args['price'] = calculate_room_price($attributesToSync, $room->price, $start_date, $end_date)['price'];
 
-            if ($member->balance < $args['price']) {
+            if (($member->balance < $args['price']) || !$member->company_id) {
                 return [
                     'booking' => null,
                     'message' => 'You don\'t have enough credits',
@@ -43,6 +43,7 @@ class CreateBooking
             $args['door_key'] = generate_door_key();
             $args['status'] = Booking::STATUS_PENDING;
             $args['out_at'] = $end_date;
+            $args['company_id'] = $member->company_id;
             DB::beginTransaction();
             try {
                 /** @var Booking $booking */
