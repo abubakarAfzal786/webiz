@@ -21,6 +21,7 @@
     {{$dataTable->scripts()}}
     <script>
         $(document).ready(function () {
+            $.fn.dataTable.ext.errMode = 'none';
             $(document).on('click', '.delete-swal', function () {
                 let item_id = $(this).data('id');
 

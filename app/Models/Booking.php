@@ -30,6 +30,7 @@ class Booking extends Model
         'door_key',
         'logo_id',
         'out_at',
+        'company_id',
     ];
 
     protected $appends = [
