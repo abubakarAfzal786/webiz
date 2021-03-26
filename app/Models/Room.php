@@ -203,38 +203,7 @@ class Room extends Authenticatable implements JWTSubject
      */
     public function getAvailableAtAttribute()
     {
-        $now = Carbon::now();
-        $tomorrow = Carbon::now()->addDay();
-
-        $current = $this->bookings()
-            ->where('start_date', '<=', $now)
-            ->where('end_date', '>=', $now)
-            ->first();
-
-        if (!$current) {
-            return ceil_date_for_booking($now);
-        } else {
-            $next_bookings = $this->bookings()
-                ->whereBetween('start_date', [$current->end_date, $tomorrow])
-                ->orderBy('start_date', 'ASC')
-                ->get();
-
-            if (!$next_bookings->count()) {
-                return ceil_date_for_booking($current->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15)));
-            }
-
-            $end_date = $current->end_date;
-
-            foreach ($next_bookings as $next_booking) {
-                if ($next_booking->start_date->diffInMinutes($end_date) < Setting::getValue('booking_minimum_time', 30) + Setting::getValue('booking_time_resolution', 15)) {
-                    $end_date = $next_booking->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15));
-                } else {
-                    return ceil_date_for_booking($next_booking->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15)));
-                }
-            }
-
-            return ceil_date_for_booking($end_date->addMinutes(Setting::getValue('booking_time_resolution', 15)));
-        }
+        return $this->attributes['available_at'] ?? get_room_available_from($this);
     }
 
     /**

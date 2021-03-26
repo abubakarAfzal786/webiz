@@ -31,9 +31,9 @@ class UploadLogos
                         'is_logo' => true,
                     ];
                     $newLogo = $member->logos()->create($data);
-                    if ($member->company->logo) $member->company->logo()->delete();
+                    if ($member->company && $member->company->logo) $member->company->logo()->delete();
                     $data['main'] = true;
-                    $member->company->logo()->create($data);
+                    if ($member->company) $member->company->logo()->create($data);
                     $ids[] = $newLogo->id;
                 }
             }

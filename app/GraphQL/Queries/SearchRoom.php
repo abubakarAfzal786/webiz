@@ -72,6 +72,12 @@ class SearchRoom
 
         $rooms = $rooms->orderBy('created_at', 'desc')->get();
 
+        if ($start) {
+            $rooms->map(function ($room) use ($start) {
+                return $room->available_at = get_room_available_from($room, $start);
+            });
+        }
+
         return $rooms;
     }
 }
