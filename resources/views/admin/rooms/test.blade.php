@@ -22,10 +22,17 @@
     </div>
 @endpush
 
+@push('header-pre-scripts')
+    <link rel="stylesheet" href="//cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,dt-1.10.8/datatables.min.css"/>
+@endpush
 @push('header-post-scripts')
     <style>
         div.pac-container.pac-logo {
             z-index: 999999;
+        }
+
+        .dataTables_length {
+            text-align: right;
         }
     </style>
     <script type="text/javascript"
@@ -124,9 +131,9 @@
             Room.myDataTable = $('#myDataTable').DataTable({
                 processing: true,
                 serverSide: true,
-                bPaginate: false,
-                bLengthChange: false,
-                bInfo: false,
+                bPaginate: true,
+                bLengthChange: true,
+                bInfo: true,
                 sDom: 'lrtip',
                 ajax: "{{ route('admin.rooms.index') }}",
                 columns: [

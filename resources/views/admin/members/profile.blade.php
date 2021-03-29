@@ -172,10 +172,12 @@
                         @foreach($member->bookings as $booking)
                             <tr>
                                 <td><b>{{ $booking->room->name }}</b></td>
-                                <td>{{ $booking->start_date->format('H:i') }}
-                                    - {{ $booking->end_date->format('H:i') }}</td>
+                                <td>{{ $booking->start_date->timezone('Asia/Jerusalem')->format('H:i') }}
+                                    - {{ $booking->end_date->timezone('Asia/Jerusalem')->format('H:i') }}</td>
                                 <td>{{ $booking->price }} credits</td>
-                                <td>{{ $booking->start_date->format('Y-m-d') == $booking->end_date->format('Y-m-d') ? $booking->start_date->format('d.m.Y') : $booking->start_date->format('d.m.Y') . ' - ' . $booking->end_date->format('d.m.Y') }}</td>
+                                <td>{{ $booking->start_date->format('Y-m-d') == $booking->end_date->format('Y-m-d')
+                                    ? $booking->start_date->timezone('Asia/Jerusalem')->format('d.m.Y')
+                                    : $booking->start_date->timezone('Asia/Jerusalem')->format('d.m.Y') . ' - ' . $booking->end_date->timezone('Asia/Jerusalem')->format('d.m.Y') }}</td>
                             </tr>
                         @endforeach
                         </tbody>

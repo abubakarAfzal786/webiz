@@ -61,8 +61,11 @@ class BookingController extends Controller
     {
         /** @var Room $room */
         $room = Room::query()->findOrFail($request->get('room_id'));
-        $start_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'))->subHours(2);
-        $end_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'))->subHours(2);
+        $offsetStart = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'), 'Asia/Jerusalem')->offsetHours;
+        $offsetEnd = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'), 'Asia/Jerusalem')->offsetHours;
+
+        $start_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'))->subHours($offsetStart);
+        $end_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'))->subHours($offsetEnd);
 
         if (room_is_busy($room->id, $start_date, $end_date)) {
             return redirect()->back()->withInput()->with([
@@ -142,8 +145,11 @@ class BookingController extends Controller
     {
         /** @var Room $room */
         $room = Room::query()->findOrFail($request->get('room_id'));
-        $start_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'))->subHours(2);
-        $end_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'))->subHours(2);
+        $offsetStart = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'), 'Asia/Jerusalem')->offsetHours;
+        $offsetEnd = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'), 'Asia/Jerusalem')->offsetHours;
+
+        $start_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'))->subHours($offsetStart);
+        $end_date = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'))->subHours($offsetEnd);
 
         if (room_is_busy($room->id, $start_date, $end_date, $booking->id)) {
             return redirect()->back()->withInput()->with([

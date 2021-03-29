@@ -66,7 +66,7 @@ class Booking extends Model
     }
 
     /**
-     * @param $date
+     * @param Carbon $date
      * @param bool $changeTz
      * @return mixed
      */

@@ -20,7 +20,7 @@ class PublicController extends Controller
      */
     public function frontscreen()
     {
-        $now = Carbon::now();
+        $now = Carbon::now('Asia/Jerusalem');
 
         $bookings = Booking::query()
             ->with(['room', 'member', 'logo'])
@@ -32,8 +32,8 @@ class PublicController extends Controller
             ->get();
 
         $rooms = Room::query()->withoutGlobalScopes()->where('monthly', true)->get();
-        $time = strtoupper(Carbon::now()->format('H:i'));
-        $date = strtoupper(Carbon::now()->format('D, d M Y'));
+        $time = strtoupper(Carbon::now('Asia/Jerusalem')->format('H:i'));
+        $date = strtoupper(Carbon::now('Asia/Jerusalem')->format('D, d M Y'));
         $temp = null;
 
         try {

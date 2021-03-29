@@ -36,9 +36,9 @@
                     </div>
                     <div class="data">
                         <h2>Date</h2>
-                        <p>{{ $booking->start_date->format('d.m.Y') }}</p>
+                        <p>{{ $booking->start_date->timezone('Asia/Jerusalem')->format('d.m.Y') }}</p>
                         @if($booking->start_date->format('d.m.Y') != $booking->end_date->format('d.m.Y'))
-                            -<p> {{ $booking->end_date->format('d.m.Y') }}</p>
+                            - <p> {{ $booking->end_date->timezone('Asia/Jerusalem')->format('d.m.Y') }}</p>
                         @endif
                     </div>
                 </li>
@@ -48,7 +48,8 @@
                     </div>
                     <div class="data">
                         <h2>Time</h2>
-                        <p>{{ $booking->start_date->format('H:i') }} - {{ $booking->end_date->format('H:i') }}</p>
+                        <p>{{ $booking->start_date->timezone('Asia/Jerusalem')->format('H:i') }}
+                            - {{ $booking->end_date->timezone('Asia/Jerusalem')->format('H:i') }}</p>
                     </div>
                 </li>
                 <li>
