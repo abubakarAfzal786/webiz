@@ -103,7 +103,12 @@ if (!function_exists('calculate_room_price')) {
                 $cond = true;
             } else {
                 $hourFormatted = $newDate->format('H');
-                $cond = ($hourFormatted >= 18) || ($hourFormatted < 6);
+
+                $offset = $newDate->timezone('Asia/Jerusalem')->offsetHours;
+                $from = 20 - $offset;
+                $to = 8 - $offset;
+
+                $cond = ($hourFormatted >= $from) || ($hourFormatted < $to);
             }
 
             $pricePer = $pricePerMin;
