@@ -10,8 +10,8 @@ type PushNotification {
     member_id: ID!
     member: Member @belongsTo
     images: [Image]! @morphMany
-    created_at: DateTime!
-    updated_at: DateTime!
+    created_at: DateTime
+    updated_at: DateTime
 }
 
 extend type Mutation @guard {

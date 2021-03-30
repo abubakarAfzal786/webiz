@@ -228,6 +228,14 @@ class Member extends Authenticatable implements JWTSubject
     }
 
     /**
+     * @return Image|Collection|mixed
+     */
+    public function getAllLogosAttribute()
+    {
+        return $this->company ? $this->company->logos() : $this->logos;
+    }
+
+    /**
      * @return HasMany
      */
     public function payment_methods()

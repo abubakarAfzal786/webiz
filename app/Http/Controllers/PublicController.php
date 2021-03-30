@@ -31,6 +31,14 @@ class PublicController extends Controller
             })
             ->get();
 
+        $nowPlus30 = Carbon::now('Asia/Jerusalem')->addMinutes(30);
+        $coming = Booking::query()
+            ->with(['room', 'member', 'logo'])
+            ->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_COMPLETED])
+            ->where('start_date', '>=', $now)
+            ->where('start_date', '<=', $nowPlus30)
+            ->get();
+
         $rooms = Room::query()->withoutGlobalScopes()->where('monthly', true)->get();
         $time = strtoupper(Carbon::now('Asia/Jerusalem')->format('H:i'));
         $date = strtoupper(Carbon::now('Asia/Jerusalem')->format('D, d M Y'));
@@ -50,7 +58,7 @@ class PublicController extends Controller
             Log::error($exception);
         }
 
-        return view('frontscreen', compact('bookings', 'rooms', 'time', 'date', 'temp'));
+        return view('frontscreen', compact('bookings', 'rooms', 'time', 'date', 'temp', 'coming'));
     }
 
     /**

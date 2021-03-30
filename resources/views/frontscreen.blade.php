@@ -53,6 +53,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
             integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
             crossorigin="anonymous"></script>
+    <script src="{{ asset('js/moment-timezone.js') }}"></script>
 </head>
 <body>
 
@@ -88,7 +89,7 @@
             <div class="title">
                 <h1>Company list</h1>
             </div>
-            @if($bookings->count())
+            @if($bookings->count() || $rooms->count())
                 <div class="list-wrap">
                     <ul>
                         @foreach($bookings as $key => $booking)
@@ -101,7 +102,8 @@
                                 </div>
 
                                 <div class="logo">
-                                    <img src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}" alt="">
+                                    <img alt=""
+                                         src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}">
                                 </div>
                             </li>
                         @endforeach
@@ -114,11 +116,38 @@
                                     </div>
                                 </div>
                                 <div class="logo">
-                                    <img src="{{ $room->company->logo ? $room->company->logo_url : $room->company->first_logo_url }}" alt="">
+                                    <img alt=""
+                                         src="{{ $room->company->logo ? $room->company->logo_url : $room->company->first_logo_url }}">
                                 </div>
                             </li>
                         @endforeach
                     </ul>
+                </div>
+            @endif
+            @if($coming->count())
+                <div class="company-list">
+                    <div class="title">
+                        <h1>Coming Up</h1>
+                    </div>
+                    <div class="list-wrap">
+                        <ul>
+                            @foreach($coming as $key => $booking)
+                                <li>
+                                    <div class="data">
+                                        <div class="counter">{{ $booking->room->number }}</div>
+                                        <div class="name">
+                                            <p>{{ $booking->member->company ? $booking->member->company->name : $booking->member->name }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="logo">
+                                        <img alt=""
+                                             src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}">
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
             @endif
         </div>
@@ -139,8 +168,10 @@
                 </div>
                 <div class="text">
                     <p><span>Download our app:</span>
-                        <a href="https://apps.apple.com/us/app/webiz/id1491648662" target="_blank"><i class="icon-apple"></i></a>
-                        <a href="https://play.google.com/store/apps/details?id=com.cyberfuze.webiz" target="_blank"><i class="icon-android"></i></a>
+                        <a href="https://apps.apple.com/us/app/webiz/id1491648662" target="_blank"><i
+                                class="icon-apple"></i></a>
+                        <a href="https://play.google.com/store/apps/details?id=com.cyberfuze.webiz" target="_blank"><i
+                                class="icon-android"></i></a>
                     </p>
                 </div>
                 <div class="qr">
@@ -150,23 +181,28 @@
         </div>
     </div>
 </div>
-{{--<script>--}}
-{{--    $(document).ready(function () {--}}
-{{--        $('#time').html(moment().format('HH:mm'));--}}
-{{--        $('#date').html(moment().format('ddd, DD MMM YYYY').toUpperCase());--}}
+<script>
+    $(document).ready(function () {
+        {{--let api_key = '{{ config("other.openweather_api") }}';--}}
+        {{--let settings = {--}}
+        {{--    "async": true,--}}
+        {{--    "crossDomain": true,--}}
+        {{--    "url": "https://api.openweathermap.org/data/2.5/weather?units=metric&id=293397&appid=" + api_key,--}}
+        {{--    "method": "GET",--}}
+        {{--}--}}
+        {{--$.ajax(settings).done(function (response) {--}}
+        {{--    if (response.main.temp) $('#temp').html(parseInt(response.main.temp));--}}
+        {{--});--}}
 
-{{--        let api_key = '{{ config("other.openweather_api") }}';--}}
-{{--        let settings = {--}}
-{{--            "async": true,--}}
-{{--            "crossDomain": true,--}}
-{{--            "url": "https://api.openweathermap.org/data/2.5/weather?units=metric&id=293397&appid=" + api_key,--}}
-{{--            "method": "GET",--}}
-{{--        }--}}
+        function liveTime() {
+            $('#time').html(moment().utc().tz('Asia/Jerusalem').format('HH:mm'));
+            // $('#date').html(moment().tz('Asia/Jerusalem').format('ddd, DD MMM YYYY').toUpperCase());
+        }
 
-{{--        $.ajax(settings).done(function (response) {--}}
-{{--            if (response.main.temp) $('#temp').html(parseInt(response.main.temp));--}}
-{{--        });--}}
-{{--    });--}}
-{{--</script>--}}
+        setInterval(function () {
+            liveTime();
+        }, 1000);
+    });
+</script>
 </body>
 </html>
