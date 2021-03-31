@@ -46,7 +46,7 @@ class SearchRoom
             });
         }
 
-        if (!$end && $start) {
+        if ($start && !$end) {
             $rooms = $rooms->where(function ($wq) use ($start) {
                 return $wq->whereHas('bookings', function (Builder $q) use ($start) {
                     $q->where('start_date', '>', $start)->orWhere('end_date', '>=', $start);
@@ -55,19 +55,15 @@ class SearchRoom
         }
 
         if ($start && $end) {
-            $rooms = $rooms->where(function ($wq) use ($start, $end) {
-                return $wq->whereHas('bookings', function (Builder $q) use ($start, $end) {
-                    $q->where(
-                        function (Builder $query) use ($start, $end) {
-                            $query->where('start_date', '>', $start)->where('start_date', '>=', $end);
-                        }
-                    )->orWhere(
-                        function (Builder $query) use ($start, $end) {
-                            $query->where('end_date', '<=', $start)->where('end_date', '<', $end);
-                        }
-                    );
-                })->orWhereDoesntHave('bookings');
-            });
+            $rooms = $rooms
+                ->where(function ($wq) use ($start, $end) {
+                    return $wq
+                        ->whereDoesntHave('bookings', function (Builder $q) use ($start, $end) {
+                            return $q
+                                ->whereBetween('start_date', [$start, $end])
+                                ->orWhereBetween('end_date', [$start, $end]);
+                        });
+                });
         }
 
         $rooms = $rooms->orderBy('created_at', 'desc')->get();
