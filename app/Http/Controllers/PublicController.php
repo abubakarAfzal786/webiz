@@ -20,7 +20,7 @@ class PublicController extends Controller
      */
     public function frontscreen()
     {
-        $now = Carbon::now('Asia/Jerusalem');
+        $now = Carbon::now();
 
         $bookings = Booking::query()
             ->with(['room', 'member', 'logo'])
@@ -31,12 +31,11 @@ class PublicController extends Controller
             })
             ->get();
 
-        $nowPlus30 = Carbon::now('Asia/Jerusalem')->addMinutes(30);
+        $nowPlus30 = Carbon::now()->addMinutes(30);
         $coming = Booking::query()
             ->with(['room', 'member', 'logo'])
             ->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_COMPLETED])
-            ->where('start_date', '>=', $now)
-            ->where('start_date', '<=', $nowPlus30)
+            ->whereBetween('start_date', [$now, $nowPlus30])
             ->get();
 
         $rooms = Room::query()->withoutGlobalScopes()->where('monthly', true)->get();

@@ -149,7 +149,7 @@ if (!function_exists('next_booked')) {
     {
         return Booking::query()
             ->where('room_id', $booking->room_id)
-            ->whereBetween('start_date', [$booking->end_date, $booking->end_date->addHours(1)])
+            ->whereBetween('start_date', [$booking->end_date, $booking->end_date->addHours(4)])
             ->orderBy('start_date', 'ASC')
             ->first();
     }

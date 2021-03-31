@@ -35,6 +35,13 @@ class BookingsDataTable extends DataTable
             ->editColumn('updated_at', function ($booking) {
                 return $booking->updated_at ? $booking->updated_at->timezone('Asia/Jerusalem')->diffForHumans() : '';
             })
+            ->addColumn('extras', function ($booking) {
+                $extras = '';
+                foreach ($booking->room_attributes as $room_attribute) {
+                    if ($room_attribute->pivot->quantity) $extras .= '<span class="badge badge-primary">' . $room_attribute->name . ' (' . $room_attribute->pivot->quantity . ')</span>';
+                }
+                return $extras;
+            })
             ->addColumn('action', function ($booking) {
                 return '
                 <div class="btn-group btn-group-sm">
@@ -42,7 +49,8 @@ class BookingsDataTable extends DataTable
                 <a class="btn btn-danger delete-swal" data-id="' . $booking->id . '">Delete</a>
                 <a class="btn btn-warning end-booking" data-id="' . $booking->id . '">END</a>
                 </div>';
-            });
+            })
+            ->rawColumns(['extras', 'action']);
     }
 
     /**
@@ -53,7 +61,7 @@ class BookingsDataTable extends DataTable
      */
     public function query(Booking $model)
     {
-        return $model->newQuery()->with(['room', 'member', 'company']);
+        return $model->newQuery()->with(['room', 'member', 'company', 'room_attributes']);
     }
 
     /**
@@ -95,6 +103,7 @@ class BookingsDataTable extends DataTable
             Column::make('end_date'),
             Column::make('price'),
             Column::make('status_name', 'status')->title('Status'),
+            Column::make('extras')->orderable(false),
             Column::make('created_at'),
             Column::make('updated_at'),
             Column::computed('action')
