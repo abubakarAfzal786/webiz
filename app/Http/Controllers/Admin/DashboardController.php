@@ -30,7 +30,8 @@ class DashboardController extends Controller
             ->where('type', Transaction::TYPE_ROOM)
             ->where('created_at', '>', $now->subMonth())
             ->sum('credit');
-        $overall_credits = $current_credits + $used_credits;
+        $totalUsed = Transaction::query()->where('type', Transaction::TYPE_ROOM)->sum('credit');
+        $overall_credits = $current_credits + $totalUsed;
 
         return view('home', compact('new_reviews', 'today_transactions_count', 'occupancy', 'current_credits', 'used_credits', 'overall_credits'));
     }

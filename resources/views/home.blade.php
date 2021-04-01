@@ -142,7 +142,8 @@
         <div class="data-bg">
             <div class="data-title no-border">
                 <div class="title">
-                    <a href="{{ route('admin.companies.index') }}"><p>Credits that have already been used <br> this month</p></a>
+                    <a href="{{ route('admin.companies.index') }}"><p>Credits that have already been used <br>
+                            in last 30 days</p></a>
                 </div>
                 <div class="more-options">
                     <div class="options-btn">
@@ -168,7 +169,7 @@
         <div class="data-bg">
             <div class="data-title no-border">
                 <div class="title">
-                    <a href="{{ route('admin.companies.index') }}"><p>Overall credits</p></a>
+                    <a href="{{ route('admin.companies.index') }}"><p>Overall credits <br> for whole time</p></a>
                 </div>
                 <div class="more-options">
                     <div class="options-btn">
