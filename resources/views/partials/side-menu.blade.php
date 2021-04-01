@@ -32,6 +32,7 @@
             <ul>
                 <li class="{{ request()->is(['dashboard/packages', 'dashboard/packages/*']) ? 'active' : '' }}"><a href="{{ route('admin.packages.index') }}">{{ __('Packages') }}</a></li>
                 <li class="{{ request()->is(['dashboard/settings', 'dashboard/settings/*']) ? 'active' : '' }}"><a href="{{ route('admin.settings.index') }}">{{ __('Settings') }}</a></li>
+                <li class="{{ request()->is(['dashboard/transactions', 'dashboard/transactions/*']) ? 'active' : '' }}"><a href="{{ route('admin.transactions.index') }}">{{ __('Transactions') }}</a></li>
             </ul>
         </div>
     </div>

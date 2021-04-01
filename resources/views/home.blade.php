@@ -18,7 +18,7 @@
             <div class="data-charts">
                 <div class="description">
                     <div class="status">
-                        <p><span class="icon-users"></span>47</p>
+                        <p><span class="icon-users"></span>{{ $occupancy }}</p>
                     </div>
                     <div class="name">
                         <p>Number of people</p>
@@ -112,7 +112,85 @@
         </div>
     </div>
 
-    <div class="data col-lg-8 col-md-6 col-sm-12">
+    <div class="data col-lg-4 col-md-6 col-sm-12">
+        <div class="data-bg">
+            <div class="data-title no-border">
+                <div class="title">
+                    <a href="{{ route('admin.companies.index') }}"><p>Credits that are yet to be used</p></a>
+                </div>
+                <div class="more-options">
+                    <div class="options-btn">
+                        <p><span class="icon-more"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="data-charts">
+                <div class="description">
+                    <div class="status">
+                        <p><span class="icon-pay"></span>{{ $current_credits }}</p>
+                    </div>
+                    <div class="name">
+                        <p>Number of credits</p>
+                    </div>
+                </div>
+                <div class="charts-wrap"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="data col-lg-4 col-md-6 col-sm-12">
+        <div class="data-bg">
+            <div class="data-title no-border">
+                <div class="title">
+                    <a href="{{ route('admin.companies.index') }}"><p>Credits that have already been used <br> this month</p></a>
+                </div>
+                <div class="more-options">
+                    <div class="options-btn">
+                        <p><span class="icon-more"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="data-charts">
+                <div class="description">
+                    <div class="status">
+                        <p><span class="icon-pay"></span>{{ $used_credits }}</p>
+                    </div>
+                    <div class="name">
+                        <p>Number of credits</p>
+                    </div>
+                </div>
+                <div class="charts-wrap"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="data col-lg-4 col-md-6 col-sm-12">
+        <div class="data-bg">
+            <div class="data-title no-border">
+                <div class="title">
+                    <a href="{{ route('admin.companies.index') }}"><p>Overall credits</p></a>
+                </div>
+                <div class="more-options">
+                    <div class="options-btn">
+                        <p><span class="icon-more"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="data-charts">
+                <div class="description">
+                    <div class="status">
+                        <p><span class="icon-pay"></span>{{ $overall_credits }}</p>
+                    </div>
+                    <div class="name">
+                        <p>Number of credits</p>
+                    </div>
+                </div>
+                <div class="charts-wrap"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="data col-lg-8 col-md-6 col-sm-12" style="display: none">
         <div class="data-bg">
             <div class="data-title">
                 <div class="title">
@@ -291,7 +369,7 @@
         </div>
     </div>
 
-    <div class="data col-lg-4 col-md-6 col-sm-12">
+    <div class="data col-lg-4 col-md-6 col-sm-12" style="display: none">
         <div class="data-bg">
             <div class="data-title">
                 <div class="title">

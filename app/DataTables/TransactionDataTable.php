@@ -24,7 +24,7 @@ class TransactionDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('member', function ($transaction) {
-                return $transaction->member ? $transaction->member->name : '';
+                return $transaction->member ? '<a href="' . route('admin.members.profile', $transaction->member_id) . '">' . $transaction->member->name . '</a>' : '';
             })
             ->addColumn('room', function ($transaction) {
                 return $transaction->room ? $transaction->room->name : '';
@@ -37,7 +37,8 @@ class TransactionDataTable extends DataTable
             })
             ->editColumn('updated_at', function ($transaction) {
                 return $transaction->updated_at ? $transaction->updated_at->diffForHumans() : '';
-            });
+            })
+            ->rawColumns(['member']);
     }
 
     /**
@@ -48,7 +49,7 @@ class TransactionDataTable extends DataTable
      */
     public function query(Transaction $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with(['room', 'member']);
     }
 
     /**
@@ -86,7 +87,7 @@ class TransactionDataTable extends DataTable
             Column::make('room'),
             Column::make('type'),
             Column::make('credit'),
-            Column::make('price'),
+//            Column::make('price'),
             Column::make('created_at'),
             Column::make('updated_at'),
         ];

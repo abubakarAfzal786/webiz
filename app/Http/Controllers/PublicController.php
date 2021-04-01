@@ -24,7 +24,7 @@ class PublicController extends Controller
 
         $bookings = Booking::query()
             ->with(['room', 'member', 'logo'])
-            ->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_COMPLETED])
+            ->whereNotIn('status', [Booking::STATUS_CANCELED])
             ->where('start_date', '<=', $now)
             ->where(function ($q) use ($now) {
                 return $q->where('end_date', '>=', $now)->orWhere('status', Booking::STATUS_EXTENDED);
