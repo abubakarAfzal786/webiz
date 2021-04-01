@@ -51,7 +51,7 @@ extend type Mutation @guard {
         phone: String, @rules(apply: ["integer", "regex:/^\\+[1-9]\\d{1,14}$/"]),
         password: String, @rules(apply: ["string", "min:6", "max:191"]),
         #        car_number: String, @rules(apply: ["string", "min:2", "max:191"]),
-        avatar: Upload, @rules(apply: ["image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"]),
+        avatar: Upload, @rules(apply: ["image", "mimes:jpeg,png,jpg,gif,svg", "max:3072v"]),
     ): UpdateProfileResponse
 
     updatePassword(
@@ -81,7 +81,7 @@ extend type Mutation @guard {
     ): Boolean
 
     uploadLogos(
-        logos: [Upload!], @rules(apply: ["image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"]),
+        logos: [Upload!], @rules(apply: ["image", "mimes:jpeg,png,jpg,gif,svg", "max:3072"]),
     ): [Image]
 
     removeLogo(

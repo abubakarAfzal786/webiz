@@ -26,7 +26,7 @@ class StoreCompanyRequest extends FormRequest
         return [
             'name' => 'required|string|min:2|max:191',
             'balance' => 'nullable|numeric|min:0',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:3072',
         ];
     }
 }

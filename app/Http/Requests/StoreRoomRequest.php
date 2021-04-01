@@ -38,7 +38,7 @@ class StoreRoomRequest extends FormRequest
             'lon' => 'nullable',
             'status' => 'nullable',
             'images' => 'array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:3072',
             'type_id' => 'required|exists:room_types,id',
             'wifi_ssid' => 'nullable|string|min:2|max:191',
             'wifi_pass' => 'nullable|string|min:2|max:191',
