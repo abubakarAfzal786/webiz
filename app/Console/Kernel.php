@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('booking:check')->everyMinute();
+        $schedule->command('booking:extended')->everyThirtyMinutes();
     }
 
     /**

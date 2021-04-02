@@ -32,6 +32,9 @@ class MembersDataTable extends DataTable
             ->addColumn('avatar', function ($member) {
                 return '<div class="member-img"><img src="' . ($member->avatar_url ? $member->avatar_url : asset('images/default-user.png')) . '" alt=""></div>';
             })
+            ->editColumn('created_at', function ($member) {
+                return $member->created_at->format('Y-m-d H:i') ?? null;
+            })
             ->addColumn('action', function ($member) {
                 return '<div class="action"><a href="' . route('admin.members.profile', $member->id) . '" class="main-btn yellow">' . __('Edit & More') . '</a></div>';
             })
@@ -89,6 +92,7 @@ class MembersDataTable extends DataTable
             Column::make('phone'),
             Column::make('email'),
             Column::make('status'),
+            Column::make('created_at'),
 //            Column::make('balance'),
 //            Column::make('created_at'),
 //            Column::make('updated_at'),

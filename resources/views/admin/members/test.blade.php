@@ -22,6 +22,18 @@
     </div>
 @endpush
 
+@push('header-pre-scripts')
+    <link rel="stylesheet" href="//cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,dt-1.10.8/datatables.min.css"/>
+@endpush
+
+@push('header-post-scripts')
+    <style>
+        .dataTables_length {
+            text-align: right;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="data col-12">
         <div class="table-intro">
@@ -43,6 +55,7 @@
                         <td>{{ __('Mobile') }}</td>
                         <td>{{ __('E-mail') }}</td>
                         <td>{{ __('Status') }}</td>
+                        <td>{{ __('Registered') }}</td>
                         <td>{{ __('Action') }}</td>
                     </tr>
                     </thead>
@@ -59,9 +72,9 @@
             let myDataTable = $('#myDataTable').DataTable({
                 processing: true,
                 serverSide: true,
-                bPaginate: false,
-                bLengthChange: false,
-                bInfo: false,
+                bPaginate: true,
+                bLengthChange: true,
+                bInfo: true,
                 sDom: 'lrtip',
                 ajax: {
                     "url": "{{ route('admin.members.index') }}",
@@ -75,6 +88,7 @@
                     {data: 'phone', name: 'phone'},
                     {data: 'email', name: 'email'},
                     {data: 'status', name: 'status'},
+                    {data: 'created_at', name: 'created_at'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ],
                 buttons: [
