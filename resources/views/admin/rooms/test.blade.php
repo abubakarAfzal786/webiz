@@ -129,6 +129,7 @@
         }
 
         $(function () {
+            $.fn.dataTable.ext.errMode = 'none';
             Room.myDataTable = $('#myDataTable').DataTable({
                 processing: true,
                 serverSide: true,

@@ -54,6 +54,7 @@
                         <td>{{ __('Member name') }}</td>
                         <td>{{ __('Mobile') }}</td>
                         <td>{{ __('E-mail') }}</td>
+                        <td>{{ __('Company') }}</td>
                         <td>{{ __('Status') }}</td>
                         <td>{{ __('Registered') }}</td>
                         <td>{{ __('Action') }}</td>
@@ -69,6 +70,7 @@
 @push('scripts')
     <script type="text/javascript">
         $(function () {
+            $.fn.dataTable.ext.errMode = 'none';
             let myDataTable = $('#myDataTable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -87,6 +89,7 @@
                     {data: 'name', name: 'name'},
                     {data: 'phone', name: 'phone'},
                     {data: 'email', name: 'email'},
+                    {data: 'company.name', name: 'company_id'},
                     {data: 'status', name: 'status'},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
