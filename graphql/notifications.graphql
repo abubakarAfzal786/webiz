@@ -18,4 +18,8 @@ extend type Mutation @guard {
     makeNotificationSeen(
         id: ID!, @rules(apply: ["exists:push_notifications,id"]),
     ): Boolean!
+
+    makeNotificationsSeen(
+        ids: [ID], @rulesForArray(apply: ["exists:push_notifications,id"]),
+    ): Boolean!
 }
