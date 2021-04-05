@@ -78,8 +78,7 @@
                                 <div class="item col-lg-4 col-md-6 col-sm-12">
                                     <label class="text-option">
                                     <span class="label-wrap">
-                                        <input type="password" value="******" class="placeholder-effect"
-                                               readonly disabled>
+                                        <input type="password" value="" class="placeholder-effect" name="password">
                                         <span class="placeholder">Password</span>
                                     </span>
                                     </label>
