@@ -274,9 +274,10 @@ if (!function_exists('make_transaction')) {
      * @param int|null $booking_id
      * @param int|null $credit
      * @param int $type
+     * @param int|null $company_id
      * @return Model|Transaction
      */
-    function make_transaction($member_id, $price, $room_id = null, $booking_id = null, $credit = null, $type = Transaction::TYPE_CREDIT)
+    function make_transaction($member_id, $price, $room_id = null, $booking_id = null, $credit = null, $type = Transaction::TYPE_CREDIT, $company_id = null)
     {
         if ($booking_id) {
             /** @var Member $member */
@@ -291,6 +292,7 @@ if (!function_exists('make_transaction')) {
             'type' => $type,
             'credit' => $credit,
             'price' => $price,
+            'company_id' => $company_id,
         ]);
     }
 }

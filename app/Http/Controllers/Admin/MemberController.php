@@ -8,6 +8,7 @@ use App\Http\Helpers\ImageUploadHelper;
 use App\Http\Requests\StoreMemberRequest;
 use App\Models\Company;
 use App\Models\Member;
+use App\Models\Transaction;
 use App\Notifications\MemberResetPassword;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -194,6 +195,7 @@ class MemberController extends Controller
             if ($member && ($credits > 0)) {
                 $credits = (float)$request->get('credits');
                 $member->update(['balance' => $member->balance + $credits]);
+                make_transaction($member->id, null, null, null, $credits, Transaction::TYPE_CREDIT, $member->company_id);
                 $memberUpdated = Member::query()->select('id', 'company_id')->find($id);
                 return response()->json(['success' => true, 'balance' => $memberUpdated->balance]);
             } else {

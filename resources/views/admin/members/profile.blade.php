@@ -265,7 +265,7 @@
                 url: '{{ route('admin.members.reset-link', $member->id) }}',
                 type: 'POST',
                 success: function (res) {
-                    alert(res.sucess ? "{{ __('Sent') }}" : "{{ __('Not Sent') }}")
+                    alert(res.success ? "{{ __('Sent') }}" : "{{ __('Not Sent') }}")
                 },
                 error: function () {
                     alert("{{ __('Something went wrong.') }}")

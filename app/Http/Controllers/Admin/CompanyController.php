@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\ImageUploadHelper;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Models\Company;
+use App\Models\Transaction;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -47,6 +48,7 @@ class CompanyController extends Controller
     public function store(StoreCompanyRequest $request)
     {
         $company = Company::query()->create($request->except('_token'));
+        make_transaction(null, null, null, null, $request->get('balance'), Transaction::TYPE_CREDIT, $company->id);
 
         $logo = $request->file('logo');
         if ($logo) {
@@ -87,7 +89,11 @@ class CompanyController extends Controller
      */
     public function update(StoreCompanyRequest $request, Company $company)
     {
+        $oldBalance = $company->balance;
+
         $company->update($request->except('_token', '_method'));
+
+        make_transaction(null, null, null, null, ($request->get('balance') - $oldBalance), Transaction::TYPE_CREDIT, $company->id);
 
         $logo = $request->file('logo');
         if ($logo) {

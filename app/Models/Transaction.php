@@ -15,6 +15,7 @@ class Transaction extends Model
         'type',
         'credit',
         'price',
+        'company_id',
     ];
 
     const TYPE_ROOM = 10;
@@ -61,5 +62,13 @@ class Transaction extends Model
     public function payment_method()
     {
         return $this->belongsTo(PaymentMethod::class, 'method_id', 'id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 }
