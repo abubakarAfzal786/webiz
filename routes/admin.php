@@ -26,4 +26,5 @@ Route::group(['as' => 'admin.'], function () {
     Route::resource('packages', 'PackageController')->except('show');
     Route::resource('companies', 'CompanyController');
     Route::get('support-chat', 'SupportChatController@index')->name('support-chat.index');
+    Route::get('statistics', 'DashboardController@statistics')->name('statistics.index');
 });

@@ -13,17 +13,19 @@ class TransactionController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param TransactionDataTable $dataTable
+     * @param Request $request
      * @return Response
      */
-    public function index(TransactionDataTable $dataTable)
+    public function index(TransactionDataTable $dataTable, Request $request)
     {
-        return $dataTable->render('admin.transactions.index');
+        return $dataTable->with('month', $request->get('month'))->render('admin.transactions.index');
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return void
      */
     public function create()
     {
@@ -34,7 +36,7 @@ class TransactionController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return void
      */
     public function store(Request $request)
     {
@@ -45,7 +47,7 @@ class TransactionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Transaction $transaction
-     * @return Response
+     * @return void
      */
     public function edit(Transaction $transaction)
     {
@@ -57,7 +59,7 @@ class TransactionController extends Controller
      *
      * @param Request $request
      * @param Transaction $transaction
-     * @return Response
+     * @return void
      */
     public function update(Request $request, Transaction $transaction)
     {
@@ -68,7 +70,7 @@ class TransactionController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Transaction $transaction
-     * @return Response
+     * @return void
      */
     public function destroy(Transaction $transaction)
     {

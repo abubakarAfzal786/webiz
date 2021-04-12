@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Yajra\DataTables\DataTableAbstract;
 use Yajra\DataTables\Html\Button;
@@ -26,6 +27,9 @@ class TransactionDataTable extends DataTable
             ->addColumn('member', function ($transaction) {
                 return $transaction->member ? '<a href="' . route('admin.members.profile', $transaction->member_id) . '">' . $transaction->member->name . '</a>' : '';
             })
+            ->addColumn('company', function ($transaction) {
+                return $transaction->company ? $transaction->company->name : ($transaction->member && $transaction->member->company ? $transaction->member->company->name : null);
+            })
             ->addColumn('room', function ($transaction) {
                 return $transaction->room ? $transaction->room->name : '';
             })
@@ -33,10 +37,7 @@ class TransactionDataTable extends DataTable
                 return Transaction::listTypes()[$transaction->type];
             })
             ->editColumn('created_at', function ($transaction) {
-                return $transaction->created_at ? $transaction->created_at->diffForHumans() : '';
-            })
-            ->editColumn('updated_at', function ($transaction) {
-                return $transaction->updated_at ? $transaction->updated_at->diffForHumans() : '';
+                return $transaction->created_at ? $transaction->created_at->format('Y-m-d H:i') : '';
             })
             ->rawColumns(['member']);
     }
@@ -49,7 +50,16 @@ class TransactionDataTable extends DataTable
      */
     public function query(Transaction $model)
     {
-        return $model->newQuery()->with(['room', 'member']);
+        $query = $model->newQuery()->with(['room', 'member.company', 'company']);
+
+        $month = $this->month;
+        if ($month) {
+            $start = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+            $end = Carbon::createFromFormat('Y-m', $month)->endOfMonth();
+            $query = $query->whereBetween('created_at', [$start, $end]);
+        }
+
+        return $query;
     }
 
     /**
@@ -83,13 +93,12 @@ class TransactionDataTable extends DataTable
     {
         return [
             Column::make('id')->title('ID'),
-            Column::make('member'),
-            Column::make('room'),
+            Column::make('member', 'member_id'),
+            Column::make('company', 'company_id'),
+            Column::make('room', 'room_id'),
             Column::make('type'),
             Column::make('credit'),
-//            Column::make('price'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
+            Column::make('created_at')->title('Date'),
         ];
     }
 
