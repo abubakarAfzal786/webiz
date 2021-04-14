@@ -13,7 +13,8 @@
                 </div>
             </div>
             <div class="control">
-                <a href="{{ route('admin.faq.edit', $item) }}" class="main-btn yellow">edit</a>
+                <a href="{{ route('admin.faq.edit', $item) }}" class="main-btn yellow">Edit</a>
+                <button class="main-btn delete-swal" data-id="{{ $item->id }}">Delete</button>
             </div>
         </div>
     </li>

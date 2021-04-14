@@ -158,19 +158,20 @@ class BookingController extends Controller
             ]);
         }
 
-        if ($booking->status == Booking::STATUS_COMPLETED) {
-            $now = Carbon::now();
-            $start = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'));
-            $end = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'));
-
-            if ($end->gt($now) && $start->lt($now)) {
-                $request->merge(['status' => Booking::STATUS_ACTIVE]);
-            }
-
-            if ($end->gt($now) && $start->gt($now)) {
-                $request->merge(['status' => Booking::STATUS_PENDING]);
-            }
-        }
+//        TODO check
+//        if ($booking->status == Booking::STATUS_COMPLETED) {
+//            $now = Carbon::now();
+//            $start = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'));
+//            $end = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'));
+//
+//            if ($end->gt($now) && $start->lt($now)) {
+//                $request->merge(['status' => Booking::STATUS_ACTIVE]);
+//            }
+//
+//            if ($end->gt($now) && $start->gt($now)) {
+//                $request->merge(['status' => Booking::STATUS_PENDING]);
+//            }
+//        }
 
         $attributes = [];
         foreach ($request->get('quantity') as $id => $quantity) {

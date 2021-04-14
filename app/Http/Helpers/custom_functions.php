@@ -328,8 +328,6 @@ if (!function_exists('get_room_available_from')) {
     function get_room_available_from($room, $from = null)
     {
         $now = $from ? $from : Carbon::now();
-        $startClone = clone $now;
-        $tomorrow = $startClone->addDay();
 
         $current = $room->bookings()
             ->where('start_date', '<=', $now)
@@ -339,6 +337,8 @@ if (!function_exists('get_room_available_from')) {
         if (!$current) {
             return ceil_date_for_booking($now);
         } else {
+            $startClone = clone $now;
+            $tomorrow = $startClone->addDay();
             $next_bookings = $room->bookings()
                 ->whereBetween('start_date', [$current->end_date, $tomorrow])
                 ->orderBy('start_date', 'ASC')

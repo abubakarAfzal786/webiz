@@ -1,0 +1,25 @@
+extend type Query @guard {
+    searchCompany(
+        name: String!
+    ): [Company]!
+}
+
+type Company {
+    id: ID!
+    name: String!
+    balance: Float
+    logo: Image @morphOne
+    logos: [Image]!
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+extend type Mutation @guard {
+    connectCompany(
+        company_id: ID!, @rules(apply: ["exists:companies,id"]),
+    ): Company
+
+    createCompany(
+        name: String!, @rules(apply: ["string", "min:2", "max:191"]),
+    ): Company
+}

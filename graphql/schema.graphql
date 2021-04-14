@@ -72,5 +72,6 @@ enum SortOrder {
 #import payments.graphql
 #import support_ticket.graphql
 #import package.graphql
+#import company.graphql
 
 #import tablet.graphql

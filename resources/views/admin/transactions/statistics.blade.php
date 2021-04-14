@@ -25,14 +25,34 @@
                         </form>
                     </div>
                     <div class="col-md-6">
-                        <h4>Credits that have been used for
-                            {{ \Carbon\Carbon::createFromFormat('Y-m', request()->get('month') ?? date('Y-m'))->format('F Y') }}
-                            <b class="text-success float-right">{{ $used_credits }}</b></h4>
+                        <div class="row border-bottom">
+                            <div class="col-md-9">
+                                <h4>Credits that have been used for
+                                    {{ \Carbon\Carbon::createFromFormat('Y-m', request()->get('month') ?? date('Y-m'))->format('F Y') }}
+                                </h4>
+                            </div>
+                            <div class="col-md-3">
+                                <h4><b class="text-success float-right">{{ $used_credits }}</b></h4>
+                            </div>
+                        </div>
 
-                        <h4>Credits that are yet to be used <b
-                                class="text-success float-right">{{ $current_credits }}</b></h4>
-                        <h4>Overall credits for whole time <b
-                                class="text-success float-right">{{ $overall_credits }}</b></h4>
+                        <div class="row border-bottom mt-2">
+                            <div class="col-md-9">
+                                <h4>Credits that are yet to be used</h4>
+                            </div>
+                            <div class="col-md-3">
+                                <h4><b class="text-success float-right">{{ $current_credits }}</b></h4>
+                            </div>
+                        </div>
+
+                        <div class="row border-bottom mt-2">
+                            <div class="col-md-9">
+                                <h4>Overall credits for whole time</h4>
+                            </div>
+                            <div class="col-md-3">
+                                <h4><b class="text-success float-right">{{ $overall_credits }}</b></h4>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
