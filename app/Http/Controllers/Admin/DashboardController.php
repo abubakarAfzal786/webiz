@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Company;
+use App\Models\Member;
 use App\Models\Review;
 use App\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -101,6 +104,33 @@ class DashboardController extends Controller
             'overall_credits',
             'data',
             'labels'
+        ));
+    }
+
+    /**
+     * @param Request $request
+     * @return View
+     */
+    public function customerService(Request $request)
+    {
+        $justJoined = Member::query()
+            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()])
+            ->orderBy('created_at', 'DESC')
+            ->paginate(10, ['*'], 'justJoined');
+
+        $firstOrders = Member::query()
+            ->whereHas('bookings', function (Builder $q) {
+                $q->whereBetween('start_date', [Carbon::now(), Carbon::now()->endOfWeek()])->where('status', Booking::STATUS_PENDING);
+            })
+            ->whereDoesntHave('bookings', function (Builder $q) {
+                $q->where('start_date', '<', Carbon::now());
+            })
+            ->orderBy('created_at', 'DESC')
+            ->paginate(10, ['*'], 'firstOrders');
+
+        return view('admin.members.customer-service', compact(
+            'justJoined',
+            'firstOrders'
         ));
     }
 }

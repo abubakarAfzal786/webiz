@@ -3,6 +3,7 @@
 namespace App\GraphQL\Queries;
 
 use App\Models\Room;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -18,13 +19,26 @@ class SearchRoom
         $types = $args['types'] ?? null;
         $seats = $args['seats'] ?? 0;
         $facilities = $args['facilities'] ?? [];
-        $start = $args['start'] ?? null;
-        $end = $args['end'] ?? null;
+        $start = $args['start'] ?? Carbon::now();
+        $end = $args['end'] ?? Carbon::now()->endOfDay();
         $name = $args['name'] ?? null;
+
+        if ($start <= Carbon::now()) $start = Carbon::now();
+        if ($end->gt($start)) {
+            $startClone = clone $start;
+            $end = $startClone->endOfDay();
+        }
 
         $rooms = Room::query()
             ->with('facilities')
             ->where('seats', '>=', $seats)
+            ->where(function ($wq) use ($start, $end) {
+                return $wq->whereDoesntHave('bookings', function (Builder $q) use ($start, $end) {
+                    return $q
+                        ->whereBetween('start_date', [$start, $end])
+                        ->orWhereBetween('end_date', [$start, $end]);
+                });
+            })
             ->when($types, function (Builder $q) use ($types) {
                 return $q->whereIn('type_id', $types);
             })
@@ -36,34 +50,6 @@ class SearchRoom
             $rooms = $rooms->whereHas('facilities', function (Builder $q) use ($facility) {
                 $q->where('room_facilities.id', $facility);
             });
-        }
-
-        if (!$start && $end) {
-            $rooms = $rooms->where(function ($wq) use ($end) {
-                return $wq->whereHas('bookings', function (Builder $q) use ($end) {
-                    $q->where('start_date', '>=', $end)->orWhere('end_date', '<', $end);
-                })->orWhereDoesntHave('bookings');
-            });
-        }
-
-        if ($start && !$end) {
-            $rooms = $rooms->where(function ($wq) use ($start) {
-                return $wq->whereHas('bookings', function (Builder $q) use ($start) {
-                    $q->where('start_date', '>', $start)->orWhere('end_date', '>=', $start);
-                })->orWhereDoesntHave('bookings');
-            });
-        }
-
-        if ($start && $end) {
-            $rooms = $rooms
-                ->where(function ($wq) use ($start, $end) {
-                    return $wq
-                        ->whereDoesntHave('bookings', function (Builder $q) use ($start, $end) {
-                            return $q
-                                ->whereBetween('start_date', [$start, $end])
-                                ->orWhereBetween('end_date', [$start, $end]);
-                        });
-                });
         }
 
         $rooms = $rooms->orderBy('created_at', 'desc')->get();

@@ -49,8 +49,10 @@ class MembersDataTable extends DataTable
      */
     public function query(Member $model)
     {
+        $id = request()->get('id');
         $company_id = request()->get('company_id');
         $newQuery = $model->newQuery()->withoutGlobalScopes()->with('company');
+        if ($id) $newQuery = $newQuery->where('id', $id);
         if ($company_id) $newQuery = $newQuery->where('company_id', $company_id);
         $newQuery = $newQuery->with('avatar')->orderBy('id', 'desc');
 

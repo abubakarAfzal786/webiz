@@ -61,7 +61,10 @@ class BookingsDataTable extends DataTable
      */
     public function query(Booking $model)
     {
-        return $model->newQuery()->with(['room', 'member', 'company', 'room_attributes']);
+        $member_id = request()->get('member_id');
+        $q = $model->newQuery()->with(['room', 'member', 'company', 'room_attributes']);
+        if ($member_id) $q = $q->where('member_id', $member_id);
+        return $q;
     }
 
     /**

@@ -25,7 +25,7 @@
 <body>
 <div id="app">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand" href="{{ route('home') }}">
                 {{ config('app.name', 'WeBiz') }}
             </a>
@@ -37,7 +37,7 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav mr-auto ml-auto">
                     @auth
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.bookings.index') }}">{{ __('Bookings') }}</a>
@@ -71,6 +71,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.statistics.index') }}">{{ __('Statistics') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.members.customer-service') }}">{{ __('Customer Service') }}</a>
                         </li>
                     @endauth
                 </ul>
