@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,6 +12,7 @@ use Illuminate\Support\Collection;
 /**
  * @property float balance
  * @property Image logo
+ * * @property Carbon expiration_date
  */
 class Company extends Model
 {
@@ -19,11 +21,19 @@ class Company extends Model
         'name',
         'balance',
         'added_every_month',
+        'expiration_date'
     ];
 
     protected $appends = [
         'logo_url',
     ];
+
+    protected $dates = [
+        'expiration_date'
+    ];
+
+    const TABLE_TIME = 'Y-m-d H:i:s';
+    const DATE_TIME_LOCAL = 'Y-m-d\TH:i';
 
     /**
      * @return HasMany
@@ -91,5 +101,16 @@ class Company extends Model
     public function getFirstLogoUrlAttribute()
     {
         return $this->logos()->first() ? $this->logos()->first()->url : null;
+    }
+
+    /**
+     * @param Carbon $date
+     * @param bool $changeTz
+     * @return mixed
+     */
+    public function toDateTimeLocal($date, $changeTz = false)
+    {
+        $notFormatted = $changeTz ? $this->$date->timezone('Asia/Jerusalem') : $this->$date;
+        return $notFormatted->format(self::DATE_TIME_LOCAL);
     }
 }

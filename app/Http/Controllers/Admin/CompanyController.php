@@ -8,6 +8,7 @@ use App\Http\Helpers\ImageUploadHelper;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Models\Company;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -47,7 +48,13 @@ class CompanyController extends Controller
      */
     public function store(StoreCompanyRequest $request)
     {
-        $company = Company::query()->create($request->except('_token'));
+        $data = $request->except('_token');
+        if($request->expiration_date){
+            $offsetStart = Carbon::createFromFormat(Company::DATE_TIME_LOCAL, $request->get('expiration_date'), 'Asia/Jerusalem')->offsetHours;
+            $start_date = Carbon::createFromFormat(Company::DATE_TIME_LOCAL, $request->get('expiration_date'))->subHours($offsetStart);
+            $data['expiration_date'] = $start_date;
+        }
+        $company = Company::query()->create($data);
         make_transaction(null, null, null, null, $request->get('balance'), Transaction::TYPE_CREDIT, $company->id);
 
         $logo = $request->file('logo');
@@ -91,7 +98,13 @@ class CompanyController extends Controller
     {
         $oldBalance = $company->balance;
 
-        $company->update($request->except('_token', '_method'));
+        $data = $request->except('_token', '_method');
+        if($request->expiration_date){
+            $offsetStart = Carbon::createFromFormat(Company::DATE_TIME_LOCAL, $request->get('expiration_date'), 'Asia/Jerusalem')->offsetHours;
+            $start_date = Carbon::createFromFormat(Company::DATE_TIME_LOCAL, $request->get('expiration_date'))->subHours($offsetStart);
+            $data['expiration_date'] = $start_date;
+        }
+        $company->update($data);
 
         make_transaction(null, null, null, null, ($request->get('balance') - $oldBalance), Transaction::TYPE_CREDIT, $company->id);
 

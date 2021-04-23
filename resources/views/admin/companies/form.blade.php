@@ -52,6 +52,14 @@
                         </div>
 
                         <div class="form-group row">
+                            <label class="col-sm-2 col-form-label" for="expiration_date">{{ __('Start Date') }}</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" id="expiration_date" type="datetime-local" name="expiration_date"
+                                       value="{{ old('expiration_date', isset($company) && $company->expiration_date ? $company->toDateTimeLocal('expiration_date', true) : null) }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <div class="col-sm-10">
                                 <button class="btn btn-{{ isset($company) ? 'warning' : 'primary' }}"
                                         type="submit">{{ isset($company) ? __('Update') : __('Create') }}</button>
