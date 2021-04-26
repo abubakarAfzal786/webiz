@@ -36,6 +36,13 @@ class SettingSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
+            [
+                'key' => 'email',
+                'value' => 'app@31floor-mail.kala-crm.co.il',
+                'title' => 'Mail to which all messages should be sent',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
         ];
 
         Setting::query()->insert($types);

@@ -120,7 +120,7 @@ class DashboardController extends Controller
 
         $firstOrders = Member::query()
             ->whereHas('bookings', function (Builder $q) {
-                $q->whereBetween('start_date', [Carbon::now(), Carbon::now()->endOfWeek()])->where('status', Booking::STATUS_PENDING);
+                $q->where('start_date', '>', Carbon::now())->where('status', Booking::STATUS_PENDING);
             })
             ->whereDoesntHave('bookings', function (Builder $q) {
                 $q->where('start_date', '<', Carbon::now());

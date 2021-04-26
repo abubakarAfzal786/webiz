@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Mail\MemberRegistered;
 use App\Models\Member;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Mail;
 
 class MemberObserver
@@ -16,7 +17,7 @@ class MemberObserver
      */
     public function created(Member $member)
     {
-        Mail::to('app@31floor-mail.kala-crm.co.il')->queue(new MemberRegistered($member));
+        Mail::to(Setting::getValue('email', 'app@31floor-mail.kala-crm.co.il'))->queue(new MemberRegistered($member));
     }
 
     /**
