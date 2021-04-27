@@ -28,6 +28,7 @@ type Member {
     support_tickets: [SupportTicket]! @hasMany
     package_id: Int
     package: Package @belongsTo
+    company: Company @belongsTo
 }
 
 type CarNumber {

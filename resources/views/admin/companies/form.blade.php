@@ -52,7 +52,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label" for="expiration_date">{{ __('Start Date') }}</label>
+                            <label class="col-sm-2 col-form-label" for="expiration_date">{{ __('Expiration Date') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" id="expiration_date" type="datetime-local" name="expiration_date"
                                        value="{{ old('expiration_date', isset($company) && $company->expiration_date ? $company->toDateTimeLocal('expiration_date', true) : null) }}">

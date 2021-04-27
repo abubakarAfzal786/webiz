@@ -8,6 +8,7 @@ type Booking {
     id: ID!
     room_id: Int!
     member_id: Int!
+    member: Member @belongsTo
     start_date: DateTimeOrDate!
     end_date: DateTimeOrDate!
     created_at: DateTime!
