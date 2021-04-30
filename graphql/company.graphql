@@ -10,6 +10,7 @@ type Company {
     balance: Float
     logo: Image @morphOne
     logos: [Image]!
+    members: [Member]! @hasMany
     created_at: DateTime
     updated_at: DateTime
 }
