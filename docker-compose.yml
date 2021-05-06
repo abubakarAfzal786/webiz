@@ -1,0 +1,40 @@
+version: "3.1"
+services:
+  php7:
+    build:
+      context: ./docker/php
+    container_name: webiz
+    ports:
+      - "94:80"
+    volumes:
+      - ./:/var/www/html:z
+      - ~/.composer/auth.json:/root/.composer/auth.json
+  db:
+    build:
+      context: docker/db
+    container_name: webiz_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "3666:3306"
+  phpmyadmin:
+    depends_on:
+      - db
+    container_name: webiz_phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      - UPLOAD_LIMIT=300M
+      - PMA_ARBITRARY=1
+    ports:
+      - "8000:80"
+  npm:
+    image: node:13.7
+    container_name: webiz_npm
+    volumes:
+      - ./:/var/www/html
+    working_dir: /var/www/html
+    entrypoint: ["npm"]

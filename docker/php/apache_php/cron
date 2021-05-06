@@ -1,0 +1,4 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+* * * * * root /var/www/html/artisan schedule:run >> /var/www/html/storage/logs/schedule-`date +\%F`.log 2>&1
