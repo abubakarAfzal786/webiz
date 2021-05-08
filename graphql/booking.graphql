@@ -33,20 +33,19 @@ type BookingAndMessageResponse {
 
 extend type Mutation @guard {
     createBooking(
-        room_id: ID!, @rules(apply: ["exists:rooms,id"]),
-        member_id: ID, @rules(apply: ["exists:members,id"]),
+        room_id: ID! @rules(apply: ["exists:rooms,id"])
+        member_id: ID @rules(apply: ["exists:members,id"])
         start_date: DateTimeOrDate! @rules(apply: ["date", "after:now"])
         end_date: DateTimeOrDate! @rules(apply: ["date", "after:start_date"])
         attributes: [BookingAttribute]
     ): BookingAndMessageResponse
+    extendBooking(
+        booking_id: ID!
+        date: DateTimeOrDate!
+    ): BookingAndMessageResponse
+    continueBooking(id: ID! @rules(apply: ["exists:bookings,id"])): Boolean
 
-    continueBooking(
-        id: ID! @rules(apply: ["exists:bookings,id"])
-    ): Boolean
-
-    completeBooking(
-        id: ID! @rules(apply: ["exists:bookings,id"])
-    ): Boolean
+    completeBooking(id: ID! @rules(apply: ["exists:bookings,id"])): Boolean
 
     completeBookingNotify(
         id: ID! @rules(apply: ["exists:bookings,id"])
@@ -63,17 +62,11 @@ extend type Mutation @guard {
         logo_id: ID! @rules(apply: ["exists:images,id"])
     ): Image
 
-    locationState(
-        out: Boolean!
-    ): Boolean
+    locationState(out: Boolean!): Boolean
 
-    openDoorMobile(
-        room_id: ID! @rules(apply: ["exists:room,id"])
-    ): Boolean
+    openDoorMobile(room_id: ID! @rules(apply: ["exists:room,id"])): Boolean
 
-    openLobbyDoor(
-        room_id: ID! @rules(apply: ["exists:room,id"])
-    ): Boolean
+    openLobbyDoor(room_id: ID! @rules(apply: ["exists:room,id"])): Boolean
 }
 
 type RoomAttribute {
@@ -90,7 +83,7 @@ type RoomAttributePivot {
 }
 
 input BookingAttribute {
-    id: ID! @rules(apply: ["exists:room_attributes,id"]),
+    id: ID! @rules(apply: ["exists:room_attributes,id"])
     quantity: Int!
 }
 
