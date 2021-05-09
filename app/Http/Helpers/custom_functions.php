@@ -145,12 +145,13 @@ if (!function_exists('next_booked')) {
      * @param $booking
      * @return Builder|Model|object|null
      */
-    function next_booked($booking)
+    function next_booked($booking, $extended_date = null)
     {
+        $secondDate = $extended_date !== null ? $extended_date : $booking->end_date->addHours(1);
         return Booking::query()
             ->where('room_id', $booking->room_id)
-            ->whereBetween('start_date', [$booking->end_date, $booking->end_date->addHours(1)])
-            ->orderBy('start_date', 'ASC')
+            ->whereBetween('start_date', [$booking->end_date, $secondDate])
+            ->orderBy('start_date', 'DESC')
             ->first();
     }
 }
@@ -315,7 +316,7 @@ if (!function_exists('ceil_date_for_booking')) {
     function ceil_date_for_booking($date)
     {
         return $date;
-//        return date('Y-m-d H:i:s', ceil(strtotime($date->format('Y-m-d H:i:s')) / 1800) * 1800);
+        //        return date('Y-m-d H:i:s', ceil(strtotime($date->format('Y-m-d H:i:s')) / 1800) * 1800);
     }
 }
 
