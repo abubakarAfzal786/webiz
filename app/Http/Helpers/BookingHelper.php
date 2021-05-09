@@ -27,11 +27,16 @@ final class BookingHelper
         //     ];
         // }
 
-        /** @var Booking $next_booked */
+        /** @var Booking $next_booked 
+         * @desctiption: it check the existing booking with user's new date
+         */
         $next_booked = next_booked($booking, $extend_date);
 
         if ($next_booked) {
-            /** @var Room $freeExist */
+            /** 
+             * @var Room $freeExist
+             * @description:it will check the available rooms 
+             * */
             $freeExist = similar_free_room($next_booked->room, $next_booked->start_date, $next_booked->end_date);
 
             if (!$freeExist) {

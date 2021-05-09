@@ -3,11 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Http\Helpers\BookingHelper;
-use App\Models\Booking;
 use App\Models\Member;
-use Exception;
-use Illuminate\Support\Facades\DB;
-use App\Http\Helpers\ExtendBookingHelper;
 
 class ExtendBooking
 {
