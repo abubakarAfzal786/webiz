@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Booking;
+use App\Models\Device;
 use App\Models\Member;
 use App\Models\Room;
 use App\Models\RoomAttribute;
@@ -203,7 +204,14 @@ if (!function_exists('generate_door_key')) {
         return rand(1000, 9999);
     }
 }
-
+if (!function_exists('get_current_door')) {
+    function get_current_device($room_id, $device_type)
+    {
+        return Device::where('room_id', $room_id)->whereHas('type', function ($q) use ($device_type) {
+            $q->where('name', $device_type);
+        })->first();
+    }
+}
 if (!function_exists('generate_door_pin')) {
     /**
      * @return int

@@ -49,10 +49,10 @@ class Room extends Authenticatable implements JWTSubject
     ];
 
     protected $appends = [
-//        'average_rate',
-//        'rates_count',
-//        'is_favorite',
-//        'available_at',
+        //        'average_rate',
+        //        'rates_count',
+        //        'is_favorite',
+        //        'available_at',
     ];
 
     protected $casts = [

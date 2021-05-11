@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Http\Helpers\IotHelper;
+use App\Models\Device;
 use App\Models\Room;
 
 class OpenDoor
@@ -19,9 +20,9 @@ class OpenDoor
         /** @var Room $room */
         $room = auth()->user();
         $booking = get_current_booking($room->id);
-
-        if ($booking && ($args['door_key'] == $booking->door_key) && $room->door_id) {
-            return $this->openIotDoor($room->door_id);
+        $device = get_current_device($booking->room->id, 'door');
+        if ($booking && ($args['door_key'] == $booking->door_key)) {
+            return $this->toggleIotDevice($device->device_id);
         } else {
             return false;
         }
