@@ -119,11 +119,8 @@ class DashboardController extends Controller
             ->paginate(10, ['*'], 'justJoined');
         $firstOrders = Member::query()
             ->whereHas('bookings', function (Builder $q) {
-                $q->whereDate('created_at', '>=', Carbon::today())->where('status', Booking::STATUS_PENDING);
+                $q->whereDate('created_at', '>=', Carbon::today())->where('status', Booking::STATUS_PENDING)->groupBy('company_id');
             })
-            // ->whereDoesntHave('bookings', function (Builder $q) {
-            //     $q->whereDate('created_at', '<', Carbon::today());
-            // })
             ->orderBy('created_at', 'DESC')
             ->paginate(10, ['*'], 'firstOrders');
         return view('admin.members.customer-service', compact(
