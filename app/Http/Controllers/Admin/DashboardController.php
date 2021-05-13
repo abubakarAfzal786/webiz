@@ -117,17 +117,15 @@ class DashboardController extends Controller
             ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()])
             ->orderBy('created_at', 'DESC')
             ->paginate(10, ['*'], 'justJoined');
-
         $firstOrders = Member::query()
             ->whereHas('bookings', function (Builder $q) {
-                $q->where('start_date', '>', Carbon::now())->where('status', Booking::STATUS_PENDING);
+                $q->whereDate('created_at', '>=', Carbon::today())->where('status', Booking::STATUS_PENDING);
             })
-            ->whereDoesntHave('bookings', function (Builder $q) {
-                $q->where('start_date', '<', Carbon::now());
-            })
+            // ->whereDoesntHave('bookings', function (Builder $q) {
+            //     $q->whereDate('created_at', '<', Carbon::today());
+            // })
             ->orderBy('created_at', 'DESC')
             ->paginate(10, ['*'], 'firstOrders');
-
         return view('admin.members.customer-service', compact(
             'justJoined',
             'firstOrders'
