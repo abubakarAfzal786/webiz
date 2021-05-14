@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Jobs\SendMailToNewUser;
 use App\Models\Member;
 use Exception;
 use Tymon\JWTAuth\JWTAuth;
@@ -29,7 +30,7 @@ class SignUp
             $member = Member::query()->create($args);
 
             $token = $this->jwt->fromUser($member);
-
+            dispatch(new SendMailToNewUser($member));
             return [
                 'token' => $token,
                 'message' => 'success',
@@ -39,7 +40,7 @@ class SignUp
         } catch (Exception $exception) {
             return [
                 'token' => null,
-                'message' => 'fail',
+                'message' => $exception->getMessage(),
                 'success' => false,
                 'user' => null
             ];
