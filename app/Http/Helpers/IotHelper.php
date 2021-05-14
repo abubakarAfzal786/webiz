@@ -71,7 +71,7 @@ trait IotHelper
      */
     public function toggleIotDevice($id)
     {
-        return $this->IotRequest('POST', ('toggle/' . $id))['data']['status'] ?? null;
+        return $this->IotRequest('GET', ('toggleDevice/' . $id))['status'] ?? null;
     }
 
     /**

@@ -16,23 +16,36 @@ final class BookingHelper
      * @param $booking
      * @return bool
      */
-    public function extendBooking($booking)
+    public function extendBooking($booking, $extend_date = null)
     {
-        if ($booking->out_at) {
-            $booking->update(['status' => Booking::STATUS_COMPLETED]);
-            return false;
-        }
+        // if ($booking->out_at) {
+        //     $booking->update(['status' => Booking::STATUS_COMPLETED]);
+        //     return [
+        //         'booking' => $booking,
+        //         'message' => 'Booking Marked as Complete 1',
+        //         'success' => true,
+        //     ];
+        // }
 
-        /** @var Booking $next_booked */
-        $next_booked = next_booked($booking);
+        /** @var Booking $next_booked 
+         * @desctiption: it check the existing booking with user's new date
+         */
+        $next_booked = next_booked($booking, $extend_date);
 
         if ($next_booked) {
-            /** @var Room $freeExist */
+            /** 
+             * @var Room $freeExist
+             * @description:it will check the available rooms 
+             * */
             $freeExist = similar_free_room($next_booked->room, $next_booked->start_date, $next_booked->end_date);
 
             if (!$freeExist) {
                 $booking->update(['status' => Booking::STATUS_COMPLETED]);
-                return false;
+                return [
+                    'booking' => $booking,
+                    'message' => 'Booking Marked as Complete',
+                    'success' => true,
+                ];
             } else {
                 DB::beginTransaction();
                 try {
@@ -44,6 +57,7 @@ final class BookingHelper
                     }
                     $newBooking->push();
                     $next_booked->update(['status' => Booking::STATUS_CANCELED]);
+
                     DB::commit();
 
                     $data = [
@@ -68,13 +82,28 @@ final class BookingHelper
                     $this->sendPush($newBooking->member->mobile_token, $data);
                 } catch (Exception $exception) {
                     DB::rollBack();
-                    return false;
+                    return [
+                        'booking' => null,
+                        'message' => $exception->getMessage(),
+                        'success' => false,
+                    ];
                 }
             }
         }
 
-        $booking->update(['status' => Booking::STATUS_EXTENDED]);
-
-        return true;
+        if ($extend_date !== null && $extend_date->gt($booking->end_date)) {
+            $booking->update(['end_date' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
+        } else {
+            return [
+                'booking' => null,
+                'message' => 'something went wrong',
+                'success' => false,
+            ];
+        }
+        return [
+            'booking' => $booking,
+            'message' => 'Success',
+            'success' => true,
+        ];
     }
 }

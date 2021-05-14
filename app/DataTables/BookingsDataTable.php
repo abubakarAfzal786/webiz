@@ -3,12 +3,12 @@
 namespace App\DataTables;
 
 use App\Models\Booking;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Mockery\Undefined;
 use Yajra\DataTables\DataTableAbstract;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
 class BookingsDataTable extends DataTable
@@ -21,6 +21,9 @@ class BookingsDataTable extends DataTable
      */
     public function dataTable($query)
     {
+        if (request()->get('start_date') !== null && request()->get('start_date')) {
+            $query->whereRaw('DATE(start_date)=?', [request()->get('start_date')])->whereRaw('DATE(end_date)=?', [request()->get('end_date')]);
+        }
         return datatables()
             ->eloquent($query)
             ->editColumn('start_date', function ($booking) {
