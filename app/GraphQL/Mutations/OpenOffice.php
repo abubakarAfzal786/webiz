@@ -6,7 +6,7 @@ use App\Http\Helpers\IotHelper;
 use App\Models\Device;
 use App\Models\Room;
 
-class OpenDoor
+class OpenOffice
 {
     use IotHelper;
 
@@ -18,8 +18,7 @@ class OpenDoor
     public function __invoke($_, array $args)
     {
         /** @var Room $room */
-        $room = auth()->user();
-        $booking = get_current_booking($room->id);
+        $booking = get_current_booking($args['room_id']);
         $device = get_current_device($booking->room->id, 'door');
         if ($booking && ($args['door_key'] == $booking->door_key)) {
             return $this->toggleIotDevice($device->device_id);
