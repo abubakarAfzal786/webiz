@@ -4,7 +4,7 @@ extend type Query {
 }
 
 extend type Mutation @guardTablet {
-    openDoor(door_key: Int!): Boolean
+    openOffice(door_key: Int!, room_id: Int!): Boolean
 }
 
 type AuthTabletResponse {

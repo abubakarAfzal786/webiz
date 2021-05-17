@@ -247,7 +247,7 @@ if (!function_exists('get_current_booking')) {
                 ->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_COMPLETED])
                 ->where('start_date', '<=', $now)
                 ->where(function ($q) use ($now) {
-                    return $q->where('end_date', '>=', $now)->orWhere('status', Booking::STATUS_EXTENDED);
+                    return $q->where('end_date', '>=', $now);
                 })
                 ->first();
         }
