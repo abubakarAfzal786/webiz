@@ -244,7 +244,7 @@ if (!function_exists('get_current_booking')) {
         if ($room) {
             $now = Carbon::now();
             return $room->bookings()
-                ->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_COMPLETED])
+                ->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_PENDING])
                 ->where('start_date', '<=', $now)
                 ->where(function ($q) use ($now) {
                     return $q->where('end_date', '>=', $now);

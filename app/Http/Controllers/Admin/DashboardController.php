@@ -113,14 +113,16 @@ class DashboardController extends Controller
      */
     public function customerService(Request $request)
     {
+
         $justJoined = Member::query()
             ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()])
             ->orderBy('created_at', 'DESC')
             ->paginate(10, ['*'], 'justJoined');
         $firstOrders = Member::query()
             ->whereHas('bookings', function (Builder $q) {
-                $q->whereDate('created_at', '>=', Carbon::today())->where('status', Booking::STATUS_PENDING)->groupBy('company_id');
+                $q->whereDate('created_at', '=', Carbon::today())->where('status', Booking::STATUS_PENDING);
             })
+            ->groupBy('company_id')->where('company_id', '!=', null)
             ->orderBy('created_at', 'DESC')
             ->paginate(10, ['*'], 'firstOrders');
         return view('admin.members.customer-service', compact(
