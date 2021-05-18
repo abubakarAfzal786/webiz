@@ -5,6 +5,7 @@ namespace App\Http\Helpers;
 use App\Models\Booking;
 use App\Models\PushNotification;
 use App\Models\Room;
+use App\Models\Transaction;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +17,7 @@ final class BookingHelper
      * @param $booking
      * @return bool
      */
-    public function extendBooking($booking, $extend_date = null)
+    public function extendBooking($booking, $extend_date = null, $member_id, $price)
     {
         // if ($booking->out_at) {
         //     $booking->update(['status' => Booking::STATUS_COMPLETED]);
@@ -93,6 +94,7 @@ final class BookingHelper
 
         if ($extend_date !== null && $extend_date->gt($booking->end_date)) {
             $booking->update(['end_date' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
+            make_transaction($member_id, null, $booking->room_id, $booking->id, $price, Transaction::TYPE_ROOM);
         } else {
             return [
                 'booking' => null,
