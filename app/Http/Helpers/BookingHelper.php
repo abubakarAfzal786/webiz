@@ -17,7 +17,7 @@ final class BookingHelper
      * @param $booking
      * @return bool
      */
-    public function extendBooking($booking, $extend_date = null, $member_id, $price)
+    public function extendBooking($booking, $extend_date = null, $member_id = null, $price = null)
     {
         // if ($booking->out_at) {
         //     $booking->update(['status' => Booking::STATUS_COMPLETED]);
