@@ -65,7 +65,7 @@ extend type Mutation @guard {
 
     locationState(out: Boolean!): Boolean
 
-    openDoorMobile(room_id: ID! @rules(apply: ["exists:room,id"])): Boolean
+    openDoorMobile(room_id: ID! @rules(apply: ["exists:rooms,id"])): Boolean
 
     openLobbyDoor(room_id: ID! @rules(apply: ["exists:rooms,id"])): Boolean
 }

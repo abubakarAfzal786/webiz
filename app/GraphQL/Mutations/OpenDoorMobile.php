@@ -18,9 +18,9 @@ class OpenDoorMobile
     {
         /** @var Room $room */
         $room = Room::query()->find($args['room_id']);
-
-        if ($room->door_id) {
-            return $this->openIotDoor($room->door_id);
+        if ($room) {
+            $device = get_current_device($room->id, 'door');
+            return $this->toggleIotDevice($device->device_id);
         } else {
             return false;
         }
