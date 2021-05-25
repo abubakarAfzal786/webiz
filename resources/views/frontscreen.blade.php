@@ -7,7 +7,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="format-detection" content="address=no">
 
-    <link rel="stylesheet" href="{{ asset('frontscreen/css/frontscreen.css') }}" type="text/css"/>
+    <link rel="stylesheet" href="{{ asset('frontscreen/css/bundle.css') }}" type="text/css"/>
     <link rel="stylesheet" href="{{ asset('frontscreen/css/custom.css') }}" type="text/css"/>
 
     <link rel="apple-touch-icon-precomposed" sizes="57x57"
@@ -69,8 +69,8 @@
                         <span class="icon-calendar"></span>
                     </div>
                     <div class="text">
-                        <h3>19:27</h3>
-                        <p>MON, 28 OCT 2020</p>
+                         <h3 id="time">{{ $time }}</h3>
+                        <p id="date">{{ $date }}</p>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                         <span class="icon-sun"></span>
                     </div>
                     <div class="text">
-                        <h3>24°</h3>
+                        <h3><span id="temp">{{ $temp }}</span>°</h3>
                         <p>Tel Aviv District, Israel</p>
                     </div>
                 </div>
