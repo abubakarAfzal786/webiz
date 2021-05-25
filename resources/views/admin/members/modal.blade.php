@@ -1,7 +1,7 @@
 <div class="modal-info" id="balance-modal">
     <div class="scroll-wrap">
         <div class="info-text">
-            <p>{{ __('Add Credits') }}</p>
+            <p>{{ __('Update Credits') }}</p>
         </div>
 
         <div class="info-icon">
@@ -10,7 +10,7 @@
                     <label class="text-option">
                         <span class="label-wrap">
                             <input type="number" name="credits" step="0.01" required
-                                   class="placeholder-effect has-content" min="0" pattern="[0-9]+">
+                                   class="placeholder-effect has-content">
                             <span class="placeholder">Credits</span>
                         </span>
                     </label>
@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="info-btn">
-            <button type="button" class="main-btn yellow add-credits">{{ __('Add') }}</button>
+            <button type="button" class="main-btn yellow add-credits">{{ __('Update') }}</button>
             <button type="button" class="main-btn yellow-blank" data-fancybox-close>{{ __('Close') }}</button>
         </div>
     </div>

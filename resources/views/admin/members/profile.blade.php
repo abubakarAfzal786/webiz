@@ -26,7 +26,7 @@
                             <p>
                                 <i class="icon-wallet"></i>
                                 <code id="current-balance">{{ $member->balance }}</code>
-                                <i class="icon-plus"></i>
+                                <a href="javascript:void(0);" class="main-btn yellow">{{__('Edit')}}</a>
                                 <span>credits</span>
                             </p>
                         </div>
@@ -292,7 +292,7 @@
             });
         });
 
-        $('.status-condition .icon-plus').click(function () {
+        $('.status-condition .main-btn').click(function () {
             $.fancybox.open({
                 src: '#balance-modal',
                 afterClose: function () {
@@ -301,12 +301,12 @@
             });
         });
 
-        $(document).on('input', 'input[name="credits"]', function () {
-            if ($(this).val()) {
-                if ($(this).val() < 0) $(this).val(0)
-                $(this).val(+$(this).val())
-            }
-        });
+        // $(document).on('input', 'input[name="credits"]', function () {
+        //     if ($(this).val()) {
+        //         if ($(this).val() < 0) $(this).val(0)
+        //         $(this).val(+$(this).val())
+        //     }
+        // });
 
         $(document).on('click', '.add-credits', function () {
             let creditsToAdd = $('#balance-modal input[name="credits"]').val();

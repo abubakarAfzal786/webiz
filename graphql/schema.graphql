@@ -2,20 +2,22 @@
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
 "A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
-scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+scalar DateTime
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 "A datetime string with format `Y-m-d` or `Y-m-d H:i:s`."
 scalar DateTimeOrDate @scalar(class: "App\\GraphQL\\Scalars\\DateTimeOrDate")
 
 "Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec"
-scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
+scalar Upload
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
 
 type Query {
     authenticate(email: String!, password: String!): AuthResponse
     authorize: Boolean
 
     sendVerification(
-        phone: String!, @rules(apply: ["exists:members,phone"]),
+        phone: String! @rules(apply: ["exists:members,phone"])
     ): Boolean
     verify(code: Int!, phone: String!, test: Boolean): VerifyResponse
 
@@ -24,10 +26,11 @@ type Query {
 
 type Mutation {
     signUp(
-        name: String!, @rules(apply: ["string", "min:2", "max:191"]),
-        email: String!, @rules(apply: ["email", "unique:members"]),
-        password: String, @rules(apply: ["string", "min:6", "max:191"]),
-        password_confirmation: String, @rules(apply: ["string", "min:2", "max:191", "same:password"]),
+        name: String! @rules(apply: ["string", "min:2", "max:191"])
+        email: String! @rules(apply: ["email", "unique:members"])
+        password: String @rules(apply: ["string", "min:6", "max:191"])
+        password_confirmation: String
+            @rules(apply: ["string", "min:2", "max:191", "same:password"])
     ): VerifyResponse
     updateToken(token: String!): Boolean! @guard
 }

@@ -28,9 +28,7 @@ class SignUp
             if (isset($args['password'])) $args['password'] = bcrypt($args['password']);
             unset($args['password_confirmation']);
             $member = Member::query()->create($args);
-
             $token = $this->jwt->fromUser($member);
-            dispatch(new SendMailToNewUser($member));
             return [
                 'token' => $token,
                 'message' => 'success',

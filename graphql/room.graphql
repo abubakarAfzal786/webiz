@@ -6,16 +6,16 @@ extend type Query @guard {
     favoriteRooms: [Room]!
 
     searchRoom(
-        types: [ID], @rulesForArray(apply: ["exists:room_types,id"])
-        seats: Int, @rules(apply: ["integer"])
-        facilities: [ID], @rulesForArray(apply: ["exists:room_facilities,id"])
+        types: [ID] @rulesForArray(apply: ["exists:room_types,id"])
+        seats: Int @rules(apply: ["integer"])
+        facilities: [ID] @rulesForArray(apply: ["exists:room_facilities,id"])
         start: DateTimeOrDate @rules(apply: ["date"])
         end: DateTimeOrDate @rules(apply: ["date", "after:start_date"])
         name: String
     ): [Room!]!
 
     getRoomPrice(
-        room_id: ID!, @rules(apply: ["exists:rooms,id"]),
+        room_id: ID! @rules(apply: ["exists:rooms,id"])
         start_date: DateTimeOrDate! @rules(apply: ["date", "after:now"])
         end_date: DateTimeOrDate! @rules(apply: ["date", "after:start_date"])
         attributes: [BookingAttribute]
@@ -45,6 +45,8 @@ type Room {
     wifi_pass: String
     qr_token: String
     available_at: DateTime
+    monthly: Boolean
+    company: Company
 }
 
 type RoomFacility {
@@ -63,18 +65,16 @@ type SearchRoomResponse {
 }
 
 type RoomPriceResponse {
-    roomPrice: Float,
-    hourlyPrice: Float,
+    roomPrice: Float
+    hourlyPrice: Float
     discounted: Boolean
 }
 
 extend type Mutation @guard {
-    makeRoomFavorite(
-        id: ID!, @rules(apply: ["exists:rooms,id"]),
-    ): Room
+    makeRoomFavorite(id: ID! @rules(apply: ["exists:rooms,id"])): Room
 
-    sameTypeRoomAvailable (
-        id: ID!, @rules(apply: ["exists:rooms,id"]),
+    sameTypeRoomAvailable(
+        id: ID! @rules(apply: ["exists:rooms,id"])
         start_date: DateTimeOrDate @rules(apply: ["date", "after:now"])
         end_date: DateTimeOrDate @rules(apply: ["date", "after:start_date"])
     ): Room
