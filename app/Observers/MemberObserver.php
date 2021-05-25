@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\SendMailToNewUser;
 use App\Mail\MemberRegistered;
 use App\Models\Member;
 use App\Models\Setting;
@@ -17,7 +18,7 @@ class MemberObserver
      */
     public function created(Member $member)
     {
-        Mail::to(Setting::getValue('email', 'app@31floor-mail.kala-crm.co.il'))->queue(new MemberRegistered($member));
+        
     }
 
     /**
@@ -28,7 +29,10 @@ class MemberObserver
      */
     public function updated(Member $member)
     {
-        //
+        if($member->isDirty('phone'))
+        {
+          dispatch(new SendMailToNewUser($member));
+        }
     }
 
     /**

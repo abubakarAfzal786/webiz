@@ -154,7 +154,7 @@ class CheckBookingState extends Command
                     $booking->update(['status' => Booking::STATUS_COMPLETED]);
                 }
             } else {
-                if (($endSub5 < $now) && ($endSub5 >= $nowSub5)) {
+                if ($endSub5->eq($now)) {
                     // EXPIRED BOOKING
                     $this->bookingExpiredPush($booking, (int)$now->diffInMinutes($booking->end_date) + 1);
                 } elseif ($booking->end_date <= $now) {

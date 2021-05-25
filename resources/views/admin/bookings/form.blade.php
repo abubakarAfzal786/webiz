@@ -44,6 +44,22 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label" for="status">{{ __('Status') }}</label>
+                            <div class="col-sm-10">
+                                <select name="status" id="status" class="form-control select2" required>
+                                    <option value="10" {{ old('status', isset($booking->status) ? $booking->status : null) == 10 ? 'selected' : '' }}>{{ __('Pending') }}</option>
+                                    <option value="20" {{ old('status', isset($booking->status) ? $booking->status : null) == 20 ? 'selected' : '' }}>{{ __('Active') }}</option>
+                                    <option value="30" {{ old('status', isset($booking->status) ? $booking->status : null) == 30 ? 'selected' : '' }}>{{ __('Completed') }}</option>
+                                    <option value="40" {{ old('status', isset($booking->status) ? $booking->status : null) == 40 ? 'selected' : '' }}>{{ __('Extended') }}</option>
+                                    <option value="50" {{ old('status', isset($booking->status) ? $booking->status : null) == 50 ? 'selected' : '' }}>{{ __('Canceled') }}</option>
+
+                                </select>
+                                @error('status')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
 
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label" for="start_date">{{ __('Start Date') }}</label>
