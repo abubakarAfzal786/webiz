@@ -31,7 +31,7 @@ class BookingController extends Controller
      *
      * @param BookingsDataTable $dataTable
      * @return Response
-     */
+     */ 
     public function index(BookingsDataTable $dataTable)
     {
         return $dataTable->render('admin.bookings.index');

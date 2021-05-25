@@ -1,5 +1,5 @@
 <?php
-
+ 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -32,5 +32,4 @@ Route::group(['as' => 'admin.'], function () {
     Route::get('statistics', 'DashboardController@statistics')->name('statistics.index');
     Route::get('customer-service', 'DashboardController@customerService')->name('members.customer-service');
     Route::get('booking-calender', 'BookingController@bookingCalender')->name('booking.calender');
-    
 });
