@@ -67,7 +67,8 @@ class CreateBooking
                 'success' => true,
             ];
         }
-
+        $freeExist = similar_free_room($room, $args['start_date'], $args['end_date']);
+        dd($freeExist->bookings->sortByDesc('id')->first());
         return [
             'booking' => null,
             'message' => 'Room is busy',

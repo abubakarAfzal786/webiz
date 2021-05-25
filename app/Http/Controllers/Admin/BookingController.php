@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers\Admin;
 
@@ -132,6 +132,19 @@ class BookingController extends Controller
         $bookingAttributes = $booking->room_attributes()->pluck('quantity', 'room_attributes.id');
 
         return view('admin.bookings.form', compact('rooms', 'members', 'booking', 'roomAttributes', 'bookingAttributes'));
+    }
+
+    public function bookingCalender(Request $request){
+        $date=$request->has('date')?$request->date:Carbon::now();
+         
+        $search_date = Carbon::now()->addHours(5)->toDateString();
+        if($request->input('search_date')){
+             $search_date = $request->search_date;
+        }   
+       
+        
+        $rooms = Room::get();
+        return view('book-calender',compact('rooms','search_date'));
     }
 
     /**

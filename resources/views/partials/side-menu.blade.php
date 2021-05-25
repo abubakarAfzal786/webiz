@@ -35,6 +35,8 @@
                 <li class="{{ request()->is(['dashboard/transactions', 'dashboard/transactions/*']) ? 'active' : '' }}"><a href="{{ route('admin.transactions.index') }}">{{ __('Transactions') }}</a></li>
                 <li class="{{ request()->is(['dashboard/statistics', 'dashboard/statistics/*']) ? 'active' : '' }}"><a href="{{ route('admin.statistics.index') }}">{{ __('Statistics') }}</a></li>
                 <li class="{{ request()->is(['dashboard/customer-service', 'dashboard/customer-service/*']) ? 'active' : '' }}"><a href="{{ route('admin.members.customer-service') }}">{{ __('Customer Service') }}</a></li>
+                <li class="{{ request()->is(['dashboard/booking-calender', 'dashboard/customer-service/*']) ? 'active' : '' }}"><a href="{{ route('admin.booking.calender') }}">{{ __('Booking Calender') }}</a></li>
+
             </ul>
         </div>
     </div>
