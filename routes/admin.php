@@ -31,5 +31,6 @@ Route::group(['as' => 'admin.'], function () {
     Route::get('support-chat', 'SupportChatController@index')->name('support-chat.index');
     Route::get('statistics', 'DashboardController@statistics')->name('statistics.index');
     Route::get('customer-service', 'DashboardController@customerService')->name('members.customer-service');
-    Route::get('booking-calender', 'BookingController@bookingCalender')->name('booking.calender');
+    Route::get('booking-calender', 'BookingController@bookingCalender')->name('booking.calender'); 
+    
 });
