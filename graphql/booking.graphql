@@ -67,7 +67,7 @@ extend type Mutation @guard {
 
     openDoorMobile(room_id: ID! @rules(apply: ["exists:rooms,id"])): Boolean
 
-    openLobbyDoor(room_id: ID! @rules(apply: ["exists:rooms,id"])): Boolean
+    openLobbyDoor: Boolean
 }
 
 type RoomAttribute {

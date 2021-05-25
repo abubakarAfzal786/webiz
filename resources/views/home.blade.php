@@ -90,12 +90,12 @@
                                     <div class="data-wrap">
                                         <div class="img">
                                             <img
-                                                src="{{ $review->member->avatar_url ? $review->member->avatar_url : asset('images/default-user.png') }}"
+                                                src="{{ isset($review->member->avatar_url) ? $review->member->avatar_url : asset('images/default-user.png') }}"
                                                 alt="">
                                         </div>
                                         <div class="info">
                                             <div class="name">
-                                                <p>{{ $review->member->name }}</p>
+                                                <p>{{ isset($review->member->name)?$review->member->name:'' }}</p>
                                             </div>
                                             {!! get_rating_stars_div($review->rate) !!}
                                         </div>

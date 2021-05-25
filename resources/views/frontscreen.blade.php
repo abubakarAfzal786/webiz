@@ -61,7 +61,7 @@
     <div class="container">
         <div class="intro">
             <div class="logo">
-                <img src="{{ asset('frontscreen/images/logo_high.png') }}" alt="">
+                <span><img src="images/logo.png" alt=""></span>
             </div>
             <div class="info">
                 <div class="item">
@@ -69,89 +69,70 @@
                         <span class="icon-calendar"></span>
                     </div>
                     <div class="text">
-                        <h3 id="time">{{ $time }}</h3>
+                         <h3 id="time">{{ $time }}</h3>
                         <p id="date">{{ $date }}</p>
                     </div>
                 </div>
+            </div>
+            <div class="info">
                 <div class="item">
                     <div class="icon">
                         <span class="icon-sun"></span>
                     </div>
                     <div class="text">
                         <h3><span id="temp">{{ $temp }}</span>°</h3>
-                        <p>Tel Aviv, Tel Aviv District, Israel</p>
+                        <p>Tel Aviv District, Israel</p>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="company-list">
             <div class="title">
                 <h1>Company list</h1>
             </div>
             @if($bookings->count() || $rooms->count())
-                <div class="list-wrap">
-                    <ul>
+            <div class="list-wrap">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
                         @foreach($bookings as $key => $booking)
-                            <li>
+                        <div class="swiper-slide">
+                            <div class="company-card">
+                                <div class="office">
+                                    <p>Office: <b>{{ $booking->room->number }}</b></p>
+                                </div>
                                 <div class="data">
-                                    <div class="counter">{{ $booking->room->number }}</div>
+                                    <div class="logo">
+                                        <img src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}" alt="">
+                                    </div>
                                     <div class="name">
                                         <p>{{ $booking->member->company ? $booking->member->company->name : $booking->member->name }}</p>
                                     </div>
                                 </div>
-
-                                <div class="logo">
-                                    <img alt=""
-                                         src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}">
-                                </div>
-                            </li>
+                            </div>
+                        </div>
                         @endforeach
                         @foreach($rooms as $room)
-                            <li>
+                        <div class="swiper-slide">
+                            <div class="company-card">
+                                <div class="office">
+                                    <p>Office: <b>{{ $room->number }}</b></p>
+                                </div>
                                 <div class="data">
-                                    <div class="counter">{{ $room->number }}</div>
+                                    <div class="logo">
+                                        <img src="{{ $room->company->logo ? $room->company->logo_url : $room->company->first_logo_url }}" alt="">
+                                    </div>
                                     <div class="name">
                                         <p>{{ $room->company ? $room->company->name : $room->name }}</p>
                                     </div>
                                 </div>
-                                <div class="logo">
-                                    <img alt=""
-                                         src="{{ $room->company->logo ? $room->company->logo_url : $room->company->first_logo_url }}">
-                                </div>
-                            </li>
+                            </div>
+                        </div>
                         @endforeach
-                    </ul>
-                </div>
-            @endif
-            @if($coming->count())
-                <div class="company-list">
-                    <div class="title">
-                        <h1>Coming Up</h1>
-                    </div>
-                    <div class="list-wrap">
-                        <ul>
-                            @foreach($coming as $key => $booking)
-                                <li>
-                                    <div class="data">
-                                        <div class="counter">{{ $booking->room->number }}</div>
-                                        <div class="name">
-                                            <p>{{ $booking->member->company ? $booking->member->company->name : $booking->member->name }}</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="logo">
-                                        <img alt=""
-                                             src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}">
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
                     </div>
                 </div>
+            </div>
             @endif
         </div>
-
         <div class="contacts">
             <div class="item">
                 <div class="icon">
@@ -181,6 +162,8 @@
         </div>
     </div>
 </div>
+<script src="{{asset('frontscreen/js/libs.js')}}" defer></script>
+<script src="{{asset('js/frontscreen.js')}}" defer></script>
 <script>
     $(document).ready(function () {
         {{--let api_key = '{{ config("other.openweather_api") }}';--}}
