@@ -7,7 +7,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="format-detection" content="address=no">
 
-    <link rel="stylesheet" href="{{ asset('frontscreen/css/bundle.css') }}" type="text/css"/>
+    <link rel="stylesheet" href="{{ asset('frontscreen/css/frontscreen.css') }}" type="text/css"/>
     <link rel="stylesheet" href="{{ asset('frontscreen/css/custom.css') }}" type="text/css"/>
 
     <link rel="apple-touch-icon-precomposed" sizes="57x57"
@@ -163,7 +163,7 @@
     </div>
 </div>
 <script src="{{asset('frontscreen/js/libs.js')}}" defer></script>
-<script src="{{asset('frontscreent/js/common.js')}}" defer></script>
+<script src="{{asset('js/frontscreen.js')}}" defer></script>
 <script>
     $(document).ready(function () {
         {{--let api_key = '{{ config("other.openweather_api") }}';--}}
