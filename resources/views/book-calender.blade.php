@@ -20,8 +20,6 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.0/main.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.0/main.css"/>
 
-
-
     <link rel="apple-touch-icon-precomposed" sizes="57x57"
           href="{{ asset('images/favicon/apple-touch-icon-57x57.png') }}"/>
     <link rel="apple-touch-icon-precomposed" sizes="114x114"

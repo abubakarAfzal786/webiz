@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers\Admin;
 
@@ -31,7 +31,7 @@ class BookingController extends Controller
      *
      * @param BookingsDataTable $dataTable
      * @return Response
-     */ 
+     */
     public function index(BookingsDataTable $dataTable)
     {
         return $dataTable->render('admin.bookings.index');
@@ -134,15 +134,16 @@ class BookingController extends Controller
         return view('admin.bookings.form', compact('rooms', 'members', 'booking', 'roomAttributes', 'bookingAttributes'));
     }
 
-    public function bookingCalender(Request $request){
-        $date=$request->has('date')?$request->date:Carbon::now();
-         
+    public function bookingCalender(Request $request)
+    {
+        $date = $request->has('date') ? $request->date : Carbon::now();
+
         $search_date = Carbon::now()->addHours(5)->toDateString();
-        if($request->input('search_date')){
-             $search_date = $request->search_date;
-        }   
+        if ($request->input('search_date')) {
+            $search_date = $request->search_date;
+        }
         $rooms = Room::get();
-        return view('book-calender',compact('rooms','search_date'));
+        return view('book-calender', compact('rooms', 'search_date'));
     }
 
     /**
@@ -169,20 +170,20 @@ class BookingController extends Controller
             ]);
         }
 
-//        TODO check
-//        if ($booking->status == Booking::STATUS_COMPLETED) {
-//            $now = Carbon::now();
-//            $start = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'));
-//            $end = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'));
-//
-//            if ($end->gt($now) && $start->lt($now)) {
-//                $request->merge(['status' => Booking::STATUS_ACTIVE]);
-//            }
-//
-//            if ($end->gt($now) && $start->gt($now)) {
-//                $request->merge(['status' => Booking::STATUS_PENDING]);
-//            }
-//        }
+        //        TODO check
+        //        if ($booking->status == Booking::STATUS_COMPLETED) {
+        //            $now = Carbon::now();
+        //            $start = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'));
+        //            $end = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'));
+        //
+        //            if ($end->gt($now) && $start->lt($now)) {
+        //                $request->merge(['status' => Booking::STATUS_ACTIVE]);
+        //            }
+        //
+        //            if ($end->gt($now) && $start->gt($now)) {
+        //                $request->merge(['status' => Booking::STATUS_PENDING]);
+        //            }
+        //        }
 
         $attributes = [];
         foreach ($request->get('quantity') as $id => $quantity) {
