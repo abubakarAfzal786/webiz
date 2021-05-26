@@ -1,6 +1,7 @@
 <div class="menu-list col-lg-2">
     <div class="close-list d-lg-none">
-        <button type="button"><span class="icon-close"></span></button>
+        <button type="button"><span class="icon-close"></span>
+        </button>
     </div>
     <div class="item-wrap">
         <div class="item">

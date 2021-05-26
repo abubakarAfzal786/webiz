@@ -130,7 +130,6 @@ class BookingController extends Controller
         $members = Member::query()->pluck('name', 'id');
         $roomAttributes = RoomAttribute::query()->get();
         $bookingAttributes = $booking->room_attributes()->pluck('quantity', 'room_attributes.id');
-
         return view('admin.bookings.form', compact('rooms', 'members', 'booking', 'roomAttributes', 'bookingAttributes'));
     }
 
