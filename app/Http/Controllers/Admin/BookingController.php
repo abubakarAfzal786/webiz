@@ -141,7 +141,6 @@ class BookingController extends Controller
         if($request->input('search_date')){
              $search_date = $request->search_date;
         }   
-       
         $rooms = Room::get();
         return view('book-calender',compact('rooms','search_date'));
     }

@@ -128,7 +128,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                                         <option>All offices</option>
                                     </select>
                                 </label>
-                            </div> --> 
+                            </div> -->  
                             <div class="item">
                                 <label class="select-date">
                                     <input style="max-width: 181px;" id="date_selector" value="{{$search_date}}" type="date" placeholder="Select date">
