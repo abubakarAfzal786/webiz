@@ -53,3 +53,27 @@
 #balance-modal .add-new {
     width: 250px;
 }
+
+.slot{
+    height: 30px;
+}
+
+.slot.end{
+    background-color: #FF5260;
+    color: white;
+/*    height: 60px;*/
+}
+.slot.hold{
+    background-color: #EABD37;
+   /* height: 60px;*/
+}
+.slot.active{
+    background-color: #0A8FEF;
+    color: white;
+   /* height: 60px;*/
+}
+.slot.no-paid{
+    background-color: #BB6BD9;
+    color: white;
+  /*  height: 60px;*/
+}

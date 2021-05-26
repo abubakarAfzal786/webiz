@@ -1,6 +1,7 @@
 <div class="menu-list col-lg-2">
     <div class="close-list d-lg-none">
-        <button type="button"><span class="icon-close"></span></button>
+        <button type="button"><span class="icon-close"></span>
+        </button>
     </div>
     <div class="item-wrap">
         <div class="item">
@@ -35,6 +36,7 @@
                 <li class="{{ request()->is(['dashboard/transactions', 'dashboard/transactions/*']) ? 'active' : '' }}"><a href="{{ route('admin.transactions.index') }}">{{ __('Transactions') }}</a></li>
                 <li class="{{ request()->is(['dashboard/statistics', 'dashboard/statistics/*']) ? 'active' : '' }}"><a href="{{ route('admin.statistics.index') }}">{{ __('Statistics') }}</a></li>
                 <li class="{{ request()->is(['dashboard/customer-service', 'dashboard/customer-service/*']) ? 'active' : '' }}"><a href="{{ route('admin.members.customer-service') }}">{{ __('Customer Service') }}</a></li>
+                <li class="{{ request()->is(['dashboard/booking-calender', 'dashboard/customer-service/*']) ? 'active' : '' }}"><a href="{{ route('admin.booking.calender') }}">{{ __('Booking Calender') }}</a></li>
             </ul>
         </div>
     </div>
@@ -44,7 +46,6 @@
                 <img src="{{ asset(auth()->user()->avatar ?? 'images/user.jpg') }}" alt="">
             </div>
             <button type="button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</button>
-
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf
             </form>

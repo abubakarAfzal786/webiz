@@ -130,8 +130,18 @@ class BookingController extends Controller
         $members = Member::query()->pluck('name', 'id');
         $roomAttributes = RoomAttribute::query()->get();
         $bookingAttributes = $booking->room_attributes()->pluck('quantity', 'room_attributes.id');
-
         return view('admin.bookings.form', compact('rooms', 'members', 'booking', 'roomAttributes', 'bookingAttributes'));
+    }
+
+    public function bookingCalender(Request $request)
+    {
+        $date = $request->has('date') ? $request->date : Carbon::now();
+        $search_date = Carbon::now()->addHours(5)->toDateString();
+        if ($request->input('search_date')) {
+            $search_date = $request->search_date;
+        }
+        $rooms = Room::get();
+        return view('book-calender', compact('rooms', 'search_date'));
     }
 
     /**
@@ -158,20 +168,20 @@ class BookingController extends Controller
             ]);
         }
 
-//        TODO check
-//        if ($booking->status == Booking::STATUS_COMPLETED) {
-//            $now = Carbon::now();
-//            $start = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'));
-//            $end = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'));
-//
-//            if ($end->gt($now) && $start->lt($now)) {
-//                $request->merge(['status' => Booking::STATUS_ACTIVE]);
-//            }
-//
-//            if ($end->gt($now) && $start->gt($now)) {
-//                $request->merge(['status' => Booking::STATUS_PENDING]);
-//            }
-//        }
+        //        TODO check
+        //        if ($booking->status == Booking::STATUS_COMPLETED) {
+        //            $now = Carbon::now();
+        //            $start = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('start_date'));
+        //            $end = Carbon::createFromFormat(Booking::DATE_TIME_LOCAL, $request->get('end_date'));
+        //
+        //            if ($end->gt($now) && $start->lt($now)) {
+        //                $request->merge(['status' => Booking::STATUS_ACTIVE]);
+        //            }
+        //
+        //            if ($end->gt($now) && $start->gt($now)) {
+        //                $request->merge(['status' => Booking::STATUS_PENDING]);
+        //            }
+        //        }
 
         $attributes = [];
         foreach ($request->get('quantity') as $id => $quantity) {
@@ -266,7 +276,6 @@ class BookingController extends Controller
                     'seen' => false,
                     'additional' => json_encode($extraData),
                 ]);
-
                 if ($this->sendPush($booking->member->mobile_token, $data, $extraData)) {
                     DB::commit();
                 } else {
