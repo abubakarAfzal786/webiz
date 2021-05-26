@@ -17,7 +17,7 @@
                                     <span class="name">{{ __('Name') }}</span>
                                     <label class="text-option">
                                 <span class="label-wrap">
-                                <input id="name" type="text" name="name" class="placeholder-effect" required>
+                                <input id="name" type="text" name="name" class="placeholder-effect has-content" required>
                                 <span class="placeholder">{{ __('Name') }}</span>
                                 </span>
                                     </label>
@@ -26,7 +26,7 @@
                                     <span class="name">{{ __('Price') }}</span>
                                     <label class="text-option">
                                 <span class="label-wrap">
-                                <input class="placeholder-effect" id="price" type="number" min="0" step="0.1"
+                                <input class="placeholder-effect has-content" id="price" type="number" min="0" step="0.1"
                                        name="price">
                                 <span class="placeholder">{{ __('Price') }}</span>
                                 </span>
@@ -36,7 +36,7 @@
                                     <span class="name">{{ __('Number of seats') }}</span>
                                     <label class="text-option">
                                 <span class="label-wrap">
-                                <input class="placeholder-effect" id="seats" type="number" min="0" step="1"
+                                <input class="placeholder-effect has-content" id="seats" type="number" min="0" step="1"
                                        name="seats">
                                 <span class="placeholder">{{ __('Number of seats') }}</span>
                                 </span>
@@ -89,7 +89,7 @@
                                     <span class="name">{{ __('Location') }}</span>
                                     <label class="text-option">
                                 <span class="label-wrap">
-                                    <input class="placeholder-effect" id="location" type="text" name="location"
+                                    <input class="placeholder-effect has-content" id="location" type="text" name="location"
                                            required>
                                 <span class="placeholder">{{ __('Address') }}</span>
                                 </span>
@@ -101,7 +101,7 @@
                                     <span class="name">{{ __('Wi-Fi SSID') }}</span>
                                     <label class="text-option">
                                 <span class="label-wrap">
-                                <input id="wifi_ssid" type="text" name="wifi_ssid" class="placeholder-effect">
+                                <input id="wifi_ssid" type="text" name="wifi_ssid" class="placeholder-effect has-content">
                                 <span class="placeholder">{{ __('Wi-Fi SSID') }}</span>
                                 </span>
                                     </label>
@@ -111,7 +111,7 @@
                                     <span class="name">{{ __('Wi-Fi Password') }}</span>
                                     <label class="text-option">
                                 <span class="label-wrap">
-                                <input id="wifi_pass" type="text" name="wifi_pass" class="placeholder-effect">
+                                <input id="wifi_pass" type="text" name="wifi_pass" class="placeholder-effect has-content">
                                 <span class="placeholder">{{ __('Wi-Fi Password') }}</span>
                                 </span>
                                     </label>

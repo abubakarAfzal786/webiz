@@ -19,4 +19,26 @@
 
 @push('scripts')
     {{$dataTable->scripts()}}
+    <script>
+        $(document).on('click', '.toggle-device', function () {
+                let item_id = $(this).data('id');
+
+               
+                    $.ajax({
+                        url: '/dashboard/device/toggle',
+                        type: 'POST',
+                        data:{
+                            device_id:item_id
+                        },
+                        success: function (res) {
+                            alert(res.message);
+                            $('#bookings-table').DataTable().draw();
+                        },
+                        error: function () {
+                            alert("{{ __('Something went wrong.') }}")
+                        }
+                    });
+                
+            });
+    </script>
 @endpush

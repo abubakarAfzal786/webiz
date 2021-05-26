@@ -38,6 +38,7 @@ class DeviceDataTable extends DataTable
             ->addColumn('action', function ($device) {
                 return '
                 <div class="btn-group btn-group-sm">
+                <a class="btn btn-warning toggle-device" data-id="' . $device->device_id . '">Toggle</a>
                 <a class="btn btn-success" href="' . route('admin.devices.edit', ['room_id' => $device->room_id, 'device' => $device]) . '">Edit</a>
                 <a class="btn btn-danger delete-swal" data-url="' . route('admin.devices.destroy', ['room_id' => $device->room_id, 'device' => $device]) . '">Delete</a>
                 </div>';
