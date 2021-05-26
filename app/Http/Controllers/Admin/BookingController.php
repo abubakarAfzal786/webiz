@@ -137,7 +137,6 @@ class BookingController extends Controller
     public function bookingCalender(Request $request)
     {
         $date = $request->has('date') ? $request->date : Carbon::now();
-
         $search_date = Carbon::now()->addHours(5)->toDateString();
         if ($request->input('search_date')) {
             $search_date = $request->search_date;
@@ -278,7 +277,6 @@ class BookingController extends Controller
                     'seen' => false,
                     'additional' => json_encode($extraData),
                 ]);
-
                 if ($this->sendPush($booking->member->mobile_token, $data, $extraData)) {
                     DB::commit();
                 } else {

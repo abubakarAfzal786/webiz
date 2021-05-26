@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Room;
 
 Route::get('/', 'DashboardController@index')->name('home');
+
 Route::group(['as' => 'admin.'], function () {
     Route::resource('faq', 'FaqController')->except('show');
     Route::resource('faq-category', 'FaqCategoryController')->except('show');

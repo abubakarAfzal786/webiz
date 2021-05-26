@@ -9,8 +9,6 @@
 <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <!-- Styles -->
     @stack('header-pre-scripts')
     <link rel="stylesheet" href="{{ asset('css/bundle_2.css') }}" type="text/css"/>
     @stack('header-post-scripts')
