@@ -10,7 +10,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @stack('header-pre-scripts')
-    <link rel="stylesheet" href="{{ asset('css/bundle_2.css') }}" type="text/css"/>
+    <link rel="stylesheet" href="{{ asset('css/calender.css') }}" type="text/css"/>
     @stack('header-post-scripts')
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -262,13 +262,17 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                                             }                                            
                                            
                                         }
-
+                                        $images = $room->images;
                                       
                                     @endphp
                                             <div class="swiper-slide">
                                                 <div class="office-card">
                                                     <div class="img">
-                                                        <span><img src="{{asset('images/office-slider/'.$room->image)}}" alt=""></span>
+                                                        <span><img src="@if (isset($images[0]->url))
+                                                            {{$images[0]->url}}
+                                                            @else
+                                                           {{ asset('images/defualt_room_image.jpeg') }}
+                                                        @endif" alt=""></span>
                                                     </div>
                                                 <div class="">
                                                         <h3>{{$room->name}}</h3>

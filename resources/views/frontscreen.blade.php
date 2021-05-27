@@ -39,6 +39,9 @@
     <meta name="msapplication-square150x150logo" content="mstile-150x150.png"/>
     <meta name="msapplication-wide310x150logo" content="mstile-310x150.png"/>
     <meta name="msapplication-square310x310logo" content="mstile-310x310.png"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital@1&display=swap" rel="stylesheet">
+
 
     <!-- open graph -->
     <meta property="og:site_name" content="{{ config('app.name') }}">
@@ -54,6 +57,49 @@
             integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
             crossorigin="anonymous"></script>
     <script src="{{ asset('js/moment-timezone.js') }}"></script>
+
+    <style type="text/css">
+      .company-card {
+        float: left;
+        display: block;
+        width: 490px;
+        height: 271px !important;
+        margin-left: 15px;
+        margin-top: 15px;
+      }
+
+      .company-card img { border-radius: 10px }
+
+      .swiper-wrapper-2 { height: 1445px; overflow: hidden }
+
+      .swiper-slide { height: 270px !important; }
+
+      .name { font-weight: bold; overflow: auto !important }
+
+      .no-logo {
+        disply: block;
+        height: 100%;
+        padding-top:50px;
+        font-family: 'Open Sans';
+      }
+      .no-logo .logo {
+        display: none;
+      }
+
+      .no-logo .name {
+        height: 100%;
+        max-height: 100%;
+      }
+
+      .no-logo .name > p {
+        font-size: 40px !important;
+      }
+    </style>
+    <script>
+    setInterval(function () {
+        $('#time').html(moment().utc().tz('Asia/Jerusalem').format('HH:mm'));
+    }, 1000);
+    </script>
 </head>
 <body>
 
@@ -91,45 +137,42 @@
                 <h1>Company list</h1>
             </div>
             @if($bookings->count() || $rooms->count())
-            <div class="list-wrap">
-                <div class="swiper-container">
-                    <div class="swiper-wrapper">
+            <div class="list-wrap" style="counter-reset: none">
+                <div class="swiper-container-">
+                    <div class="swiper-wrapper-2">
                         @foreach($bookings as $key => $booking)
-                        <div class="swiper-slide">
-                            <div class="company-card">
-                                <div class="office">
-                                    <p>Office: <b>{{ $booking->room->number }}</b></p>
-                                </div>
-                                <div class="data">
-                                    <div class="logo">
-                                        <img src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}" alt="">
-                                    </div>
-                                    <div class="name">
-                                        <p>{{ $booking->member->company ? $booking->member->company->name : $booking->member->name }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                          <div class="company-card">
+                              <div class="office">
+                                  <p>Office: <b>{{ $booking->room->number }}</b></p>
+                              </div>
+                              <div class="data {{!$booking->logo && !$booking->member->company->first_logo_url ? 'no-logo' : ''}}">
+                                  <div class="logo">
+                                      <img src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}" alt="">
+                                  </div>
+                                  <div class="name">
+                                      <p>{{ $booking->member->company ? $booking->member->company->name : $booking->member->name }}</p>
+                                  </div>
+                              </div>
+                          </div>
                         @endforeach
                         @foreach($rooms as $room)
-                        <div class="swiper-slide">
-                            <div class="company-card">
-                                <div class="office">
-                                    <p>Office: <b>{{ $room->number }}</b></p>
-                                </div>
-                                <div class="data">
-                                    <div class="logo">
-                                        <img src="{{ $room->company->logo ? $room->company->logo_url : $room->company->first_logo_url }}" alt="">
-                                    </div>
-                                    <div class="name">
-                                        <p>{{ $room->company ? $room->company->name : $room->name }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                          <div class="company-card">
+                              <div class="office">
+                                  <p>Office: <b>{{ $room->number }}</b></p>
+                              </div>
+                              <div class="data">
+                                  <div class="logo">
+                                      <img src="{{ $room->company->logo ? $room->company->logo_url : $room->company->first_logo_url }}" alt="">
+                                  </div>
+                                  <div class="name">
+                                      <p>{{ $room->company ? $room->company->name : $room->name }}</p>
+                                  </div>
+                              </div>
+                          </div>
                         @endforeach
                     </div>
                 </div>
+                <div style="clear: both"></div>
             </div>
             @endif
         </div>
@@ -155,15 +198,15 @@
                                 class="icon-android"></i></a>
                     </p>
                 </div>
-                <div class="qr">
-                    <img src="{{ asset('frontscreen/images/webiz-qr.svg') }}" alt="">
+                <div class="qr2" style="margin-left: 30px;">
+                    <img src="https://www.onelink.to/gmarb6.png?rnd=779625465" alt="">
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script src="{{asset('frontscreen/js/libs.js')}}" defer></script>
-<script src="{{asset('js/frontscreen.js')}}" defer></script>
+<!--<script src="{{asset('js/frontscreen.js')}}" defer></script>-->
 <script>
     $(document).ready(function () {
         {{--let api_key = '{{ config("other.openweather_api") }}';--}}
@@ -176,15 +219,6 @@
         {{--$.ajax(settings).done(function (response) {--}}
         {{--    if (response.main.temp) $('#temp').html(parseInt(response.main.temp));--}}
         {{--});--}}
-
-        function liveTime() {
-            $('#time').html(moment().utc().tz('Asia/Jerusalem').format('HH:mm'));
-            // $('#date').html(moment().tz('Asia/Jerusalem').format('ddd, DD MMM YYYY').toUpperCase());
-        }
-
-        setInterval(function () {
-            liveTime();
-        }, 1000);
     });
 </script>
 </body>
