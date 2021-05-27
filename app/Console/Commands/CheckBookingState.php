@@ -142,7 +142,7 @@ class CheckBookingState extends Command
             $endSub5 = $endClone->subMinutes(5);
 
             if ($booking->status == Booking::STATUS_PENDING) {
-                if (($booking->start_date <= $now) && ($booking->end_date > $now)) {
+                if (($booking->start_date->eq($now)) && ($booking->end_date->gt($now))) {
                     // STARTED BOOKING
                     $this->bookingStartedPush($booking);
                     $booking->update(['status' => Booking::STATUS_ACTIVE]);
