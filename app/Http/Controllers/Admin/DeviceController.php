@@ -56,6 +56,7 @@ class DeviceController extends Controller
         if ($request->ajax()) {
             $response = $this->IotRequest('GET', ('toggleDevice/' . $request->device_id));
             if (array_key_exists('error', $response['data'])) {
+
                 return response()->json(['success' => true, 'message' => 'Something wents wrong'], 200);
             } else {
                 return response()->json(['success' => true, 'message' => 'Action performed Successfully'], 200);
