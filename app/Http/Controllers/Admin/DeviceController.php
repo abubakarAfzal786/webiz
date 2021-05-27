@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\DataTables\DeviceDataTable;
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\IotHelper;
 use App\Http\Requests\StoreDeviceRequest;
 use App\Models\Device;
 use App\Models\DeviceType;
@@ -13,11 +14,13 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 
 class DeviceController extends Controller
 {
+    use IotHelper;
     /**
      * Display a listing of the resource.
      *
@@ -43,7 +46,24 @@ class DeviceController extends Controller
         $types = DeviceType::query()->pluck('name', 'id');
         return view('admin.device.form', compact('room', 'types'));
     }
+    /**
+     * @param $room_id
+     * @param $device_id
+     * @return RedirectResponse
+     */
+    public function toggle(Request $request)
+    {
+        if ($request->ajax()) {
+            $response = $this->IotRequest('GET', ('toggleDevice/' . $request->device_id));
+            if (array_key_exists('error', $response['data'])) {
 
+                return response()->json(['success' => true, 'message' => 'Something wents wrong'], 200);
+            } else {
+                return response()->json(['success' => true, 'message' => 'Action performed Successfully'], 200);
+            }
+        }
+        return abort(404);
+    }
     /**
      * Store a newly created resource in storage.
      *

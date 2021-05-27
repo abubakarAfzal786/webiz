@@ -22,6 +22,7 @@ Route::group(['as' => 'admin.'], function () {
     Route::resource('bookings', 'BookingController')->except('show');
     Route::resource('reviews', 'ReviewController')->except('show');
     Route::resource('rooms/{room_id}/devices', 'DeviceController')->except('show');
+    Route::post('device/toggle', 'DeviceController@toggle')->name('admin.devices.toggle');
     Route::resource('device-type', 'DeviceTypeController')->except('show');
     Route::resource('settings', 'SettingController')->except('show');
     Route::resource('transactions', 'TransactionController')->except('show');
