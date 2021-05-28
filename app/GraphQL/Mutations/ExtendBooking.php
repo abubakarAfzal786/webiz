@@ -21,7 +21,7 @@ class ExtendBooking
         $attributes = $args['attributes'] ?? [];
         $booking = $member->bookings()->find($booking_id);
         if (!$booking) return ['booking' => null, 'message' => 'User don\'t have any booking', 'success' => false];
-        $attributes = $args['attributes'] ?? null;
+        $attributes = $args['attributes'] ?? [];
         $attributesToSync = get_attributes_to_sync($attributes);
         $price = calculate_room_price($attributesToSync, $booking->room->price, $booking->start_date, $extend_date)['price'];
         if (($member->balance < $price) || !$member->company_id) {

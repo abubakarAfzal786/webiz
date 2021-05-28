@@ -42,7 +42,6 @@ extend type Mutation @guard {
     extendBooking(
         booking_id: ID!
         date: DateTimeOrDate!
-        attributes: [BookingAttribute]
     ): BookingAndMessageResponse
     continueBooking(id: ID! @rules(apply: ["exists:bookings,id"])): Boolean
 
