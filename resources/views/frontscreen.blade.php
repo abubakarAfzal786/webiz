@@ -175,6 +175,30 @@
                 <div style="clear: both"></div>
             </div>
             @endif
+            @if($coming->count())
+            <div class="list-wrap" style="counter-reset: none">
+                <div class="swiper-container-">
+                    <div class="swiper-wrapper-2">
+                        @foreach($coming as $key => $booking)
+                          <div class="company-card">
+                              <div class="office">
+                                  <p>Office: <b>{{ $booking->room->number }}</b></p>
+                              </div>
+                              <div class="data {{!$booking->logo && !$booking->member->company->first_logo_url ? 'no-logo' : ''}}">
+                                  <div class="logo">
+                                      <img src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}" alt="">
+                                  </div>
+                                  <div class="name">
+                                      <p>{{ $booking->member->company ? $booking->member->company->name : $booking->member->name }}</p>
+                                  </div>
+                              </div>
+                          </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div style="clear: both"></div>
+            </div>
+            @endif
         </div>
         <div class="contacts">
             <div class="item">
