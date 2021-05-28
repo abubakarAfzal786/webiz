@@ -63,13 +63,24 @@
                         <p>{{ $booking->room->location }}</p>
                     </div>
                 </li>
+                <li>
+                    <div class="icon">
+                        <span class="icon-parking">P</span>
+                    </div>
+                    <div class="data">
+                        <h2>Parking</h2>
+                    </div>
+                    <div class="location">
+                        <p>{{ $booking->room->overview }}</p>
+                    </div>
+                </li>
             </ul>
             <div class="btn-wrap">
                 <a class="main-btn" href="{{ $geo_href }}" target="_blank" style="">Open in map</a>
             </div>
         </div>
         <div class="logo-wrap">
-            <a href="javascript:void(0)"><img src="{{ asset('book/images/logo.png') }}" alt=""></a>
+            <a href="javascript:void(0)"><img src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}" alt=""></a>
         </div>
     </div>
     <div class="add-btn">
