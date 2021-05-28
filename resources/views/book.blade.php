@@ -71,7 +71,7 @@
                         <h2>Parking</h2>
                     </div>
                     <div class="location">
-                        <p>{{ $booking->room->overview }}</p>
+                        <p>{{$share_additional_infromation? $share_additional_infromation->additional:'' }}</p>
                     </div>
                 </li>
             </ul>
