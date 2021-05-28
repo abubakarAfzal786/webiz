@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Room;
+use App\Models\Setting;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -69,8 +70,8 @@ class PublicController extends Controller
         /** @var Booking $booking */
         $booking = Booking::query()->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_COMPLETED])->findOrFail($id);
         $geo_href = ($booking->room->lat && $booking->room->lon) ? ('geo:' . $booking->room->lat . ',' . $booking->room->lon) : ('http://maps.google.com/?q=' . $booking->room->location);
-
-        return view('book', compact('booking', 'geo_href'));
+        $share_additional_infromation = Setting::where('key', 'share_additional_infromation')->first();
+        return view('book', compact('booking', 'geo_href', 'share_additional_infromation'));
     }
 
     /**
