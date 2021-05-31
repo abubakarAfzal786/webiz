@@ -98,27 +98,30 @@ class CheckBookingState extends Command
      */
     private function bookingStartedPush($booking)
     {
-        if ($booking->member->mobile_token) {
-            $data = [
-                'title' => $booking->room->name . ' מוכן לרשותך ', // Booking started
-                'body' => 'הזמנתך החלה, עבודה נעימה', // Your order has begun, pleasant work
-            ];
+        $now = Carbon::now();
+        if (($booking->start_date->eq($now)) && ($booking->end_date->gt($now))) {
+            if ($booking->member->mobile_token) {
+                $data = [
+                    'title' => $booking->room->name . ' מוכן לרשותך ', // Booking started
+                    'body' => 'הזמנתך החלה, עבודה נעימה', // Your order has begun, pleasant work
+                ];
 
-            $extraData = [
-                'id' => $booking->id,
-                'type' => 'bookings',
-                'action' => 'started',
-            ];
+                $extraData = [
+                    'id' => $booking->id,
+                    'type' => 'bookings',
+                    'action' => 'started',
+                ];
 
-            PushNotification::query()->create([
-                'title' => $data['title'],
-                'body' => $data['body'],
-                'member_id' => $booking->member_id,
-                'seen' => false,
-                'additional' => json_encode($extraData),
-            ]);
+                PushNotification::query()->create([
+                    'title' => $data['title'],
+                    'body' => $data['body'],
+                    'member_id' => $booking->member_id,
+                    'seen' => false,
+                    'additional' => json_encode($extraData),
+                ]);
 
-            echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
+                echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
+            }
         }
     }
 
@@ -142,7 +145,7 @@ class CheckBookingState extends Command
             $endSub5 = $endClone->subMinutes(5);
 
             if ($booking->status == Booking::STATUS_PENDING) {
-                if (($booking->start_date->eq($now)) && ($booking->end_date->gt($now))) {
+                if (($booking->start_date <= $now) && ($booking->end_date > $now)) {
                     // STARTED BOOKING
                     $this->bookingStartedPush($booking);
                     $booking->update(['status' => Booking::STATUS_ACTIVE]);
