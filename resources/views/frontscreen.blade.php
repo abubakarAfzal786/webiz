@@ -160,7 +160,7 @@
                               <div class="office">
                                   <p>Office: <b>{{ $room->number }}</b></p>
                               </div>
-                              <div class="data">
+                              <div class="data {{!$room->company->logo_url && !$room->company->first_logo_url ? 'no-logo' : ''}}">
                                   <div class="logo">
                                       <img src="{{ $room->company->logo ? $room->company->logo_url : $room->company->first_logo_url }}" alt="">
                                   </div>
@@ -170,30 +170,23 @@
                               </div>
                           </div>
                         @endforeach
-                    </div>
-                </div>
-                <div style="clear: both"></div>
-            </div>
-            @endif
-            @if($coming->count())
-            <div class="list-wrap" style="counter-reset: none">
-                <div class="swiper-container-">
-                    <div class="swiper-wrapper-2">
+                        @if($coming->count())
                         @foreach($coming as $key => $booking)
-                          <div class="company-card">
-                              <div class="office">
-                                  <p>Office: <b>{{ $booking->room->number }}</b></p>
-                              </div>
-                              <div class="data {{!$booking->logo && !$booking->member->company->first_logo_url ? 'no-logo' : ''}}">
-                                  <div class="logo">
-                                      <img src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}" alt="">
-                                  </div>
-                                  <div class="name">
-                                      <p>{{ $booking->member->company ? $booking->member->company->name : $booking->member->name }}</p>
-                                  </div>
-                              </div>
-                          </div>
-                        @endforeach
+                        <div class="company-card">
+                            <div class="office">
+                                <p>Office: <b>{{ $booking->room->number }}</b></p>
+                            </div>
+                            <div class="data {{!$booking->logo && !$booking->member->company->first_logo_url ? 'no-logo' : ''}}">
+                                <div class="logo">
+                                    <img src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}" alt="">
+                                </div>
+                                <div class="name">
+                                    <p>{{ $booking->member->company ? $booking->member->company->name : $booking->member->name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                      @endforeach
+                      @endif
                     </div>
                 </div>
                 <div style="clear: both"></div>

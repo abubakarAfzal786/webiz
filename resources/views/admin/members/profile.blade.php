@@ -201,8 +201,11 @@
                             <tr>
                                 <td>{{ $transaction->id }}</td>
                                 <td>{{ $transaction->created_at ? $transaction->created_at->format('d.m.Y H:i') : '' }}</td>
-                                <td>{{ $transaction->payment_method ? $transaction->payment_method->mode : '' }}</td>
-                                <td>{{ $transaction->price }}</td>
+                                <!--<td>{{ $transaction->payment_method ? $transaction->payment_method->mode : '' }}</td>-->
+                                <td>{{ $transaction->type }}</td>
+
+                                <td>{{ $transaction->credit }}</td>
+                                <!-- <td>{{ $transaction->price }}</td> -->
                                 <td>
                                     <div class="status">
                                         @if($transaction->status == \App\Models\Transaction::STATUS_PENDING)
