@@ -354,7 +354,7 @@ if (!function_exists('get_room_available_from')) {
                 ->get();
 
             if (!$next_bookings->count()) {
-                return ceil_date_for_booking($current->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15)));
+                return ceil_date_for_booking($current->end_date->addMinutes(Setting::getValue('booking_minimum_time', 15)));
             }
 
             $end_date = $current->end_date;
@@ -363,11 +363,11 @@ if (!function_exists('get_room_available_from')) {
                 if ($next_booking->start_date->diffInMinutes($end_date) < Setting::getValue('booking_minimum_time', 30) + Setting::getValue('booking_time_resolution', 15)) {
                     $end_date = $next_booking->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15));
                 } else {
-                    return ceil_date_for_booking($next_booking->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15)));
+                    return ceil_date_for_booking($next_booking->end_date->addMinutes(Setting::getValue('booking_minimum_time', 15)));
                 }
             }
 
-            return ceil_date_for_booking($end_date->addMinutes(Setting::getValue('booking_time_resolution', 15)));
+            return ceil_date_for_booking($end_date->addMinutes(Setting::getValue('booking_minimum_time', 15)));
         }
     }
 }
