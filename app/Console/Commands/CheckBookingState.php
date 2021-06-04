@@ -99,7 +99,7 @@ class CheckBookingState extends Command
     private function bookingStartedPush($booking)
     {
         $now = Carbon::now();
-        if (($booking->start_date->eq($now)) && ($booking->end_date->gt($now))) {
+        if ((Carbon::parse($booking->start_date)->format("Y-m-d H:i:00")==Carbon::parse($now)->format("Y-m-d H:i:00")) && ($booking->end_date->gt($now))) {
             if ($booking->member->mobile_token) {
                 $data = [
                     'title' => $booking->room->name . ' מוכן לרשותך ', // Booking started
@@ -157,7 +157,7 @@ class CheckBookingState extends Command
                     $booking->update(['status' => Booking::STATUS_COMPLETED]);
                 }
             } else {
-                if ($endSub5->eq($now)) {
+                if (Carbon::parse($endSub5)->format("Y-m-d H:i:00")==Carbon::parse($now)->format("Y-m-d H:i:00")) {
                     // EXPIRED BOOKING
                     $this->bookingExpiredPush($booking, (int)$now->diffInMinutes($booking->end_date) + 1);
                 } elseif ($booking->end_date <= $now) {
