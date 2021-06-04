@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
+use Carbon\Carbon;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,3 +21,10 @@ Route::redirect('/', '/dashboard');
 Route::get('/frontscreen/{id}', 'PublicController@frontscreen')->name('frontscreen');
 Route::get('/book/{id}', 'PublicController@book');
 Route::get('/qr', 'PublicController@qrRedirect');
+Route::get('test',function(){
+	$date1 = Carbon::createFromFormat('m/d/Y H:i:s', '12/01/2020 10:20:10');
+	$date2 = Carbon::now()->timestamp;
+dd($date2);
+	$result = $date1->diffInMinutes($date2);
+	var_dump($result);
+});

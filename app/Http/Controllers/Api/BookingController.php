@@ -64,4 +64,30 @@ class BookingController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Booking Completed. Push Sent'], 200);
     }
+    public function testNotifications(){
+        try {
+            $booking = Booking::query()
+                ->with(['member', 'room'])
+                ->where('id', request()->get('booking_id'))->first();
+            $data = [
+                'title' => $booking->room->name . ' מוכן לרשותך ', // Booking started
+                'body' => 'הזמנתך החלה, עבודה נעימה', // Your order has begun, pleasant work
+            ];
+            $extraData = [
+                'id' => $booking->id,
+                'type' => 'bookings',
+                'action' => request()->get('action'),
+            ];
+            PushNotification::query()->create([
+                'title' => $data['title'],
+                'body' => $data['body'],
+                'member_id' => $booking->member_id,
+                'seen' => false,
+                'additional' => json_encode($extraData),
+            ]);
+            echo ($this->sendPush(request()->get('fcm_token'), $data, $extraData) ? 'success' : 'failure') . "\n";
+        } catch (Exception $e) {
+            return response()->json($e->getMessage());
+        }
+    }
 }
