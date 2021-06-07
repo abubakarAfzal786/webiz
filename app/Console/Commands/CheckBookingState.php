@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Console\Commands;
-
 use App\Http\Helpers\BookingHelper;
 use App\Http\Helpers\FCMHelper;
 use App\Models\Booking;
 use App\Models\PushNotification;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Command;
-
+use Monolog\Logger;
 class CheckBookingState extends Command
 {
     use FCMHelper;
@@ -19,7 +19,6 @@ class CheckBookingState extends Command
      * @var string
      */
     protected $signature = 'booking:check';
-
     /**
      * The console command description.
      *
@@ -40,6 +39,7 @@ class CheckBookingState extends Command
      */
     private function bookingCompletedPush($booking)
     {
+        
         if ($booking->member->mobile_token) {
             $data = [
                 'title' => 'שים לב! הזמנתך הסתיימה', // Your booking finished
@@ -61,6 +61,8 @@ class CheckBookingState extends Command
             ]);
 
             echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
+           Log::channel('notifications')->info('complete booking notification run at'.'--id--'.$booking->id.'--'.Carbon::now());
+
         }
     }
 
@@ -90,7 +92,10 @@ class CheckBookingState extends Command
             ]);
 
             echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
+            Log::channel('notifications')->info('expired notification run at'.'--id--'.$booking->id.'--'.Carbon::now());
+
         }
+   
     }
 
     /**
@@ -100,6 +105,8 @@ class CheckBookingState extends Command
     {
         $now = Carbon::now();
         if ((Carbon::parse($booking->start_date)->format("Y-m-d H:i:00")==Carbon::parse($now)->format("Y-m-d H:i:00")) && ($booking->end_date->gt($now))) {
+           
+            Log::info('start notification run at'.$now);
             if ($booking->member->mobile_token) {
                 $data = [
                     'title' => $booking->room->name . ' מוכן לרשותך ', // Booking started
@@ -121,6 +128,8 @@ class CheckBookingState extends Command
                 ]);
 
                 echo ($this->sendPush($booking->member->mobile_token, $data, $extraData) ? 'success' : 'failure') . "\n";
+                 Log::channel('notifications')->info('started notification run at'.'-- id ---'.$booking->id.'---'.$now);
+
             }
         }
     }
@@ -134,7 +143,7 @@ class CheckBookingState extends Command
     {
         $now = Carbon::now();
         $nowSub5 = Carbon::now()->subMinutes(5);
-
+        Log::channel('notifications')->info('cron run at'.$now);
         $bookings = Booking::query()
             ->with(['member', 'room'])
             ->whereNotIn('status', [Booking::STATUS_COMPLETED, Booking::STATUS_CANCELED])

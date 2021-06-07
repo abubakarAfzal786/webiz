@@ -56,7 +56,8 @@ class SearchRoom
 
         if ($start) {
             $rooms->map(function ($room) use ($start) {
-                return $room->available_at = get_room_available_from($room, $start);
+                $end = $args['end'] ?? Carbon::now()->endOfDay();
+                return $room->available_at = get_room_available_from($room, $start,$end);
             });
         }
 
