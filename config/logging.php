@@ -40,7 +40,11 @@ return [
             'channels' => ['single'],
             'ignore_exceptions' => false,
         ],
-
+'notifications'=>[
+    'driver' => 'single',
+    'path' => storage_path('logs/notifications.log'),
+    'level' => 'debug',
+],
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
