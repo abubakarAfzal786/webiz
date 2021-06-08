@@ -50,14 +50,14 @@ final class BookingHelper
             } else {
                 DB::beginTransaction();
                 try {
-                    $newBooking = $next_booked->replicate();
-                    $newBooking->room_id = $freeExist->id;
-                    $newBooking->save();
-                    foreach ($next_booked->room_attributes as $room_attribute) {
-                        $newBooking->room_attributes()->attach($room_attribute, ['quantity' => $room_attribute->pivot->quantity]);
-                    }
-                    $newBooking->push();
-                    $next_booked->update(['status' => Booking::STATUS_CANCELED]);
+                    // $newBooking = $next_booked->replicate();
+                    // $newBooking->room_id = $freeExist->id;
+                    // $newBooking->save();
+                    // foreach ($next_booked->room_attributes as $room_attribute) {
+                    //     $newBooking->room_attributes()->attach($room_attribute, ['quantity' => $room_attribute->pivot->quantity]);
+                    // }
+                    // $newBooking->push();
+                    $next_booked->update(['room_id' => $freeExist->id]);
 
                     DB::commit();
 
@@ -67,7 +67,7 @@ final class BookingHelper
                     ];
 
                     $extraData = [
-                        'id' => $newBooking->id,
+                        'id' => $next_booked->id,
                         'type' => 'bookings',
                         'action' => 'changed',
                     ];
@@ -75,12 +75,12 @@ final class BookingHelper
                     PushNotification::query()->create([
                         'title' => $data['title'],
                         'body' => $data['body'],
-                        'member_id' => $newBooking->member_id,
+                        'member_id' => $next_booked->member_id,
                         'seen' => false,
                         'additional' => json_encode($extraData),
                     ]);
 
-                    $this->sendPush($newBooking->member->mobile_token, $data);
+                    $this->sendPush($next_booked->member->mobile_token, $data);
                 } catch (Exception $exception) {
                     DB::rollBack();
                     return [
