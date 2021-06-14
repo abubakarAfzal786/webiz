@@ -17,7 +17,7 @@ final class BookingHelper
      * @param $booking
      * @return bool
      */
-    public function extendBooking($booking, $extend_date = null, $member_id = null, $price = null)
+    public function extendBooking($booking, $extend_date = null, $member_id = null,$attributesToSync=null)
     {
         // if ($booking->out_at) {
         //     $booking->update(['status' => Booking::STATUS_COMPLETED]);
@@ -50,14 +50,14 @@ final class BookingHelper
             } else {
                 DB::beginTransaction();
                 try {
-                    // $newBooking = $next_booked->replicate();
-                    // $newBooking->room_id = $freeExist->id;
-                    // $newBooking->save();
-                    // foreach ($next_booked->room_attributes as $room_attribute) {
-                    //     $newBooking->room_attributes()->attach($room_attribute, ['quantity' => $room_attribute->pivot->quantity]);
-                    // }
-                    // $newBooking->push();
-                    $next_booked->update(['room_id' => $freeExist->id]);
+                    $newBooking = $next_booked->replicate();
+                    $newBooking->room_id = $freeExist->id;
+                    $newBooking->save();
+                    foreach ($next_booked->room_attributes as $room_attribute) {
+                        $newBooking->room_attributes()->attach($room_attribute, ['quantity' => $room_attribute->pivot->quantity]);
+                    }
+                    $newBooking->push();
+                    $next_booked->update(['status' => Booking::STATUS_CANCELED]);
 
                     DB::commit();
 
@@ -67,7 +67,7 @@ final class BookingHelper
                     ];
 
                     $extraData = [
-                        'id' => $next_booked->id,
+                        'id' => $newBooking->id,
                         'type' => 'bookings',
                         'action' => 'changed',
                     ];
@@ -75,12 +75,12 @@ final class BookingHelper
                     PushNotification::query()->create([
                         'title' => $data['title'],
                         'body' => $data['body'],
-                        'member_id' => $next_booked->member_id,
+                        'member_id' => $newBooking->member_id,
                         'seen' => false,
                         'additional' => json_encode($extraData),
                     ]);
 
-                    $this->sendPush($next_booked->member->mobile_token, $data);
+                    $this->sendPush($newBooking->member->mobile_token, $data);
                 } catch (Exception $exception) {
                     DB::rollBack();
                     return [
@@ -93,8 +93,28 @@ final class BookingHelper
         }
 
         if ($extend_date !== null && $extend_date->gt($booking->end_date)) {
-            $booking->update(['end_date' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
-            make_transaction($member_id, null, $booking->room_id, $booking->id, $price, Transaction::TYPE_ROOM);
+            DB::beginTransaction();
+            try {
+            $price = calculate_room_price($attributesToSync, $booking->room->price, $booking->end_date, $extend_date)['price'];
+            if (($booking->member->balance < $price) || !$booking->member->company_id) {
+                return [
+                    'booking' => null,
+                    'message' => 'You don\'t have enough credits',
+                    'success' => false,
+                ];
+            }else{
+              $trasaction= make_transaction($booking->member_id, null, $booking->room_id, $booking->id, $price, Transaction::TYPE_ROOM);
+              $booking->update(['end_date' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
+            }
+        }
+        catch (Exception $exception) {
+            DB::rollBack();
+            return [
+                'booking' => null,
+                'message' => $exception->getMessage(),
+                'success' => false,
+            ];
+        }
         } else {
             return [
                 'booking' => null,

@@ -24,6 +24,7 @@ type Transaction {
     type: Int
     credit: Float
     price: Float
+    description:String
     created_at: DateTime
     updated_at: DateTime
     member: Member! @belongsTo
