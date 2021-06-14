@@ -286,14 +286,13 @@ if (!function_exists('make_transaction')) {
      * @param int|null $company_id
      * @return Model|Transaction
      */
-    function make_transaction($member_id, $price, $room_id = null, $booking_id = null, $credit = null, $type = Transaction::TYPE_CREDIT, $company_id = null)
+    function make_transaction($member_id, $price, $room_id = null, $booking_id = null, $credit = null, $type = Transaction::TYPE_CREDIT, $company_id = null,$description=null)
     {
         if ($booking_id) {
             /** @var Member $member */
             $member = Member::query()->find($member_id);
             $member->update(['balance' => ($member->balance - $credit)]);
         }
-
         return Transaction::query()->create([
             'member_id' => $member_id,
             'room_id' => $room_id,
@@ -302,6 +301,7 @@ if (!function_exists('make_transaction')) {
             'credit' => $credit,
             'price' => $price,
             'company_id' => $company_id,
+            'description'=> $description!==null? preg_replace( "/\r|\n/", "", $description ) :null
         ]);
     }
 }
@@ -343,24 +343,24 @@ if (!function_exists('get_room_available_from')) {
         $newStart->subMinutes(Setting::getValue('booking_time_resolution', 15));
         $newEnd->addMinutes(Setting::getValue('booking_time_resolution', 15));
         $nowSub45 = Carbon::now()->subMinutes(45);
-        $current = $room->bookings()
-        ->where('status', '<>', Booking::STATUS_CANCELED)
-        ->where(function ($q) use ($newStart, $newEnd) {
-            return $q
-                ->where(function ($query) use ($newStart, $newEnd) {
-                    return $query->where('start_date', '>', $newStart)->where('start_date', '<', $newEnd);
-                })
-                ->orWhere(function ($query) use ($newStart, $newEnd) {
-                    return $query->where('end_date', '>', $newStart)->where('end_date', '<', $newEnd);
-                })
-                ->orWhere(function ($query) use ($newStart, $newEnd) {
-                    return $query->where('start_date', '<', $newStart)->where('end_date', '>', $newEnd);
-                });
-        })->first();
         // $current = $room->bookings()
-        // ->where('start_date', '<=', $now)
-        // ->where('end_date', '>=', $now)
-        // ->first();
+        // ->where('status', '<>', Booking::STATUS_CANCELED)
+        // ->where(function ($q) use ($newStart, $newEnd) {
+        //     return $q
+        //         ->where(function ($query) use ($newStart, $newEnd) {
+        //             return $query->where('start_date', '>', $newStart)->where('start_date', '<', $newEnd);
+        //         })
+        //         ->orWhere(function ($query) use ($newStart, $newEnd) {
+        //             return $query->where('end_date', '>', $newStart)->where('end_date', '<', $newEnd);
+        //         })
+        //         ->orWhere(function ($query) use ($newStart, $newEnd) {
+        //             return $query->where('start_date', '<', $newStart)->where('end_date', '>', $newEnd);
+        //         });
+        // })->first();
+        $current = $room->bookings()
+        ->where('start_date', '<=', $now)
+        ->where('end_date', '>=', $now)
+        ->first();
         if (!$current) {
             return ceil_date_for_booking($now);
         } else {

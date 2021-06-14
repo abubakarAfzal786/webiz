@@ -17,7 +17,7 @@ final class BookingHelper
      * @param $booking
      * @return bool
      */
-    public function extendBooking($booking, $extend_date = null, $member_id = null, $price = null)
+    public function extendBooking($booking, $extend_date = null, $member_id = null,$attributesToSync=null)
     {
         // if ($booking->out_at) {
         //     $booking->update(['status' => Booking::STATUS_COMPLETED]);
@@ -93,8 +93,28 @@ final class BookingHelper
         }
 
         if ($extend_date !== null && $extend_date->gt($booking->end_date)) {
-            $booking->update(['end_date' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
-            make_transaction($member_id, null, $booking->room_id, $booking->id, $price, Transaction::TYPE_ROOM);
+            DB::beginTransaction();
+            try {
+            $price = calculate_room_price($attributesToSync, $booking->room->price, $booking->end_date, $extend_date)['price'];
+            if (($booking->member->balance < $price) || !$booking->member->company_id) {
+                return [
+                    'booking' => null,
+                    'message' => 'You don\'t have enough credits',
+                    'success' => false,
+                ];
+            }else{
+              $trasaction= make_transaction($booking->member_id, null, $booking->room_id, $booking->id, $price, Transaction::TYPE_ROOM);
+              $booking->update(['end_date' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
+            }
+        }
+        catch (Exception $exception) {
+            DB::rollBack();
+            return [
+                'booking' => null,
+                'message' => $exception->getMessage(),
+                'success' => false,
+            ];
+        }
         } else {
             return [
                 'booking' => null,

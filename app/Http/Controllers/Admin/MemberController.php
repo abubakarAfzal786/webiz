@@ -192,10 +192,12 @@ class MemberController extends Controller
             /** @var Member $member */
             $member = Member::query()->withoutGlobalScopes()->findOrFail($id);
             $credits = $request->get('credits');
+            $description=$request->get('description');
             if ($member) {
+                
                 $credits = (float)$request->get('credits');
                 $member->update(['balance' => $member->balance + $credits]);
-                make_transaction($member->id, null, null, null, $credits, Transaction::TYPE_CREDIT, $member->company_id);
+                make_transaction($member->id, null, null, null, $credits, Transaction::TYPE_CREDIT, $member->company_id,$description);
                 $memberUpdated = Member::query()->select('id', 'company_id')->find($id);
                 return response()->json(['success' => true, 'balance' => $memberUpdated->balance]);
             } else {

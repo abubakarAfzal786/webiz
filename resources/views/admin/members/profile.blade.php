@@ -192,6 +192,7 @@
                             <td>Date</td>
                             <td>Mode</td>
                             <td>Amount</td>
+                            <td>Description</td>
                             <td>Status</td>
                             <td>Invoice</td>
                         </tr>
@@ -206,6 +207,7 @@
 
                                 <td>{{ $transaction->credit }}</td>
                                 <!-- <td>{{ $transaction->price }}</td> -->
+                                <td><div style = "width:80px; word-wrap: break-word">{!! $transaction->description !!}</div></td>
                                 <td>
                                     <div class="status">
                                         @if($transaction->status == \App\Models\Transaction::STATUS_PENDING)
@@ -313,15 +315,23 @@
 
         $(document).on('click', '.add-credits', function () {
             let creditsToAdd = $('#balance-modal input[name="credits"]').val();
-
+            let transectionDescription= $('#balance-modal textarea[name="transectionDescription"]').val();
+            console.log(transectionDescription);
+            if(creditsToAdd==""){
+               alert('Credit value cannot be Empty');
+            }else if(transectionDescription=="" || transectionDescription==undefined){
+               alert("Please Provide the Description");
+            }else{
             $.ajax({
                 url: '{{ route('admin.members.add-credits', $member->id) }}',
                 type: 'POST',
                 data: {
-                    credits: creditsToAdd
+                    credits: creditsToAdd,
+                    description: transectionDescription
                 },
                 success: function (data) {
                     $('#current-balance').text(data.balance)
+                    $('#balance-modal textarea[name="transectionDescription"]').val("");
                 },
                 error: function () {
                     alert("{{ __('Something went wrong.') }}")
@@ -330,6 +340,7 @@
                     $.fancybox.close({src: '#balance-modal'});
                 }
             });
+            }
         });
     </script>
 @endpush

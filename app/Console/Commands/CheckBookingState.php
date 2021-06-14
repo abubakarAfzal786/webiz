@@ -177,7 +177,7 @@ class CheckBookingState extends Command
                     } else {
                         // EXTEND BOOKING
                         $extendBooking = (new BookingHelper())->extendBooking($booking);
-                        if (!$extendBooking) {
+                        if ($extendBooking['success']!==true) {
                             // COMPLETE BOOKING
                             $this->bookingCompletedPush($booking);
                             $booking->update(['status' => Booking::STATUS_COMPLETED]);

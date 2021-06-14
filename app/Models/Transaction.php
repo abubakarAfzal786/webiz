@@ -16,6 +16,7 @@ class Transaction extends Model
         'credit',
         'price',
         'company_id',
+        'description',
     ];
 
     const TYPE_ROOM = 10;
@@ -71,4 +72,5 @@ class Transaction extends Model
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
+
 }
