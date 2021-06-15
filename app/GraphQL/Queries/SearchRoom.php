@@ -41,7 +41,7 @@ class SearchRoom
                 });
             });
            }
-           $rooms->when($types!==null, function (Builder $q) use ($types) {
+           $rooms->when($types, function (Builder $q) use ($types) {
                 return $q->whereIn('type_id', $types);
             })
             ->when($name, function (Builder $q) use ($name) {
