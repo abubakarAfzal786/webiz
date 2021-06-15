@@ -31,15 +31,17 @@ class SearchRoom
 
         $rooms = Room::query()
             ->with('facilities')
-            ->where('seats', '>=', $seats)
-            // ->where(function ($wq) use ($start, $end) {
-            //     return $wq->whereDoesntHave('bookings', function (Builder $q) use ($start, $end) {
-            //         return $q
-            //             ->whereBetween('start_date', [$start, $end])
-            //             ->orWhereBetween('end_date', [$start, $end]);
-            //     });
-            // })
-            ->when($types, function (Builder $q) use ($types) {
+            ->where('seats', '>=', $seats);
+           if($name==null){
+            $rooms->where(function ($wq) use ($start, $end) {
+                return $wq->whereDoesntHave('bookings', function (Builder $q) use ($start, $end) {
+                    return $q
+                        ->whereBetween('start_date', [$start, $end])
+                        ->orWhereBetween('end_date', [$start, $end]);
+                });
+            });
+           }
+           $rooms->when($types!==null, function (Builder $q) use ($types) {
                 return $q->whereIn('type_id', $types);
             })
             ->when($name, function (Builder $q) use ($name) {
