@@ -367,7 +367,7 @@ if (!function_exists('get_room_available_from')) {
             $startClone = clone $now;
             $tomorrow = $startClone->addDay();
             $next_bookings = $room->bookings()
-                ->whereBetween('start_date', [$current->end_date, $tomorrow])
+                ->whereBetween('start_date', [$current->end_date, $end])
                 ->orderBy('start_date', 'ASC')
                 ->get();
                
