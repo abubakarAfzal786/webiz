@@ -170,6 +170,7 @@ class MemberController extends Controller
                 try {
                     $member->notify(new MemberResetPassword($token));
                 } catch (Exception $exception) {
+                    dd($exception);
                     Log::channel('mail')->error($exception);
                     return response()->json(['success' => false]);
                 }

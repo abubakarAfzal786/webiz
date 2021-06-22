@@ -176,12 +176,12 @@ class CheckBookingState extends Command
                         $booking->update(['status' => Booking::STATUS_COMPLETED]);
                     } else {
                         // EXTEND BOOKING
-                        $extendBooking = (new BookingHelper())->extendBooking($booking);
-                        if ($extendBooking['success']!==true) {
+                        // $extendBooking = (new BookingHelper())->extendBooking($booking);
+                        // if ($extendBooking['success']!==true) {
                             // COMPLETE BOOKING
                             $this->bookingCompletedPush($booking);
                             $booking->update(['status' => Booking::STATUS_COMPLETED]);
-                        }
+                        // }
                     }
                 }
             }

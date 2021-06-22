@@ -45,7 +45,7 @@ class MemberResetPassword extends Notification
         return (new MailMessage)
             ->subject(config('app.name') . ': Reset Password')
             ->line('You are receiving this email because we received a password reset request for your account.')
-            ->action('Reset Password', 'webiz://password/restore/' . $this->token)
+            ->action('Reset Password', url('restpassword')."?token=".$this->token)
             ->line('Thank you for using our application!');
     }
 

@@ -21,15 +21,15 @@ if (!function_exists('room_is_busy')) {
      * @param null|int $booking_id
      * @return bool
      */
-    function room_is_busy(int $id, $start, $end, $booking_id = null)
+    function room_is_busy(int $id, $start, $end, $booking_id = null,$user=null)
     {
         $newStart = clone $start;
         $newEnd = clone $end;
         $newStart->subMinutes(Setting::getValue('booking_time_resolution', 15));
         $newEnd->addMinutes(Setting::getValue('booking_time_resolution', 15));
         $nowSub45 = Carbon::now()->subMinutes(45);
-
-        $busy = Booking::query()
+        $busy=null;
+        $booking = Booking::query()
             ->where('id', '<>', $booking_id)
             ->where('room_id', $id)
             ->where('status', '<>', Booking::STATUS_CANCELED)
@@ -44,8 +44,32 @@ if (!function_exists('room_is_busy')) {
                     ->orWhere(function ($query) use ($newStart, $newEnd) {
                         return $query->where('start_date', '<', $newStart)->where('end_date', '>', $newEnd);
                     });
-            })->exists();
-
+            })->orderBy('id','DESC')->first();
+            // dd($booking);
+            if($booking && $booking->member_id==$user){
+                $busy = Booking::query()
+                ->where('id', '<>', $booking_id)
+                ->where('room_id', $id)
+                ->where('status', '<>', Booking::STATUS_CANCELED)
+                ->where('start_date','>=',$start)->where('start_date','<',$end)->exists();
+            }else{
+                $busy = Booking::query()
+                ->where('id', '<>', $booking_id)
+                ->where('room_id', $id)
+                ->where('status', '<>', Booking::STATUS_CANCELED)
+                ->where(function ($q) use ($newStart, $newEnd) {
+                    return $q
+                        ->where(function ($query) use ($newStart, $newEnd) {
+                            return $query->where('start_date', '>', $newStart)->where('start_date', '<', $newEnd);
+                        })
+                        ->orWhere(function ($query) use ($newStart, $newEnd) {
+                            return $query->where('end_date', '>', $newStart)->where('end_date', '<', $newEnd);
+                        })
+                        ->orWhere(function ($query) use ($newStart, $newEnd) {
+                            return $query->where('start_date', '<', $newStart)->where('end_date', '>', $newEnd);
+                        });
+                })->exists();
+            }
         if ($busy) return true;
 
         $extended = Booking::query()
@@ -336,6 +360,8 @@ if (!function_exists('get_room_available_from')) {
      */
     function get_room_available_from($room, $from = null,$end=null)
     {
+        $user=auth()->user();
+        $currentUser=$user ? $user->id :null;
         $now = $from ? $from : Carbon::now();
         $newStart = clone $now;
         $end=$end ? $end:Carbon::now()->endOfDay();
@@ -373,19 +399,28 @@ if (!function_exists('get_room_available_from')) {
                
 
             if (!$next_bookings->count()) {
-                return ceil_date_for_booking($current->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15)));
+                if($current->member_id==$currentUser){
+                    return ceil_date_for_booking($current->end_date);
+                }
+                else{
+                    return ceil_date_for_booking($current->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15)));
+
+                }
             }
 
             $end_date = $current->end_date;
 
             foreach ($next_bookings as $next_booking) {
-                if ($next_booking->start_date->diffInMinutes($end_date) < Setting::getValue('booking_minimum_time', 30) + Setting::getValue('booking_time_resolution', 15)) {
-                    $end_date = $next_booking->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15));
-                } else {
+                if($next_booking->member_id==$currentUser){
+                    return ceil_date_for_booking($next_booking->end_date);
+                }else{
+                  if ($next_booking->start_date->diffInMinutes($end_date) < Setting::getValue('booking_minimum_time', 30) + Setting::getValue('booking_time_resolution', 15)) {
+                      $end_date = $next_booking->end_date;
+                  } else {
                     return ceil_date_for_booking($next_booking->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15)));
+                  }
                 }
-            }
-
+          }
             return ceil_date_for_booking($end_date->addMinutes(Setting::getValue('booking_time_resolution', 15)));
         }
     }

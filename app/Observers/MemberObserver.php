@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use App\Jobs\SendMailToNewUser;
-use App\Mail\MemberRegistered;
+use App\Jobs\MemberRegisterationJob;
 use App\Models\Member;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Mail;
@@ -18,7 +18,7 @@ class MemberObserver
      */
     public function created(Member $member)
     {
-        
+        dispatch(new MemberRegisterationJob($member));
     }
 
     /**

@@ -21,8 +21,12 @@ Route::redirect('/', '/dashboard');
 Route::get('/frontscreen/{id}', 'PublicController@frontscreen')->name('frontscreen');
 Route::get('/book/{id}', 'PublicController@book');
 Route::get('/qr', 'PublicController@qrRedirect');
-Route::get('test',function(){
+Route::get('restpassword',function(){
+	$token=request()->get('token');
+	// dd($user);
+	return redirect()->to("webiz://password/restore/".$token);
+});
 
-	$user=\DB::table('members')->where('email','abubakarfzal786@gmail.com')->get();
-	dd($user);
+Route::get('testing-app',function(){
+	
 });
