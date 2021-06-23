@@ -201,7 +201,7 @@
                         @foreach($member->transactions as $transaction)
                             <tr>
                                 <td>{{ $transaction->id }}</td>
-                                <td>{{ $transaction->created_at ? $transaction->created_at->format('d.m.Y H:i') : '' }}</td>
+                                <td>{{ $transaction->created_at ? $transaction->created_at->timezone('Asia/Jerusalem')->format('d.m.Y H:i') : '' }}</td>
                                 <!--<td>{{ $transaction->payment_method ? $transaction->payment_method->mode : '' }}</td>-->
                                 <td>{{ $transaction->type }}</td>
 
@@ -242,7 +242,7 @@
                         @foreach($member->support_tickets as $support_tickets)
                             <tr>
                                 <td><b>Ticket {{ $support_tickets->id }}</b></td>
-                                <td>{{ $support_tickets->updated_at->format('d.m.Y') }}</td>
+                                <td>{{ $support_tickets->updated_at->timezone('Asia/Jerusalem')->format('d.m.Y') }}</td>
                                 <td><span class="one-line">{{ $support_tickets->last_message }}</span>
                                 </td>
                                 <td>

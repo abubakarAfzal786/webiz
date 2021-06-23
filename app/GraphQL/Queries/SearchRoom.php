@@ -36,12 +36,17 @@ class SearchRoom
             $rooms->where(function ($wq) use ($start, $end) {
                 return $wq->whereDoesntHave('bookings', function (Builder $q) use ($start, $end) {
                     return $q
-                        ->whereBetween('start_date', [$start, $end])
-                        ->orWhereBetween('end_date', [$start, $end]);
+                        // ->whereBetween('start_date', [$start, $end])
+                        // ->orWhereBetween('end_date', [$start, $end]);
+                        ->where(function($q) use ($start,$end){
+                            $q->where('start_date','>=',$start)->where('start_date','<=',$start);
+                        })->orWhere(function($q) use ($start,$end){
+                            $q->where('end_date','>=',$end)->where('end_date','<=',$end);
+                        });
                 });
             });
            }
-           $rooms->when($types!==null, function (Builder $q) use ($types) {
+           $rooms->when($types, function (Builder $q) use ($types) {
                 return $q->whereIn('type_id', $types);
             })
             ->when($name, function (Builder $q) use ($name) {

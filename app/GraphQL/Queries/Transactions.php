@@ -16,6 +16,6 @@ class Transactions
         /** @var Collection $transactions */
         $transactions = auth()->user()->transactions;
 
-        return $transactions ? $transactions->sortBy('created_at', SORT_DESC) : [];
+        return $transactions ? $transactions->sortByDESC('id', SORT_DESC) : [];
     }
 }

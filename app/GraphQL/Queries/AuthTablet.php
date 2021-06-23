@@ -25,7 +25,7 @@ class AuthTablet
         /** @var Room $room */
         $room = Room::query()->withoutGlobalScope('active')->where('pin', $args['pin'])->first();
         if (!$room->monthly) {
-            $room->monthly=null;
+            $room->monthly=false;
             $room->company=null;
             $token = $this->jwt->fromUser($room);
             $code = 200;

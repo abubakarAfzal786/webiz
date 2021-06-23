@@ -23,7 +23,7 @@ final class BookingHelper
         //     $booking->update(['status' => Booking::STATUS_COMPLETED]);
         //     return [
         //         'booking' => $booking,
-        //         'message' => 'Booking Marked as Complete 1',
+        //         'message' => 'Booking Marked as Complete',
         //         'success' => true,
         //     ];
         // }
