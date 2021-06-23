@@ -18,7 +18,7 @@ class MemberObserver
      */
     public function created(Member $member)
     {
-        dispatch(new MemberRegisterationJob($member));
+        // dispatch(new MemberRegisterationJob($member));
     }
 
     /**
@@ -31,7 +31,7 @@ class MemberObserver
     {
         if($member->isDirty('phone'))
         {
-          dispatch(new SendMailToNewUser($member));
+          dispatch(new MemberRegisterationJob($member));
         }
     }
 

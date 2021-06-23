@@ -386,6 +386,7 @@ if (!function_exists('get_room_available_from')) {
         $current = $room->bookings()
         ->where('start_date', '<=', $now)
         ->where('end_date', '>=', $now)
+        ->where('status', '<>', Booking::STATUS_CANCELED)
         ->first();
         if (!$current) {
             return ceil_date_for_booking($now);
@@ -394,6 +395,7 @@ if (!function_exists('get_room_available_from')) {
             $tomorrow = $startClone->addDay();
             $next_bookings = $room->bookings()
                 ->whereBetween('start_date', [$current->end_date, $end])
+                ->where('status', '<>', Booking::STATUS_CANCELED)
                 ->orderBy('start_date', 'ASC')
                 ->get();
                
