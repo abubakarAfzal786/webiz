@@ -103,7 +103,7 @@ class BookingController extends Controller
             /** @var Booking $booking */
             $booking = Booking::query()->create($request->except('_token'));
             $booking->room_attributes()->attach($attributesToSync);
-            make_transaction($member->id, null, $room->id, $booking->id, $price, Transaction::TYPE_ROOM);
+            make_transaction($member->id, null, $room->id, $booking->id, $price, Transaction::TYPE_ROOM,null,null,"Create Booking from Admin Panel");
         } catch (Exception $exception) {
             DB::rollBack();
             return redirect()->back()->withInput()->with([
@@ -210,7 +210,7 @@ class BookingController extends Controller
         try {
             $booking->update($request->except('_token', '_method'));
             $booking->room_attributes()->sync($attributesToSync);
-            make_transaction($member->id, null, $room->id, $booking->id, $priceDiff, Transaction::TYPE_ROOM);
+            make_transaction($member->id, null, $room->id, $booking->id, $priceDiff, Transaction::TYPE_ROOM,null,null,"Update Booking From admin panel");
         } catch (Exception $exception) {
             DB::rollBack();
             return redirect()->back()->withInput()->with([
@@ -234,7 +234,7 @@ class BookingController extends Controller
     public function destroy(Booking $booking)
     {
         try {
-            make_transaction($booking->member_id, null, $booking->room_id, $booking->id, -$booking->price, Transaction::TYPE_ROOM);
+            make_transaction($booking->member_id, null, $booking->room_id, $booking->id, -$booking->price, Transaction::TYPE_ROOM,null,null,"Delete Booking from Admin panel");
             $booking->delete();
             return response()->json(['message' => 'success'], 200);
         } catch (Exception $exception) {

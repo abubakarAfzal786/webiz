@@ -37,7 +37,7 @@ class AddCredits
         DB::beginTransaction();
         try {
             $member->update(['balance' => $member->balance + $amount]);
-            make_transaction($member->id, $price, null, null, $amount);
+            make_transaction($member->id, $price, null, null, $amount,null,null,null,'Add Credit from app');
         } catch (Exception $exception) {
             DB::rollBack();
             return false;

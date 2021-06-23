@@ -195,10 +195,9 @@ class MemberController extends Controller
             $credits = $request->get('credits');
             $description=$request->get('description');
             if ($member) {
-                
                 $credits = (float)$request->get('credits');
                 $member->update(['balance' => $member->balance + $credits]);
-                make_transaction($member->id, null, null, null, $credits, Transaction::TYPE_CREDIT, $member->company_id,$description);
+                make_transaction($member->id, null, null, null, $credits, Transaction::TYPE_CREDIT, $member->company_id,$description,"Add Credit into user account from Admin Panel");
                 $memberUpdated = Member::query()->select('id', 'company_id')->find($id);
                 return response()->json(['success' => true, 'balance' => $memberUpdated->balance]);
             } else {

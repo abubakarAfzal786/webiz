@@ -41,7 +41,7 @@ class CancelBooking
         }
 
         $booking->update(['status' => Booking::STATUS_CANCELED]);
-        make_transaction($member->id, null, $booking->room_id, $booking->id, -$booking->price, Transaction::TYPE_ROOM);
+        make_transaction($member->id, null, $booking->room_id, $booking->id, -$booking->price, Transaction::TYPE_ROOM,null,null,'Cancel Booking');
 
         return [
             'message' => 'Booking successfully canceled.',
