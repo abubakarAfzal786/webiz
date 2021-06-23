@@ -55,7 +55,7 @@ class CompanyController extends Controller
             $data['expiration_date'] = $start_date;
         }
         $company = Company::query()->create($data);
-        make_transaction(null, null, null, null, $request->get('balance'), Transaction::TYPE_CREDIT, $company->id);
+        make_transaction(null, null, null, null, $request->get('balance'), Transaction::TYPE_CREDIT, $company->id,null,"Add Company Balance from admin panel");
 
         $logo = $request->file('logo');
         if ($logo) {
@@ -106,7 +106,7 @@ class CompanyController extends Controller
         }
         $company->update($data);
 
-        make_transaction(null, null, null, null, ($request->get('balance') - $oldBalance), Transaction::TYPE_CREDIT, $company->id);
+        make_transaction(null, null, null, null, ($request->get('balance') - $oldBalance), Transaction::TYPE_CREDIT, $company->id,null,"Update Company balance from Admin Panel");
 
         $logo = $request->file('logo');
         if ($logo) {

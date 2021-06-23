@@ -168,7 +168,7 @@ class Booking extends Model
             }
             $attributesToSync = get_attributes_to_sync($room_attributes);
             $addedPrice = calculate_room_price($attributesToSync, $this->room->price, $this->end_date, Carbon::now())['price'];
-            make_transaction($this->member_id, null, $this->room_id, $this->id, $addedPrice, Transaction::TYPE_ROOM);
+            make_transaction($this->member_id, null, $this->room_id, $this->id, $addedPrice, Transaction::TYPE_ROOM,null,null,"From Booking Modal");
             $attributes['price'] = $this->price + $addedPrice;
             $attributes['end_date'] = Carbon::now();
         }

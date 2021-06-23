@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\UuidInterface;
+use Illuminate\Support\Facades\Log;
 
 if (!function_exists('room_is_busy')) {
     /**
@@ -310,14 +311,14 @@ if (!function_exists('make_transaction')) {
      * @param int|null $company_id
      * @return Model|Transaction
      */
-    function make_transaction($member_id, $price, $room_id = null, $booking_id = null, $credit = null, $type = Transaction::TYPE_CREDIT, $company_id = null,$description=null)
+    function make_transaction($member_id, $price, $room_id = null, $booking_id = null, $credit = null, $type = Transaction::TYPE_CREDIT, $company_id = null,$description=null,$source=null)
     {
         if ($booking_id) {
             /** @var Member $member */
             $member = Member::query()->find($member_id);
             $member->update(['balance' => ($member->balance - $credit)]);
         }
-        return Transaction::query()->create([
+        $transaction= Transaction::query()->create([
             'member_id' => $member_id,
             'room_id' => $room_id,
             'booking_id' => $booking_id,
@@ -327,6 +328,8 @@ if (!function_exists('make_transaction')) {
             'company_id' => $company_id,
             'description'=> $description!==null? preg_replace( "/\r|\n/", "", $description ) :null
         ]);
+        Log::channel('transaction')->info('transaction made at '.Carbon::now().'  '.'member_id->'.$member_id.' transaction_id->'.$transaction->id.' source ->'.$source." amount ->".$credit);
+       return $transaction;
     }
 }
 

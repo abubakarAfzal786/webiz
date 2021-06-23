@@ -40,14 +40,19 @@ return [
             'channels' => ['single'],
             'ignore_exceptions' => false,
         ],
-'notifications'=>[
-    'driver' => 'single',
-    'path' => storage_path('logs/notifications.log'),
-    'level' => 'debug',
-],
+         'notifications'=>[
+             'driver' => 'single',
+             'path' => storage_path('logs/notifications.log'),
+             'level' => 'debug',
+         ],
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
+            'level' => 'debug',
+        ],
+        'transaction'=>[
+            'driver' => 'single',
+            'path' => storage_path('logs/transaction.log'),
             'level' => 'debug',
         ],
 

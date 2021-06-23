@@ -103,7 +103,7 @@ final class BookingHelper
                 ];
             }else{
               DB::beginTransaction();
-              $transaction= make_transaction($booking->member_id, null, $booking->room_id, $booking->id, $price, Transaction::TYPE_ROOM);
+              $transaction= make_transaction($booking->member_id, null, $booking->room_id, $booking->id, $price, Transaction::TYPE_ROOM,null,null,"Extend Booking");
                $booking->update(['end_date' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
              DB::commit();
             }
