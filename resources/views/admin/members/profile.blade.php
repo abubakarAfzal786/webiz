@@ -168,12 +168,12 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($member->bookings as $booking)
+                        @foreach($member->bookings()->orderBy('id','DESC')->get() as $booking)
                             <tr>
                                 <td><b>{{ $booking->room->name }}</b></td>
                                 <td>{{ $booking->start_date->timezone('Asia/Jerusalem')->format('H:i') }}
                                     - {{ $booking->end_date->timezone('Asia/Jerusalem')->format('H:i') }}</td>
-                                <td>{{ $booking->price }} credits</td>
+                                <td>{{ $booking->transactions()->sum('credit') }} credits</td>
                                 <td>{{ $booking->start_date->format('Y-m-d') == $booking->end_date->format('Y-m-d')
                                     ? $booking->start_date->timezone('Asia/Jerusalem')->format('d.m.Y')
                                     : $booking->start_date->timezone('Asia/Jerusalem')->format('d.m.Y') . ' - ' . $booking->end_date->timezone('Asia/Jerusalem')->format('d.m.Y') }}</td>
@@ -198,7 +198,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($member->transactions as $transaction)
+                        @foreach($member->transactions()->orderBy('id','DESC')->get() as $transaction)
                             <tr>
                                 <td>{{ $transaction->id }}</td>
                                 <td>{{ $transaction->created_at ? $transaction->created_at->timezone('Asia/Jerusalem')->format('d.m.Y H:i') : '' }}</td>
