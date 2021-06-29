@@ -409,7 +409,6 @@ if (!function_exists('get_room_available_from')) {
                 }
                 else{
                     return ceil_date_for_booking($current->end_date->addMinutes(Setting::getValue('booking_time_resolution', 15)));
-
                 }
             }
 
