@@ -94,11 +94,33 @@ final class BookingHelper
                 }
             }
         }
+        if($cron==true){
+            $extend_date=$booking->end_date->addMinute();
+            try {
+                $price = calculate_room_price($attributesToSync, $booking->room->price, $booking->end_date, $extend_date)['price'];
+                if (($booking->member->balance < $price) || !$booking->member->company_id) {
+                    return [
+                        'booking' => null,
+                        'message' => 'You don\'t have enough credits',
+                        'success' => false,
+                    ];
+                }else{
+                  DB::beginTransaction();
+                  $booking->update(['end_date' => $extend_date]);
+                 DB::commit();
+                }
+                }
+                catch (Exception $exception) {
+                    DB::rollBack();
+                    return [
+                        'booking' => null,
+                        'message' => $exception->getMessage(),
+                        'success' => false,
+                    ];
+                }
+        }
         if ($extend_date !== null && $extend_date->gt($booking->end_date) && $booking->end_date->diffInHours($extend_date)<=12) {
             try {
-                if($cron==true){
-                    $extend_date=$booking->end_date->addMinute();
-                }
             $price = calculate_room_price($attributesToSync, $booking->room->price, $booking->end_date, $extend_date)['price'];
             if (($booking->member->balance < $price) || !$booking->member->company_id) {
                 return [
