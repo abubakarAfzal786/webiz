@@ -106,7 +106,7 @@ final class BookingHelper
                     ];
                 }else{
                   DB::beginTransaction();
-                  $booking->update(['end_date' => $extend_date]);
+                  $booking->update(['extend_time' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
                  DB::commit();
                 }
                 }
