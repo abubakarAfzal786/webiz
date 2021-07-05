@@ -165,14 +165,14 @@ class CheckBookingState extends Command
                     $this->bookingCompletedPush($booking);
                     $booking->update(['status' => Booking::STATUS_COMPLETED]);
                 }
-                // else{
-                //     $extendBooking = (new BookingHelper())->extendBooking($booking,null,null,[],true);
-                //     if ($extendBooking['success']!==true) {
-                //         // COMPLETE BOOKING
-                //         $this->bookingCompletedPush($booking);
-                //         $booking->update(['status' => Booking::STATUS_COMPLETED]);
-                //     }
-                // }
+                else{
+                    $extendBooking = (new BookingHelper())->extendBooking($booking,null,null,[],true,"from Cron section 1");
+                    if ($extendBooking['success']!==true) {
+                        // COMPLETE BOOKING
+                        $this->bookingCompletedPush($booking);
+                        $booking->update(['status' => Booking::STATUS_COMPLETED]);
+                    }
+                }
                 Log::channel('notifications')->info('on extend section'.$now." booking_id". $booking->id);
 
             } else {
@@ -187,7 +187,7 @@ class CheckBookingState extends Command
                     } 
                     else {
                         // EXTEND BOOKING
-                        $extendBooking = (new BookingHelper())->extendBooking($booking,null,null,[],true);
+                        $extendBooking = (new BookingHelper())->extendBooking($booking,null,null,[],true,"from cron section 2");
                         if ($extendBooking['success']!==true) {
                             // COMPLETE BOOKING
                             $this->bookingCompletedPush($booking);

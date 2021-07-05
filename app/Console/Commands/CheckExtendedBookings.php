@@ -78,7 +78,7 @@ class CheckExtendedBookings extends Command
             ->get();
 
         foreach ($bookings as $booking) {
-            $extendBooking = (new BookingHelper())->extendBooking($booking);
+            $extendBooking = (new BookingHelper())->extendBooking($booking,null,null,[],false,"From Check Extend Booking file");
             if (!$extendBooking) {
                 $this->bookingCompletedPush($booking);
                 $booking->update(['status' => Booking::STATUS_COMPLETED]);

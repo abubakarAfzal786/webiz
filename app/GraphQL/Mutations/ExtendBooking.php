@@ -23,6 +23,6 @@ class ExtendBooking
         if (!$booking) return ['booking' => null, 'message' => 'User don\'t have any booking', 'success' => false];
         $attributes = $args['attributes'] ?? [];
         $attributesToSync = get_attributes_to_sync($attributes);
-        return (new BookingHelper())->extendBooking($booking, $extend_date, $member->id, $attributesToSync);
+        return (new BookingHelper())->extendBooking($booking, $extend_date, $member->id, $attributesToSync,false,"From Extend Booking Mutation");
     }
 }
