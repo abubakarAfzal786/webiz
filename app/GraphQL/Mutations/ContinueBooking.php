@@ -20,6 +20,6 @@ class ContinueBooking
         $booking = $member->bookings()->find($booking_id);
         if (!$booking) return false;
 
-        return (new BookingHelper())->extendBooking($booking);
+        return (new BookingHelper())->extendBooking($booking,null,null,[],false,"From Continue Booking Mutation");
     }
 }
