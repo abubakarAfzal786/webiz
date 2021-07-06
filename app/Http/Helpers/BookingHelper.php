@@ -8,6 +8,8 @@ use App\Models\Room;
 use App\Models\Transaction;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 final class BookingHelper
 {
@@ -17,7 +19,7 @@ final class BookingHelper
      * @param $booking
      * @return bool
      */
-    public function extendBooking($booking, $extend_date = null, $member_id = null,$attributesToSync=[],$cron=null)
+    public function extendBooking($booking, $extend_date = null, $member_id = null,$attributesToSync=[],$cron=false,$source)
     {
         // if ($booking->out_at) {
         //     $booking->update(['status' => Booking::STATUS_COMPLETED]);
@@ -123,6 +125,8 @@ final class BookingHelper
                 Log::channel('notifications')->info($exception->getMessage()."booking_id". $booking->id);
 
                 }
+                Log::channel('booking')->info('extending booking pango'.Carbon::now()." booking_id". $booking->id." Source ->".$source);
+
         }
         else{
             if ($extend_date !== null && $extend_date->gt($booking->end_date) && $booking->end_date->diffInHours($extend_date)<=12) {
@@ -139,6 +143,8 @@ final class BookingHelper
                   $transaction= make_transaction($booking->member_id, null, $booking->room_id, $booking->id, $price, Transaction::TYPE_ROOM,null,null,"Extend Booking");
                    $booking->update(['end_date' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
                  DB::commit();
+                Log::channel('booking')->info('extending booking'.Carbon::now()." booking_id". $booking->id." Source ->".$source);
+
                 }
                 }
                 catch (Exception $exception) {

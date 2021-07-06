@@ -55,6 +55,11 @@ return [
             'path' => storage_path('logs/transaction.log'),
             'level' => 'debug',
         ],
+        'booking'=>[
+            'driver' => 'single',
+            'path' => storage_path('logs/booking.log'),
+            'level' => 'debug',
+        ],
 
         'daily' => [
             'driver' => 'daily',
