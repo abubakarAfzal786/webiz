@@ -46,13 +46,24 @@ if (!function_exists('room_is_busy')) {
                         return $query->where('start_date', '<', $newStart)->where('end_date', '>', $newEnd);
                     });
             })->orderBy('id','DESC')->first();
-            // dd($booking);
             if($booking && $booking->member_id==$user){
                 $busy = Booking::query()
                 ->where('id', '<>', $booking_id)
                 ->where('room_id', $id)
                 ->where('status', '<>', Booking::STATUS_CANCELED)
-                ->where('start_date','>=',$start)->where('start_date','<',$end)->exists();
+                ->where(function ($q) use ($newStart, $end) {
+                    return $q
+                        ->where(function ($query) use ($newStart, $end) {
+                            return $query->where('start_date', '>', $newStart)->where('start_date', '<', $end);
+                        })
+                        ->orWhere(function ($query) use ($newStart, $end) {
+                            return $query->where('end_date', '>=', $newStart)->where('end_date', '=<', $end);
+                        })
+                        ->orWhere(function ($query) use ($newStart, $end) {
+                            return $query->where('start_date', '<', $newStart)->where('end_date', '>', $end);
+                        });
+                })->exists();
+                // dd($busy);
             }else{
                 $busy = Booking::query()
                 ->where('id', '<>', $booking_id)

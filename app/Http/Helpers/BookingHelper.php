@@ -96,6 +96,9 @@ final class BookingHelper
         }
         if($cron==true){
             $extend_date=$booking->end_date->addMinute();
+            if($booking->extend_minutes!==null){
+            $extend_date=$booking->extend_minutes->addMinute();
+            }
             try {
                 $price = calculate_room_price($attributesToSync, $booking->room->price, $booking->end_date, $extend_date)['price'];
                 if (($booking->member->balance < $price) || !$booking->member->company_id) {
@@ -106,7 +109,7 @@ final class BookingHelper
                     ];
                 }else{
                   DB::beginTransaction();
-                  $booking->update(['extend_time' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
+                  $booking->update(['extend_minutes' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
                  DB::commit();
                 }
                 }
@@ -117,6 +120,8 @@ final class BookingHelper
                         'message' => $exception->getMessage(),
                         'success' => false,
                     ];
+                Log::channel('notifications')->info($exception->getMessage()."booking_id". $booking->id);
+
                 }
         }
         else{

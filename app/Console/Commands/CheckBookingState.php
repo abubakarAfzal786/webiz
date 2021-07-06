@@ -165,15 +165,16 @@ class CheckBookingState extends Command
                     $this->bookingCompletedPush($booking);
                     $booking->update(['status' => Booking::STATUS_COMPLETED]);
                 }
-                // else{
-                //     $extendBooking = (new BookingHelper())->extendBooking($booking,null,null,[],true);
-                //     if ($extendBooking['success']!==true) {
-                //         // COMPLETE BOOKING
-                //         $this->bookingCompletedPush($booking);
-                //         $booking->update(['status' => Booking::STATUS_COMPLETED]);
-                //     }
-                // }
-                Log::channel('notifications')->info('on extend section'.$now." booking_id". $booking->id);
+                else{
+                    $extendBooking = (new BookingHelper())->extendBooking($booking,null,null,[],true);
+                    if ($extendBooking['success']!==true) {
+                        // COMPLETE BOOKING
+                        $this->bookingCompletedPush($booking);
+                        $booking->update(['status' => Booking::STATUS_COMPLETED]);
+                   Log::channel('notifications')->info('on extend section'.$now." booking_id". $booking->id);
+
+                    }
+                }
 
             } else {
                 if (Carbon::parse($endSub5)->format("Y-m-d H:i:00")==Carbon::parse($now)->format("Y-m-d H:i:00")) {
@@ -192,8 +193,9 @@ class CheckBookingState extends Command
                             // COMPLETE BOOKING
                             $this->bookingCompletedPush($booking);
                             $booking->update(['status' => Booking::STATUS_COMPLETED]);
-                        }
                         Log::channel('notifications')->info('extending booking'.$now." booking_id". $booking->id);
+
+                        }
 
 
                     }
