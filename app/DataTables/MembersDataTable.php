@@ -36,7 +36,7 @@ class MembersDataTable extends DataTable
                 return $member->created_at->format('Y-m-d H:i') ?? null;
             })
             ->addColumn('action', function ($member) {
-                return '<div class="action"><a href="' . route('admin.members.profile', $member->id) . '" class="main-btn yellow">' . __('Edit & More') . '</a></div>';
+                return '<div class="action"><a href="' . route('admin.members.profile', $member->id) . '" class="main-btn yellow">' . __('Edit') . '</a>&nbsp;<a data-id="' . $member->id . '" class="main-btn delete-member" style="background-color:red;color:white;cursor:pointer;">' . __('Delete') . '</a></div>';
             })
             ->rawColumns(['status', 'avatar', 'action']);
     }

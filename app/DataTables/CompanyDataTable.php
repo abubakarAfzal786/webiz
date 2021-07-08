@@ -33,12 +33,23 @@ class CompanyDataTable extends DataTable
                 return $company->updated_at ? $company->updated_at->diffForHumans() : '';
             })
             ->addColumn('action', function ($company) {
+               if($company->status==true){
                 return '
                 <div class="btn-group btn-group-sm">
                 <a class="btn btn-light" href="' . route('admin.members.index', ['company_id' => $company->id]) . '">Members</a>
                 <a class="btn btn-success" href="' . route('admin.companies.edit', $company->id) . '">Edit</a>
                 <a class="btn btn-danger delete-swal" data-id="' . $company->id . '">Delete</a>
-                </div>';
+                <a class="btn btn-danger block-company" data-id="' . $company->id . '">Block</a>
+               </div>';
+               }else{
+                return '
+                <div class="btn-group btn-group-sm">
+                <a class="btn btn-light" href="' . route('admin.members.index', ['company_id' => $company->id]) . '">Members</a>
+                <a class="btn btn-success" href="' . route('admin.companies.edit', $company->id) . '">Edit</a>
+                <a class="btn btn-danger delete-swal" data-id="' . $company->id . '">Delete</a>
+                <a class="btn btn-success unblock-company" data-id="' . $company->id . '">Unblock</a>
+               </div>';
+               }
             })
             ->rawColumns(['logo', 'action']);
     }

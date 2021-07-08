@@ -156,7 +156,7 @@
                                     <span class="name">{{ __('Room №') }}</span>
                                     <label class="text-option">
                                 <span class="label-wrap">
-                                <input class="placeholder-effect" id="number" type="number" min="0" step="1"
+                                <input class="placeholder-effect has-content" id="number" type="number" min="0" step="1"
                                        name="number" pattern="[0-9]+">
                                 <span class="placeholder">{{ __('Room №') }}</span>
                                 </span>

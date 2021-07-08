@@ -107,5 +107,21 @@
                 $('#myDataTable').DataTable().buttons(0, 0).trigger();
             });
         });
+        $(document).on('click', '.delete-member', function () {
+                let item_id = $(this).data('id');
+
+                if (confirm("Are you sure?")) {
+                    $.ajax({
+                        url: '/dashboard/members/' + item_id,
+                        type: 'DELETE',
+                        success: function () {
+                            $('#myDataTable').DataTable().draw();
+                        },
+                        error: function () {
+                            alert("{{ __('Something went wrong.') }}")
+                        }
+                    });
+                }
+            });
     </script>
 @endpush

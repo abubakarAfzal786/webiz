@@ -28,6 +28,9 @@ Route::group(['as' => 'admin.'], function () {
     Route::resource('transactions', 'TransactionController')->except('show');
     Route::resource('packages', 'PackageController')->except('show');
     Route::resource('companies', 'CompanyController');
+    Route::post('block-companies','CompanyController@block');
+    Route::post('unblock-companies','CompanyController@unblock');
+
     Route::get('support-chat', 'SupportChatController@index')->name('support-chat.index');
     Route::get('statistics', 'DashboardController@statistics')->name('statistics.index');
     Route::get('customer-service', 'DashboardController@customerService')->name('members.customer-service');
