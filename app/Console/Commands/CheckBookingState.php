@@ -192,8 +192,9 @@ class CheckBookingState extends Command
                             // COMPLETE BOOKING
                             $this->bookingCompletedPush($booking);
                             $booking->update(['status' => Booking::STATUS_COMPLETED]);
-                        }
                         Log::channel('notifications')->info('extending booking'.$now." booking_id". $booking->id);
+
+                        }
 
 
                     }
