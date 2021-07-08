@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\ImageUploadHelper;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Models\Company;
+use App\Models\Member;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Exception;
@@ -140,6 +141,34 @@ class CompanyController extends Controller
             $company->delete();
             return response()->json(['message' => 'success'], 200);
         } catch (Exception $exception) {
+            return response()->json(['message' => 'fail'], 422);
+        }
+    }
+    public function block()
+    {
+        try {
+            $company=request()->get('company_id');
+            \DB::beginTransaction();
+            Company::where('id',$company)->update(['status'=>false]);
+            Member::where('company_id',$company)->update(['status'=>false]);
+            \DB::commit();
+            return response()->json(['message' => 'success'], 200);
+        } catch (Exception $exception) {
+            \DB::rollBack();
+            return response()->json(['message' => 'fail'], 422);
+        }
+    }
+    public function unblock()
+    {
+        try {
+            $company=request()->get('company_id');
+            \DB::beginTransaction();
+            Company::where('id',$company)->update(['status'=>true]);
+            Member::query()->withoutGlobalScopes()->where('company_id',$company)->update(['status'=>true]);
+            \DB::commit();
+            return response()->json(['message' => 'success'], 200);
+        } catch (Exception $exception) {
+            \DB::rollBack();
             return response()->json(['message' => 'fail'], 422);
         }
     }

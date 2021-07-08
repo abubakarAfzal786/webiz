@@ -37,6 +37,44 @@
                     });
                 }
             });
+            $(document).on('click', '.block-company[data-id]', function () {
+                let item_id = $(this).data('id');
+
+                if (confirm("Are you sure?")) {
+                    $.ajax({
+                        url: '/dashboard/block-companies',
+                        type: 'POST',
+                        data:{
+                            company_id:item_id
+                        },
+                        success: function () {
+                            $('#company-table').DataTable().draw();
+                        },
+                        error: function () {
+                            alert("{{ __('Something went wrong.') }}")
+                        }
+                    });
+                }
+            });
+            $(document).on('click', '.unblock-company[data-id]', function () {
+                let item_id = $(this).data('id');
+
+                if (confirm("Are you sure?")) {
+                    $.ajax({
+                        url: '/dashboard/unblock-companies',
+                        type: 'POST',
+                        data:{
+                            company_id:item_id
+                        },
+                        success: function () {
+                            $('#company-table').DataTable().draw();
+                        },
+                        error: function () {
+                            alert("{{ __('Something went wrong.') }}")
+                        }
+                    });
+                }
+            });
         });
     </script>
 @endpush
