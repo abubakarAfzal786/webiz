@@ -22,19 +22,22 @@ class SearchRoom
         $start = $args['start'] ?? Carbon::now();
         $end = $args['end'] ?? Carbon::now()->endOfDay();
         $name = $args['name'] ?? null;
-
+        if($end==null){
+            $end = Carbon::now()->endOfDay();
+        }
         if ($start <= Carbon::now()) $start = Carbon::now();
         if ($end->gt($start)) {
             $startClone = clone $start;
             $end = $startClone->endOfDay();
         }
-
         $rooms = Room::query()
             ->with('facilities')
             ->where('seats', '>=', $seats);
            if($name==null){
-            $rooms->where(function ($wq) use ($start, $end) {
-                return $wq->whereDoesntHave('bookings', function (Builder $q) use ($start, $end) {
+            $rooms->where(function ($wq) use ($start, $end,$args) {
+
+                return $wq->whereDoesntHave('bookings', function (Builder $q) use ($start, $end,$args) {
+                    $end=$args['end']??Carbon::now()->endOfDay();
                     return $q
                         // ->whereBetween('start_date', [$start, $end])
                         // ->orWhereBetween('end_date', [$start, $end]);

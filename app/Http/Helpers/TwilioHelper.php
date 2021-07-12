@@ -100,6 +100,24 @@ trait TwilioHelper
 
         return false;
     }
+    public function sendBookingMessage($number)
+    {
+        try {
+            $twilio = $this->setCredentials();
+            $options = [
+                "body" => "Test booking SMS",
+                "from" => "WeBiz", // config('twilio.from_number')
+            ];
+            $twilio->messages->create($number, $options);
+            return true;
+        } catch (TwilioException $e) {
+            Log::channel('twilio')->error($e);
+        } catch (Exception $exception) {
+            Log::channel('twilio')->error($exception);
+        }
+
+        return false;
+    }
 
     /**
      * @param $number

@@ -10,10 +10,10 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
-
+use App\Http\Helpers\TwilioHelper;
 final class BookingHelper
 {
-    use FCMHelper;
+    use FCMHelper,TwilioHelper;
 
     /**
      * @param $booking
@@ -110,6 +110,11 @@ final class BookingHelper
                         'success' => false,
                     ];
                 }else{
+                        if($booking->member->phone){
+                  $this->sendBookingMessage($booking->member->phone);
+                Log::channel('notifications')->info('Send SMS'.$now." booking_id". $booking->id);
+
+                }
                   DB::beginTransaction();
                   $booking->update(['extend_minutes' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
                  DB::commit();

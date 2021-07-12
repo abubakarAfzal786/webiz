@@ -42,7 +42,7 @@ class CreateBooking
 
             $args['door_key'] = generate_door_key();
             $args['status'] = Booking::STATUS_PENDING;
-            $args['out_at'] = $end_date;
+            // $args['out_at'] = $end_date;
             $args['company_id'] = $member->company_id;
             DB::beginTransaction();
             try {

@@ -9,9 +9,12 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Command;
 use Monolog\Logger;
+use App\Http\Helpers\TwilioHelper;
+
 class CheckBookingState extends Command
 {
-    use FCMHelper;
+    use FCMHelper,TwilioHelper;
+
 
     /**
      * The name and signature of the console command.
@@ -152,7 +155,14 @@ class CheckBookingState extends Command
         foreach ($bookings as $booking) {
             $endClone = clone $booking->end_date;
             $endSub5 = $endClone->subMinutes(5);
+            $difference=$booking->end_date->diffInHours($now);
+            // if($difference>=1){
+            //    if($booking->member->phone){
+            //       $this->sendBookingMessage($booking->member->phone);
+            //     Log::channel('notifications')->info('Send SMS'.$now." booking_id". $booking->id);
 
+            //     }
+            //  }
             if ($booking->status == Booking::STATUS_PENDING) {
                 if (($booking->start_date <= $now) && ($booking->end_date > $now)) {
                     // STARTED BOOKING
@@ -162,6 +172,8 @@ class CheckBookingState extends Command
             } elseif ($booking->status == Booking::STATUS_EXTENDED) {
                 if ($booking->out_at && ($booking->out_at <= $nowSub5)) {
                     // COMPLETE BOOKING
+                Log::channel('notifications')->info('on out at extend'.$now." booking_id". $booking->id);
+
                     $this->bookingCompletedPush($booking);
                     $booking->update(['status' => Booking::STATUS_COMPLETED]);
                 }
@@ -182,6 +194,8 @@ class CheckBookingState extends Command
                 } elseif ($booking->end_date <= $now) {
                     if ($booking->out_at) {
                         // COMPLETE BOOKING
+                Log::channel('notifications')->info('on out at'.$now." booking_id". $booking->id);
+
                         $this->bookingCompletedPush($booking);
                         $booking->update(['status' => Booking::STATUS_COMPLETED]);
                     } 
