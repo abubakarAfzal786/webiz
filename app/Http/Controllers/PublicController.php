@@ -57,6 +57,9 @@ class PublicController extends Controller
         } catch (Exception $exception) {
             Log::error($exception);
         }
+         if(request()->route('id')==2){
+             return view('frontscreen.frontscreen-1', compact('bookings', 'rooms', 'time', 'date', 'temp', 'coming'));
+          }
 
         return view('frontscreen', compact('bookings', 'rooms', 'time', 'date', 'temp', 'coming'));
     }
