@@ -9,14 +9,19 @@
 <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Styles -->
     @stack('header-pre-scripts')
-    <link rel="stylesheet" href="{{ asset('css/calender.css') }}" type="text/css"/>
+    <link rel="stylesheet" href="{{ asset('css/bundle_2.css') }}" type="text/css"/>
     @stack('header-post-scripts')
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.0/main.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.0/main.css"/>
+
+
+
     <link rel="apple-touch-icon-precomposed" sizes="57x57"
           href="{{ asset('images/favicon/apple-touch-icon-57x57.png') }}"/>
     <link rel="apple-touch-icon-precomposed" sizes="114x114"
@@ -55,7 +60,7 @@
     <meta property="og:description" content="{{ config('app.name') }}"/>
     <meta property="og:image" content="{{ asset('images/logo.png') }}"/>
     <meta property="og:locale" content="he">
-	<style>
+    <style>
 input[type="date"]::-webkit-calendar-picker-indicator {
     background: none;
 }
@@ -68,15 +73,30 @@ input[type="date"]::-webkit-calendar-picker-indicator {
        
     position: absolute;
     top: 55px;
-}.slot.hold {
-    background-color: #EABD37;
+}.slot.pending {
+    background-color: #BB6BD9;
      color: white;
 }.slot.active {
+    background-color: #EABD37;
+    color: white;
+    /* height: 60px; */
+}
+.slot.completed {
+    background-color: green;
+    color: white;
+    /* height: 60px; */
+}
+.slot.extended {
     background-color: #0A8FEF;
     color: white;
     /* height: 60px; */
 }
-	</style>
+.slot.canceled {
+    background-color: #FF5260;
+    color: white;
+    /* height: 60px; */
+}
+    </style>
     <!-- open graph -->
 </head>
 
@@ -145,7 +165,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <div class="page-menu">
         <div class="container">
             <div class="flex wrap">
-				@include('partials.side-menu')
+                @include('partials.side-menu')
 
                 <div class="content-wrap col-lg-10 col-sm-11">
 
@@ -187,16 +207,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                                         <div class="scroll-wrap">
                                             <ul>
                                                 <li>
-                                                    <p><span style="background-color: #FF5260"></span>End</p>
+                                                    <p><span style="background-color: #BB6BD9"></span>PENDING</p>
                                                 </li>
                                                 <li>
-                                                    <p><span style="background-color: #EABD37"></span>Hold</p>
+                                                    <p><span style="background-color: #EABD37"></span>ACTIVE</p>
                                                 </li>
                                                 <li>
-                                                    <p><span style="background-color: #0A8FEF"></span>Active</p>
+                                                    <p><span style="background-color: green"></span>COMPLETED</p>
                                                 </li>
                                                 <li>
-                                                    <p><span style="background-color: #BB6BD9"></span>Not paid</p>
+                                                    <p><span style="background-color: #0A8FEF"></span>EXTENDED</p>
+                                                </li>
+                                                <li>
+                                                    <p><span style="background-color: #FF5260"></span>CANCELED</p>
                                                 </li>
                                             </ul>
                                         </div>
@@ -211,64 +234,91 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
                                 @if(isset($rooms))
                                     @foreach($rooms as $key => $room)
-                                    @php
 
-                                        $bookings = \App\Models\Booking::where('room_id',$room->id)->whereDate('start_date','=',$search_date)->get();
+    @php
+       
+        $booked = [];
+        $booking_member = 'No booking';
+        $end_slot = null;
+        $booking_timings = null;
+        $no_booking = 'No Booking';
+        $color = '';
 
-                                        
-                                        $booking_array = [];
-                                        $booking_end = [];
-                                        $last_block = null;
-                                        $last_text = null;
-                                        $member_name = null;
+        if($booking = DB::table('bookings')->whereDate('start_date','<',$search_date)->whereDate('end_date','>',$search_date)->where('room_id',$room->id)->first()){
 
-                                       
-                                        foreach($bookings as $key=>$book){
+            $end_hour = 23;
+            $color = $booking->status;
+            $booking_timings = \Carbon\Carbon::parse($booking->start_date)->format('D-H:s') .'-' .\Carbon\Carbon::parse($booking->end_date)->format('D-H:s');
+            $end_slot = 23;
+            $booking_member = DB::table('members')->where('id',$booking->member_id)->pluck('name')->first();
+            
+            while($end_hour >= 10){
+                array_push($booked,$end_hour);
+                $end_hour --;
+            }  
+        }
+        elseif($booking = DB::table('bookings')->whereDate('end_date',$search_date)->whereDate('start_date','!=',$search_date)->where('room_id',$room->id)->first()){
 
-                                            $member_name = $book->member->name;
-                                            $booking_array = [];
-                                            $booking_end = [];
-                                            $last_block = null;
-                                            $last_text = null;
+            $color = $booking->status;
+            $booking_member = DB::table('members')->where('id',$booking->member_id)->pluck('name')->first();
+            $end_hour = \Carbon\Carbon::parse($booking->end_date)->format('H');
+            $end_slot = $end_hour;
+            $booking_timings = \Carbon\Carbon::parse($booking->start_date)->format('D-H:s') .'-' .\Carbon\Carbon::parse($booking->end_date)->format('D-H:s');
+            
+             while($end_hour >= 10){
+                array_push($booked,$end_hour);
+                $end_hour --;
+            }   
+        }
+        elseif($booking = DB::table('bookings')->whereDate('start_date',$search_date)->whereDate('end_date','!=',$search_date)->where('room_id',$room->id)->first()){
 
-                                            $multiplier = 1;
-                                            $status = $book->status;
-                                            if($status == 20){
-                                                $multiplier = 20;
-                                            }elseif($status == 30){
-                                                $multiplier = 30;
-                                            }
-                                            elseif($status == 40){
-                                                $multiplier = 40;
-                                            }
+            $color = $booking->status;
+            $booking_member = DB::table('members')->where('id',$booking->member_id)->pluck('name')->first();
+            $end_slot = 23;
+            $start_hour = \Carbon\Carbon::parse($booking->start_date)->format('H');
+            $booking_timings = \Carbon\Carbon::parse($booking->start_date)->format('D-H:s') .'-' .\Carbon\Carbon::parse($booking->end_date)->format('D-H:s');
+
+             while($start_hour <= 23){
+                array_push($booked,$start_hour);
+                $start_hour ++;
+            }
+        }
+        elseif($booking = DB::table('bookings')->whereDate('start_date',$search_date)->whereDate('end_date',$search_date)->where('room_id',$room->id)->first()){
+
+            $color = $booking->status;
+            $booking_member = DB::table('members')->where('id',$booking->member_id)->pluck('name')->first();
+            $start_hour = \Carbon\Carbon::parse($booking->start_date)->format('H');
+            $end_hour = \Carbon\Carbon::parse($booking->end_date)->format('H');
+            $booking_timings = \Carbon\Carbon::parse($booking->start_date)->format('H:s') .'-' .\Carbon\Carbon::parse($booking->end_date)->format('H:s');
+            $end_slot = $end_hour;
+
+             while($start_hour <= $end_hour){
+                array_push($booked,$start_hour);
+                $start_hour ++;
+            }
+        }
+
+        if($color == 10){
+                $color = 'pending';
+        }elseif($color == 20){
+                $color = 'active';
+        }elseif($color == 30){
+                $color = 'completed';
+        }elseif($color == 40){
+                $color = 'extended';
+        }elseif($color == 50){
+                $color = 'canceled';
+        }
+
+ $images = $room->images;
+    @endphp
 
 
-                                            
-
-                                             $start_date = \Carbon\Carbon::parse($book->start_date)->format('H') * $multiplier;
-                                           
-                                            
-                                            $end_date = \Carbon\Carbon::parse($book->end_date)->format('H') * $multiplier;
-                                                    
-                                            $last_block = $end_date * $multiplier;
-                                            $last_text = $start_date/$multiplier . ':00 - ' .$end_date/$multiplier . ':00';
-
-                                            if($end_date != $start_date){
-                                                while($end_date != $start_date){
-                                                    array_push($booking_end,$end_date);
-                                                    $end_date = $end_date - $multiplier;
-                                                }
-                                                 array_push($booking_end,$start_date);
-                                            }                                            
-                                           
-                                        }
-                                        $images = $room->images;
-                                      
-                                    @endphp
+                                    
                                             <div class="swiper-slide">
                                                 <div class="office-card">
                                                     <div class="img">
-                                                        <span><img src="@if (isset($images[0]->url))
+                                                          <span><img src="@if (isset($images[0]->url))
                                                             {{$images[0]->url}}
                                                             @else
                                                            {{ asset('images/defualt_room_image.jpeg') }}
@@ -279,34 +329,34 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
                                                       
                                                         <p><i class='bx bxs-user'></i>{{$room->seats}}</p>
-                                                    <div class="slot pl-2 @if(in_array('10', $booking_end)) end @endif @if(in_array('200', $booking_end)) hold @endif @if(in_array('300', $booking_end)) active @endif " >@if($last_block == '10') <i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>{{$last_text}} @elseif($last_block == '200')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i> @endif</div>
+
+                                                    <div class="slot pl-2 @if(in_array('10',$booked)) {{$color}} @endif" >@if($end_slot == '10') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('10',$booked)) {{$no_booking}} @endif</div>
                                                    
-                                                    <div class="slot pl-2 @if(in_array('11', $booking_end)) end @endif @if(in_array('220', $booking_end)) hold @endif @if(in_array('330', $booking_end)) active @endif">@if($last_block == '11') <i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>{{$last_text}} @elseif($last_block == '220')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i> @endif</div>
+                                                    <div class="slot pl-2 @if(in_array(11,$booked)) {{$color}} @endif">@if($end_slot == '11') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('11',$booked)) {{$no_booking}} @endif</div>
                                                    
-                                                    <div class="slot pl-2  @if(in_array('12', $booking_end)) end @endif @if(in_array('240', $booking_end)) hold @endif @if(in_array('360', $booking_end)) active @endif">@if($last_block == '12') <i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>{{$last_text}} @elseif($last_block == '240')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i> @endif</div>
+                                                   <div class="slot pl-2 @if(in_array('12',$booked)) {{$color}} @endif" >@if($end_slot == '12') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('12',$booked)) {{$no_booking}} @endif</div>
                                                   
-                                                    <div class="slot pl-2  @if(in_array('13', $booking_end)) end @endif @if(in_array('260', $booking_end)) hold @endif @if(in_array('390', $booking_end)) active @endif">@if($last_block == '13') <i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>{{$last_text}} @elseif($last_block == '260')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i> @endif</div>
+                                                   <div class="slot pl-2 @if(in_array('13',$booked)) {{$color}} @endif" >@if($end_slot == '13') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('13',$booked)) {{$no_booking}} @endif</div>
                                                   
-                                                    <div class="slot pl-2  @if(in_array('14', $booking_end)) end @endif @if(in_array('280', $booking_end)) hold @endif @if(in_array('420', $booking_end)) active @endif">@if($last_block == '14') <i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>{{$last_text}} @elseif($last_block == '280')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i> @endif</div>
+                                                   <div class="slot pl-2 @if(in_array('14',$booked)) {{$color}} @endif" >@if($end_slot == '14') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('14',$booked)) {{$no_booking}} @endif</div>
                                                    
-                                                    <div class="slot pl-2 @if(in_array('15', $booking_end)) end @endif @if(in_array('300', $booking_end)) hold @endif @if(in_array('450', $booking_end)) active @endif">@if($last_block == '15') <i class='bx bxs-user'></i> {{$member_name}} <br> 
-                                                        <i class='bx bx-time-five'></i> {{$last_text}}  @elseif($last_block == '300')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>@endif</div>
-                                                   
-                                                    <div class="slot pl-2 @if(in_array('16', $booking_end)) end @endif @if(in_array('320', $booking_end)) hold @endif @if(in_array('480', $booking_end)) active @endif">@if($last_block == '16') <i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>{{$last_text}} @elseif($last_block == '320')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i> @endif</div>
-                                                   
-                                                    <div class="slot pl-2 @if(in_array('17', $booking_end)) end @endif @if(in_array('320', $booking_end)) hold @endif @if(in_array('480', $booking_end)) active @endif">@if($last_block == '17') <i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>{{$last_text}} @elseif($last_block == '340')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i> @endif</div>
+                                                    <div class="slot pl-2 @if(in_array('15',$booked)) {{$color}} @endif" >@if($end_slot == '15') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('15',$booked)) {{$no_booking}} @endif</div>
 
-                                                    <div class="slot pl-2 @if(in_array('18', $booking_end)) end @endif @if(in_array('320', $booking_end)) hold @endif @if(in_array('480', $booking_end)) active @endif">@if($last_block == '18') <i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>{{$last_text}} @elseif($last_block == '360')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i> @endif</div>
+                                                    <div class="slot pl-2 @if(in_array('16',$booked)) {{$color}} @endif" >@if($end_slot == '16') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('16',$booked)) {{$no_booking}} @endif</div>
 
-                                                    <div class="slot pl-2 @if(in_array('19', $booking_end)) end @endif @if(in_array('320', $booking_end)) hold @endif @if(in_array('480', $booking_end)) active @endif">@if($last_block == '19') <i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>{{$last_text}} @elseif($last_block == '380')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i> @endif</div>
+                                                    <div class="slot pl-2 @if(in_array('17',$booked)) {{$color}} @endif" >@if($end_slot == '17') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('17',$booked)) {{$no_booking}} @endif</div>
 
-                                                    <div class="slot pl-2 @if(in_array('20', $booking_end)) end @endif @if(in_array('320', $booking_end)) hold @endif @if(in_array('480', $booking_end)) active @endif">@if($last_block == '20') <i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>{{$last_text}} @elseif($last_block == '400')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i> @endif</div>
+                                                    <div class="slot pl-2 @if(in_array('18',$booked)) {{$color}} @endif" >@if($end_slot == '18') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('18',$booked)) {{$no_booking}} @endif</div>
 
-                                                    <div class="slot pl-2 @if(in_array('21', $booking_end)) end @endif @if(in_array('320', $booking_end)) hold @endif @if(in_array('480', $booking_end)) active @endif">@if($last_block == '21') <i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>{{$last_text}} @elseif($last_block == '420')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i> @endif</div>
+                                                    <div class="slot pl-2 @if(in_array('19',$booked)) {{$color}} @endif" >@if($end_slot == '19') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('19',$booked)) {{$no_booking}} @endif</div>
 
-                                                    <div class="slot pl-2 @if(in_array('22', $booking_end)) end @endif @if(in_array('320', $booking_end)) hold @endif @if(in_array('480', $booking_end)) active @endif">@if($last_block == '22') <i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>{{$last_text}} @elseif($last_block == '440')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i> @endif</div>
+                                                    <div class="slot pl-2 @if(in_array('20',$booked)) {{$color}} @endif" >@if($end_slot == '20') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('20',$booked)) {{$no_booking}} @endif</div>
 
-                                                    <div class="slot pl-2 @if(in_array('23', $booking_end)) end @endif @if(in_array('320', $booking_end)) hold @endif @if(in_array('480', $booking_end)) active @endif">@if($last_block == '23') <i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i>{{$last_text}} @elseif($last_block == '460')<i class='bx bxs-user'></i> {{$member_name}} <br> <i class='bx bx-time-five'></i> @endif</div>
+                                                    <div class="slot pl-2 @if(in_array('21',$booked)) {{$color}} @endif" >@if($end_slot == '21') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('21',$booked)) {{$no_booking}} @endif</div>
+
+                                                    <div class="slot pl-2 @if(in_array('22',$booked)) {{$color}} @endif" >@if($end_slot == '22') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('22',$booked)) {{$no_booking}} @endif</div>
+
+                                                    <div class="slot pl-2 @if(in_array('23',$booked)) {{$color}} @endif" >@if($end_slot == '23') <i class='bx bxs-user'></i> {{$booking_member}} <br> <i class='bx bx-time-five'></i>{{$booking_timings}} @elseif(!in_array('23',$booked)) {{$no_booking}} @endif</div>
                                                 </div>
                                                 </div>
                                             </div>

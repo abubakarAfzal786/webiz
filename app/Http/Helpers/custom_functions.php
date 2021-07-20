@@ -383,25 +383,26 @@ if (!function_exists('get_room_available_from')) {
         $newStart->subMinutes(Setting::getValue('booking_time_resolution', 15));
         $newEnd->addMinutes(Setting::getValue('booking_time_resolution', 15));
         $nowSub45 = Carbon::now()->subMinutes(45);
-        // $current = $room->bookings()
-        // ->where('status', '<>', Booking::STATUS_CANCELED)
-        // ->where(function ($q) use ($newStart, $newEnd) {
-        //     return $q
-        //         ->where(function ($query) use ($newStart, $newEnd) {
-        //             return $query->where('start_date', '>', $newStart)->where('start_date', '<', $newEnd);
-        //         })
-        //         ->orWhere(function ($query) use ($newStart, $newEnd) {
-        //             return $query->where('end_date', '>', $newStart)->where('end_date', '<', $newEnd);
-        //         })
-        //         ->orWhere(function ($query) use ($newStart, $newEnd) {
-        //             return $query->where('start_date', '<', $newStart)->where('end_date', '>', $newEnd);
-        //         });
-        // })->first();
         $current = $room->bookings()
-        ->where('start_date', '<=', $now)
-        ->where('end_date', '>=', $now)
         ->where('status', '<>', Booking::STATUS_CANCELED)
-        ->first();
+        ->where(function ($q) use ($newStart, $newEnd) {
+            return $q
+                ->where(function ($query) use ($newStart, $newEnd) {
+                    return $query->where('start_date', '>', $newStart)->where('start_date', '<', $newEnd);
+                })
+                ->orWhere(function ($query) use ($newStart, $newEnd) {
+                    return $query->where('end_date', '>', $newStart)->where('end_date', '<', $newEnd);
+                })
+                ->orWhere(function ($query) use ($newStart, $newEnd) {
+                    return $query->where('start_date', '<', $newStart)->where('end_date', '>', $newEnd);
+                });
+        })->first();
+// dd($current);
+        // $current = $room->bookings()
+        // ->where('start_date', '<=', $now)
+        // ->where('end_date', '>=', $now)
+        // ->where('status', '<>', Booking::STATUS_CANCELED)
+        // ->first();
         if (!$current) {
             return ceil_date_for_booking($now);
         } else {

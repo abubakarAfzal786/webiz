@@ -102,23 +102,38 @@ final class BookingHelper
             $extend_date=$booking->extend_minutes->addMinute();
             }
             try {
-                $price = calculate_room_price($attributesToSync, $booking->room->price, $booking->end_date, $extend_date)['price'];
-                if (($booking->member->balance < $price) || !$booking->member->company_id) {
+
+            if($booking->end_date->diffInHours($extend_date)<=12){
+                   $price = calculate_room_price($attributesToSync, $booking->room->price, $booking->end_date, $extend_date)['price'];
+                  if (($booking->member->balance < $price) || !$booking->member->company_id) {
                     return [
                         'booking' => null,
                         'message' => 'You don\'t have enough credits',
                         'success' => false,
                     ];
-                }else{
-                        if($booking->member->phone){
-                  $this->sendBookingMessage($booking->member->phone);
-                Log::channel('notifications')->info('Send SMS'.$now." booking_id". $booking->id);
+                  }else{
+                if($booking->member->phone){
+                      $this->sendBookingMessage($booking->member->phone,$booking->member->name,$booking->id);
+                   Log::channel('notifications')->info('Send SMS'.$now." booking_id". $booking->id);
 
-                }
-                  DB::beginTransaction();
-                  $booking->update(['extend_minutes' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
-                 DB::commit();
-                }
+                   }
+                    DB::beginTransaction();
+                    $booking->update(['extend_minutes' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
+                    DB::commit();
+                return [
+                     'booking' => $booking,
+                     'message' => 'Success',
+                     'success' => true,
+                       ];
+                    }
+                 }else{
+                 return [
+                    'booking' => null,
+                    'message' => 'something went wrong',
+                    'success' => false,
+                    ];
+                  }
+              
                 }
                 catch (Exception $exception) {
                     DB::rollBack();
@@ -134,7 +149,7 @@ final class BookingHelper
 
         }
         else{
-            if ($extend_date !== null && $extend_date->gt($booking->end_date) && $booking->end_date->diffInHours($extend_date)<=12) {
+            if ($extend_date !== null && $extend_date->gt($booking->end_date) && $booking->end_date->diffInHours($extend_date)<=12 && $booking->status!==Booking::STATUS_EXTENDED) {
                 try {
                 $price = calculate_room_price($attributesToSync, $booking->room->price, $booking->end_date, $extend_date)['price'];
                 if (($booking->member->balance < $price) || !$booking->member->company_id) {

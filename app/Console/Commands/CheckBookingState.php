@@ -172,20 +172,23 @@ class CheckBookingState extends Command
             } elseif ($booking->status == Booking::STATUS_EXTENDED) {
                 if ($booking->out_at && ($booking->out_at <= $nowSub5)) {
                     // COMPLETE BOOKING
-                Log::channel('notifications')->info('on out at extend'.$now." booking_id". $booking->id);
+                    Log::channel('notifications')->info('on out at extend 1'.$now." booking_id". $booking->id);
 
                     $this->bookingCompletedPush($booking);
                     $booking->update(['status' => Booking::STATUS_COMPLETED]);
                 }
                 else{
+                    if($booking->end_date<=$now){
                     $extendBooking = (new BookingHelper())->extendBooking($booking,null,null,[],true,"from Cron section 1");
                     if ($extendBooking['success']!==true) {
                         // COMPLETE BOOKING
                         $this->bookingCompletedPush($booking);
                         $booking->update(['status' => Booking::STATUS_COMPLETED]);
                     }
-                }
                 Log::channel('notifications')->info('on extend section'.$now." booking_id". $booking->id);
+
+                      }
+                }
 
             } else {
                 if (Carbon::parse($endSub5)->format("Y-m-d H:i:00")==Carbon::parse($now)->format("Y-m-d H:i:00")) {

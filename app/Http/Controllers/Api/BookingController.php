@@ -11,16 +11,26 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Helpers\TwilioHelper;
 
 class BookingController extends Controller
 {
-    use FCMHelper;
+    use FCMHelper,TwilioHelper;
 
     /**
      * @param $id
      * @param Request $request
      * @return false|JsonResponse
      */
+    public function test(){
+
+        try{
+           $response= $this->sendBookingMessage("+972547919874","Abubakar",247);
+            dd($response);
+        }catch (Exception $exception) {
+           dd($exception);
+        }
+    }
     public function complete($id, Request $request)
     {
         /** @var Member $member */

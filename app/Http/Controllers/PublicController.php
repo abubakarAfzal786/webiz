@@ -60,6 +60,9 @@ class PublicController extends Controller
 
         return view('frontscreen', compact('bookings', 'rooms', 'time', 'date', 'temp', 'coming'));
     }
+    public function calculator(){
+      return view('calculator-widget');
+    }
 
     /**
      * @param $id

@@ -185,6 +185,12 @@ class Booking extends Model
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
+    public function getEnd_DateAttribute(){
+        if($this->extend_minutes!==null){
+            return $this->end_date+$this->extend_minutes;
+        }
+        return $this->end_date;
+    }
 
     /**
      * @return Image|Collection

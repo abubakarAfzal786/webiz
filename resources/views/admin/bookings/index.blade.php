@@ -35,6 +35,8 @@
                                                 <div class="col-md-12  text-right">
                                                     <button class="btn btn-primary" id="date_filter_button"
                                                         value="Filter">Search</button>
+                                              <button class="btn btn-light" id="date_reset_button"
+                                                        type="reset">Reset</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -64,6 +66,9 @@
             currentDate = $('#start_date').val();
             $('#end_date').attr('min', currentDate);
         })
+$(document).on('click','#date_reset_button',function(){
+window.location.href="{{url('dashboard/bookings')}}"
+});
         $(document).ready(function () {
             currentDate = $('#start_date').val();
             $('#end_date').attr('min', currentDate);
