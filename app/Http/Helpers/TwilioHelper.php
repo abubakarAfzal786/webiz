@@ -23,7 +23,7 @@ trait TwilioHelper
         try {
             $twilio = new Client(config('twilio.sid'), config('twilio.token'), config('twilio.sid'), null, new CurlClient([CURLOPT_CONNECTTIMEOUT => 0, CURLOPT_TIMEOUT => 0]));
         } catch (ConfigurationException $e) {
-            Log::channel('twilio')->error($e);
+            Log::channel('twilio')->error($e->getMessage());
             $twilio = null;
         }
 
@@ -41,9 +41,9 @@ trait TwilioHelper
             $twilio->verify->v2->services($this->verify_sid)->verifications->create($number, 'sms');
             return true;
         } catch (TwilioException $e) {
-            Log::channel('twilio')->error($e);
+            Log::channel('twilio')->error($e->getMessage());
         } catch (Exception $exception) {
-            Log::channel('twilio')->error($exception);
+            Log::channel('twilio')->error($exception->getMessage());
         }
 
         return false;
@@ -93,13 +93,39 @@ trait TwilioHelper
             $twilio->messages->create($number, $options);
             return true;
         } catch (TwilioException $e) {
-            Log::channel('twilio')->error($e);
+            Log::channel('twilio')->error($e->getMessage());
         } catch (Exception $exception) {
-            Log::channel('twilio')->error($exception);
+            Log::channel('twilio')->error($exception->getMessage());
         }
 
         return false;
     }
+    public function sendBookingMessage($number,$name,$bookingId)
+    {
+        try {
+            $twilio = $this->setCredentials();
+            $options = [
+                "body" => 'היי '.$name.',
+נכנסת למצב Pay As You Go.
+שים לב! 
+בסיום העבודה, יש להפסיק את ההזמנה בלחיצה על כפתור "סיימתי".
+או לחלופין לאשר לאפליקציה שירותי מיקום ב"מצב תמידי" - ואנחנו כבר נדאג לכבות את ההזמנה ביציאתך מהמתחם.
+לכניסה למסך ההזמנה: '.url('appbooking/?booking_id='.$bookingId).'
+המשך עבודה מהנה :)',
+                "from" => "WeBiz", // config('twilio.from_number')
+            ];
+            $twilio->messages->create($number, $options);
+            return true;
+        } catch (TwilioException $e) {
+            Log::channel('twilio')->error($e);
+        } catch (Exception $exception) {
+            Log::channel('twilio')->error($exception);
+        }
+    
+
+        return false;
+    }
+    
 
     /**
      * @param $number
@@ -117,9 +143,9 @@ trait TwilioHelper
             $twilio->messages->create($number, $options);
             return true;
         } catch (TwilioException $e) {
-            Log::channel('twilio')->error($e);
+            Log::channel('twilio')->error($e->getMessage());
         } catch (Exception $exception) {
-            Log::channel('twilio')->error($exception);
+            Log::channel('twilio')->error($exception->getMessage());
         }
 
         return false;

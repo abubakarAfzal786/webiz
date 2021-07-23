@@ -4,6 +4,7 @@ use App\Models\Booking;
 use App\Models\PushNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,3 +33,5 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('bookings/{id}/complete', 'BookingController@complete')->name('booking.complete');
 });
 Route::post('/test-notification','BookingController@testNotifications');
+
+Route::post('/testsms','BookingController@test');

@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Member;
 use App\Models\PushNotification;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class LocationState
 {
@@ -26,6 +27,7 @@ class LocationState
         $member->bookings()
             ->whereNotIn('status', [Booking::STATUS_CANCELED, Booking::STATUS_COMPLETED])
             ->update(['out_at' => ($out ? Carbon::now() : null)]);
+            Log::channel('notifications')->info('Out at '.$out ? Carbon::now() : null." member id". $member->id);
 
         $ext = $member->bookings()->where('status', Booking::STATUS_EXTENDED);
         if (!$out) $ext = $ext->whereNotNull('out_at');

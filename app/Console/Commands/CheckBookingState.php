@@ -9,9 +9,12 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Command;
 use Monolog\Logger;
+use App\Http\Helpers\TwilioHelper;
+
 class CheckBookingState extends Command
 {
-    use FCMHelper;
+    use FCMHelper,TwilioHelper;
+
 
     /**
      * The name and signature of the console command.
@@ -152,7 +155,7 @@ class CheckBookingState extends Command
         foreach ($bookings as $booking) {
             $endClone = clone $booking->end_date;
             $endSub5 = $endClone->subMinutes(5);
-
+            $difference=$booking->end_date->diffInHours($now);
             if ($booking->status == Booking::STATUS_PENDING) {
                 if (($booking->start_date <= $now) && ($booking->end_date > $now)) {
                     // STARTED BOOKING
@@ -162,18 +165,24 @@ class CheckBookingState extends Command
             } elseif ($booking->status == Booking::STATUS_EXTENDED) {
                 if ($booking->out_at && ($booking->out_at <= $nowSub5)) {
                     // COMPLETE BOOKING
+
                     $this->bookingCompletedPush($booking);
                     $booking->update(['status' => Booking::STATUS_COMPLETED]);
+                    Log::channel('notifications')->info('on out at extend 1'.$now." booking_id". $booking->id);
+
                 }
                 else{
+                    if($booking->end_date<=$now){
                     $extendBooking = (new BookingHelper())->extendBooking($booking,null,null,[],true,"from Cron section 1");
-                    if ($extendBooking['success']!==true) {
+                      if ($extendBooking['success']!==true) {
                         // COMPLETE BOOKING
                         $this->bookingCompletedPush($booking);
                         $booking->update(['status' => Booking::STATUS_COMPLETED]);
-                    }
+                        Log::channel('notifications')->info('extending booking'.$now." booking_id". $booking->id);
+
+                       }
+                      }
                 }
-                Log::channel('notifications')->info('on extend section'.$now." booking_id". $booking->id);
 
             } else {
                 if (Carbon::parse($endSub5)->format("Y-m-d H:i:00")==Carbon::parse($now)->format("Y-m-d H:i:00")) {
@@ -182,8 +191,11 @@ class CheckBookingState extends Command
                 } elseif ($booking->end_date <= $now) {
                     if ($booking->out_at) {
                         // COMPLETE BOOKING
+
                         $this->bookingCompletedPush($booking);
                         $booking->update(['status' => Booking::STATUS_COMPLETED]);
+                        Log::channel('notifications')->info('on out at'.$now." booking_id". $booking->id);
+
                     } 
                     else {
                         // EXTEND BOOKING
@@ -192,7 +204,7 @@ class CheckBookingState extends Command
                             // COMPLETE BOOKING
                             $this->bookingCompletedPush($booking);
                             $booking->update(['status' => Booking::STATUS_COMPLETED]);
-                        Log::channel('notifications')->info('extending booking'.$now." booking_id". $booking->id);
+                            Log::channel('notifications')->info('extending booking'.$now." booking_id". $booking->id);
 
                         }
 

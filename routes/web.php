@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,7 +27,9 @@ Route::get('restpassword',function(){
 	// dd($user);
 	return redirect()->to("webiz://password/restore/".$token);
 });
-
-Route::get('testing-app',function(){
-	
+Route::get('appbooking',function(){
+	$booking=request()->get('booking_id');
+	// dd($user);
+	return redirect()->to("webiz://booking/".$booking);
 });
+Route::get('calculator','PublicController@calculator')->name('calculator');

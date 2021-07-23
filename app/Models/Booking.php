@@ -31,6 +31,7 @@ class Booking extends Model
         'logo_id',
         'out_at',
         'company_id',
+        'extend_minutes',
     ];
 
     protected $appends = [
@@ -44,6 +45,7 @@ class Booking extends Model
         'out_at',
         'created_at',
         'updated_at',
+        'extend_minutes',
     ];
 
     const STATUS_PENDING = 10;
@@ -184,6 +186,12 @@ class Booking extends Model
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+    public function getEnd_DateAttribute(){
+        if($this->extend_minutes!==null){
+            return $this->end_date+$this->extend_minutes;
+        }
+        return $this->end_date;
     }
 
     /**
