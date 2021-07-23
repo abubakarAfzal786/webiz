@@ -60,6 +60,9 @@ class PublicController extends Controller
          if(request()->route('id')==2){
              return view('frontscreen.frontscreen-1', compact('bookings', 'rooms', 'time', 'date', 'temp', 'coming'));
           }
+         if(request()->route('id')==3){
+             return view('frontscreen.frontscreen-2', compact('bookings', 'rooms', 'time', 'date', 'temp', 'coming'));
+          }
 
         return view('frontscreen', compact('bookings', 'rooms', 'time', 'date', 'temp', 'coming'));
     }

@@ -7,7 +7,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="format-detection" content="address=no">
 
-    <link rel="stylesheet" href="{{ asset('frontscreen/css/bundle.js.css') }}" type="text/css"/>
+    <link rel="stylesheet" href="{{ asset('frontscreen/css/bundle.jq.css') }}" type="text/css"/>
 
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="images/favicon/apple-touch-icon-57x57.png" />
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/favicon/apple-touch-icon-114x114.png" />
@@ -29,6 +29,16 @@
     <meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
     <meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
     <meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
+
+
+    <!-- open graph -->
+	<meta property="og:site_name" content="Template">
+     <meta property="og:url" content="http://template/" />
+     <meta property="og:type" content="website" />
+     <meta property="og:title" content="template" />
+     <meta property="og:description" content="template" />
+     <meta property="og:image" content="http://template/" />
+	 <meta property="og:locale" content="ru_RU">
 <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
             integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
@@ -54,21 +64,8 @@
         font-size: 40px !important;
       }
 </style>
-    <!-- open graph -->
-	<meta property="og:site_name" content="Template">
-     <meta property="og:url" content="http://template/" />
-     <meta property="og:type" content="website" />
-     <meta property="og:title" content="template" />
-     <meta property="og:description" content="template" />
-     <meta property="og:image" content="http://template/" />
-	 <meta property="og:locale" content="ru_RU">
      <!-- open graph -->
 </head>
-   <script>
-    setInterval(function () {
-        $('#time').html(moment().utc().tz('Asia/Jerusalem').format('HH:mm'));
-    }, 1000);
-    </script>
 <body>
 
 
@@ -106,32 +103,24 @@
             <div class="title">
                 <h1>Company list</h1>
             </div>
-          @if($bookings->count() || $rooms->count())
+           @if($bookings->count() || $rooms->count())
             <div class="list-wrap">
-                <div class="splide company-splide">
-                    <div class="splide__track">
-                        <ul class="splide__list">
-                        @foreach($bookings->chunk(2) as $key => $chunk)
-                            <li class="splide__slide">
-                                @foreach($chunk as $key=>$booking)
-                                  <div class="company-card">
-                                    <div class="office">
-                                        <p>Office: <b>{{ $booking->room->number }}</b></p>
-                                    </div>
-                                    <div class="data {{!$booking->logo && !$booking->member->company->first_logo_url ? 'no-logo' : ''}}">
-                                        <div class="logo">
-                                            <img src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}" alt="">
-                                        </div>
-                                        <div class="name">
-                                            <p>{{ $booking->member->company ? $booking->member->company->name : $booking->member->name }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                              @endforeach
-                            </li>
-                     @endforeach
-                        </ul>
+                <div class="list-slider">
+                @foreach($bookings as $key => $booking)
+                    <div class="company-card">
+                        <div class="office">
+                            <p>Office: <b>{{ $booking->room->number }}</b></p>
+                        </div>
+                        <div class="data {{!$booking->logo && !$booking->member->company->first_logo_url ? 'no-logo' : ''}}">
+                            <div class="logo">
+                                <img src="{{ $booking->logo ? $booking->logo->url : $booking->member->company->first_logo_url }}" alt="">
+                            </div>
+                            <div class="name">
+                                <p>{{ $booking->member->company ? $booking->member->company->name : $booking->member->name }}</p>
+                            </div>
+                        </div>
                     </div>
+              @endforeach
                 </div>
             </div>
          @endif
@@ -167,21 +156,8 @@
 
 
 
-<script src="{{asset('js/frontscreenjs/js/libs.js')}}" defer></script>
-<script src="{{asset('js/frontscreenjs/js/common.js')}}" defer></script>
-<script>
-    $(document).ready(function () {
-        {{--let api_key = '{{ config("other.openweather_api") }}';--}}
-        {{--let settings = {--}}
-        {{--    "async": true,--}}
-        {{--    "crossDomain": true,--}}
-        {{--    "url": "https://api.openweathermap.org/data/2.5/weather?units=metric&id=293397&appid=" + api_key,--}}
-        {{--    "method": "GET",--}}
-        {{--}--}}
-        {{--$.ajax(settings).done(function (response) {--}}
-        {{--    if (response.main.temp) $('#temp').html(parseInt(response.main.temp));--}}
-        {{--});--}}
-    });
-</script>
+<script src="{{asset('js/frontscreenjq/js/libs.js')}}" defer></script>
+<script src="{{asset('js/frontscreenjq/js/common.js')}}" defer></script>
+
 </body>
 </html>

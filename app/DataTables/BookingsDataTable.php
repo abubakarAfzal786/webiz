@@ -32,6 +32,9 @@ class BookingsDataTable extends DataTable
             ->editColumn('end_date', function ($booking) {
                 return $booking->end_date ? $booking->end_date->timezone('Asia/Jerusalem')->format('Y-m-d H:i') : '';
             })
+            ->editColumn('extend_minutes', function ($booking) {
+                return $booking->extend_minutes ? $booking->end_date->diffInMinutes($booking->extend_minutes)." Minutes" : '';
+            })
             ->editColumn('created_at', function ($booking) {
                 return $booking->created_at ? $booking->created_at->timezone('Asia/Jerusalem')->diffForHumans() : '';
             })
@@ -107,6 +110,7 @@ class BookingsDataTable extends DataTable
             Column::make('company.name')->title('Company'),
             Column::make('start_date'),
             Column::make('end_date'),
+            Column::make('extend_minutes')->title('Pango Time'),
             Column::make('price'),
             Column::make('status_name', 'status')->title('Status'),
             Column::make('extras')->orderable(false),

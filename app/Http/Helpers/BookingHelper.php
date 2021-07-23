@@ -29,6 +29,7 @@ final class BookingHelper
         //         'success' => true,
         //     ];
         // }
+        $now = Carbon::now();
         if($cron==true){
             $extend_date=$booking->end_date->addMinutes(30);
         }
@@ -97,11 +98,11 @@ final class BookingHelper
             }
         }
         if($cron==true){
-            $extend_date=$booking->end_date->addMinute();
+            try {
+            $extend_date=$booking->end_date->addMinute();  
             if($booking->extend_minutes!==null){
             $extend_date=$booking->extend_minutes->addMinute();
             }
-            try {
 
             if($booking->end_date->diffInHours($extend_date)<=12){
                    $price = calculate_room_price($attributesToSync, $booking->room->price, $booking->end_date, $extend_date)['price'];
@@ -112,13 +113,14 @@ final class BookingHelper
                         'success' => false,
                     ];
                   }else{
-                if($booking->member->phone){
-                      $this->sendBookingMessage($booking->member->phone,$booking->member->name,$booking->id);
-                   Log::channel('notifications')->info('Send SMS'.$now." booking_id". $booking->id);
+                // if($booking->member->phone){
+                //       $this->sendBookingMessage($booking->member->phone,$booking->member->name,$booking->id);
+                //       Log::channel('notifications')->info('Send SMS'.$now." booking_id". $booking->id);
 
-                   }
+                //    }
                     DB::beginTransaction();
                     $booking->update(['extend_minutes' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
+                    Log::channel('notifications')->info('Pango Mode '.$now." booking_id -> ". $booking->id);
                     DB::commit();
                 return [
                      'booking' => $booking,
@@ -127,6 +129,11 @@ final class BookingHelper
                        ];
                     }
                  }else{
+                     if($booking->extend_minutes!==null){
+                            $price=calculate_room_price($attributesToSync, $booking->room->price, $booking->end_date, $booking->extend_minutes)['price'];
+                            make_transaction($booking->member->id, null, $booking->room->price, $booking->id, $price, Transaction::TYPE_ROOM,null,null,"Pango");
+       
+                 }
                  return [
                     'booking' => null,
                     'message' => 'something went wrong',
@@ -163,7 +170,7 @@ final class BookingHelper
                   $transaction= make_transaction($booking->member_id, null, $booking->room_id, $booking->id, $price, Transaction::TYPE_ROOM,null,null,"Extend Booking");
                    $booking->update(['end_date' => $extend_date, 'status' => Booking::STATUS_EXTENDED]);
                  DB::commit();
-                Log::channel('booking')->info('extending booking'.Carbon::now()." booking_id". $booking->id." Source ->".$source);
+                Log::channel('booking')->info('manual extending booking'.Carbon::now()." booking_id". $booking->id." Source ->".$source);
 
                 }
                 }

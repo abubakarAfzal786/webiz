@@ -29,7 +29,7 @@ if (!function_exists('room_is_busy')) {
         $newStart->subMinutes(Setting::getValue('booking_time_resolution', 15));
         $newEnd->addMinutes(Setting::getValue('booking_time_resolution', 15));
         $nowSub45 = Carbon::now()->subMinutes(45);
-        $busy=null;
+        $busy=false;
         $booking = Booking::query()
             ->where('id', '<>', $booking_id)
             ->where('room_id', $id)
@@ -63,24 +63,23 @@ if (!function_exists('room_is_busy')) {
                             return $query->where('start_date', '<', $newStart)->where('end_date', '>', $end);
                         });
                 })->exists();
-                // dd($busy);
             }else{
-                $busy = Booking::query()
-                ->where('id', '<>', $booking_id)
-                ->where('room_id', $id)
-                ->where('status', '<>', Booking::STATUS_CANCELED)
-                ->where(function ($q) use ($newStart, $newEnd) {
-                    return $q
-                        ->where(function ($query) use ($newStart, $newEnd) {
-                            return $query->where('start_date', '>', $newStart)->where('start_date', '<', $newEnd);
-                        })
-                        ->orWhere(function ($query) use ($newStart, $newEnd) {
-                            return $query->where('end_date', '>', $newStart)->where('end_date', '<', $newEnd);
-                        })
-                        ->orWhere(function ($query) use ($newStart, $newEnd) {
-                            return $query->where('start_date', '<', $newStart)->where('end_date', '>', $newEnd);
-                        });
-                })->exists();
+          $busy = Booking::query()
+            ->where('id', '<>', $booking_id)
+            ->where('room_id', $id)
+            ->where('status', '<>', Booking::STATUS_CANCELED)
+            ->where(function ($q) use ($newStart, $newEnd) {
+                return $q
+                    ->where(function ($query) use ($newStart, $newEnd) {
+                        return $query->where('start_date', '>', $newStart)->where('start_date', '<', $newEnd);
+                    })
+                    ->orWhere(function ($query) use ($newStart, $newEnd) {
+                        return $query->where('end_date', '>', $newStart)->where('end_date', '<', $newEnd);
+                    })
+                    ->orWhere(function ($query) use ($newStart, $newEnd) {
+                        return $query->where('start_date', '<', $newStart)->where('end_date', '>', $newEnd);
+                    });
+            })->exists();
             }
         if ($busy) return true;
 
@@ -326,7 +325,7 @@ if (!function_exists('make_transaction')) {
     {
         if ($booking_id) {
             /** @var Member $member */
-            $member = Member::query()->find($member_id);
+            $member = Member::query()->withoutGlobalScope('active')->find($member_id);
             $member->update(['balance' => ($member->balance - $credit)]);
         }
         $transaction= Transaction::query()->create([

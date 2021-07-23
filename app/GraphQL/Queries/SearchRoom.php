@@ -41,11 +41,21 @@ class SearchRoom
                     return $q
                         // ->whereBetween('start_date', [$start, $end])
                         // ->orWhereBetween('end_date', [$start, $end]);
-                        ->where(function($q) use ($start,$end){
-                            $q->where('start_date','>=',$start)->where('start_date','<=',$start);
-                        })->orWhere(function($q) use ($start,$end){
-                            $q->where('end_date','>=',$end)->where('end_date','<=',$end);
-                        });
+                        // ->where(function($q) use ($start,$end){
+                        //     $q->where('start_date','>',$start)->where('start_date','<',$start);
+                        // })->orWhere(function($q) use ($start,$end){
+                        //     $q->where('end_date','>',$end)->where('end_date','<',$end);
+                        // });
+                //   return $q
+                    ->where(function ($query) use ($start, $end) {
+                        return $query->where('start_date', '>', $start)->where('start_date', '<', $end);
+                    })
+                    ->orWhere(function ($query) use ($start, $end) {
+                        return $query->where('end_date', '>', $start)->where('end_date', '<', $end);
+                    })
+                    ->orWhere(function ($query) use ($start, $end) {
+                        return $query->where('start_date', '<', $start)->where('end_date', '>', $end);
+                    });
                 });
             });
            }

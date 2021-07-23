@@ -156,13 +156,6 @@ class CheckBookingState extends Command
             $endClone = clone $booking->end_date;
             $endSub5 = $endClone->subMinutes(5);
             $difference=$booking->end_date->diffInHours($now);
-            // if($difference>=1){
-            //    if($booking->member->phone){
-            //       $this->sendBookingMessage($booking->member->phone);
-            //     Log::channel('notifications')->info('Send SMS'.$now." booking_id". $booking->id);
-
-            //     }
-            //  }
             if ($booking->status == Booking::STATUS_PENDING) {
                 if (($booking->start_date <= $now) && ($booking->end_date > $now)) {
                     // STARTED BOOKING
@@ -172,21 +165,22 @@ class CheckBookingState extends Command
             } elseif ($booking->status == Booking::STATUS_EXTENDED) {
                 if ($booking->out_at && ($booking->out_at <= $nowSub5)) {
                     // COMPLETE BOOKING
-                    Log::channel('notifications')->info('on out at extend 1'.$now." booking_id". $booking->id);
 
                     $this->bookingCompletedPush($booking);
                     $booking->update(['status' => Booking::STATUS_COMPLETED]);
+                    Log::channel('notifications')->info('on out at extend 1'.$now." booking_id". $booking->id);
+
                 }
                 else{
                     if($booking->end_date<=$now){
                     $extendBooking = (new BookingHelper())->extendBooking($booking,null,null,[],true,"from Cron section 1");
-                    if ($extendBooking['success']!==true) {
+                      if ($extendBooking['success']!==true) {
                         // COMPLETE BOOKING
                         $this->bookingCompletedPush($booking);
                         $booking->update(['status' => Booking::STATUS_COMPLETED]);
-                    }
-                Log::channel('notifications')->info('on extend section'.$now." booking_id". $booking->id);
+                        Log::channel('notifications')->info('extending booking'.$now." booking_id". $booking->id);
 
+                       }
                       }
                 }
 
@@ -197,10 +191,11 @@ class CheckBookingState extends Command
                 } elseif ($booking->end_date <= $now) {
                     if ($booking->out_at) {
                         // COMPLETE BOOKING
-                Log::channel('notifications')->info('on out at'.$now." booking_id". $booking->id);
 
                         $this->bookingCompletedPush($booking);
                         $booking->update(['status' => Booking::STATUS_COMPLETED]);
+                        Log::channel('notifications')->info('on out at'.$now." booking_id". $booking->id);
+
                     } 
                     else {
                         // EXTEND BOOKING
@@ -209,7 +204,7 @@ class CheckBookingState extends Command
                             // COMPLETE BOOKING
                             $this->bookingCompletedPush($booking);
                             $booking->update(['status' => Booking::STATUS_COMPLETED]);
-                        Log::channel('notifications')->info('extending booking'.$now." booking_id". $booking->id);
+                            Log::channel('notifications')->info('extending booking'.$now." booking_id". $booking->id);
 
                         }
 
